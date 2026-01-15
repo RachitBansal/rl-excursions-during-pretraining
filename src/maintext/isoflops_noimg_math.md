@@ -1,690 +1,8 @@
-import { c as create_ssr_component, i as escape, k as add_attribute, o as onDestroy, h as each, v as validate_component } from "./ssr.js";
-import katex from "katex";
-import { marked } from "marked";
-import strftime from "strftime";
-const Seo = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { title: title2 } = $$props;
-  let { ogTitle = null } = $$props;
-  let { description } = $$props;
-  if ($$props.title === void 0 && $$bindings.title && title2 !== void 0)
-    $$bindings.title(title2);
-  if ($$props.ogTitle === void 0 && $$bindings.ogTitle && ogTitle !== void 0)
-    $$bindings.ogTitle(ogTitle);
-  if ($$props.description === void 0 && $$bindings.description && description !== void 0)
-    $$bindings.description(description);
-  return `${$$result.head += `<!-- HEAD_svelte-1u7ey3_START -->${$$result.title = `<title>${escape(title2)}</title>`, ""}<meta name="description"${add_attribute("content", description, 0)}><meta property="og:title"${add_attribute("content", ogTitle ?? title2, 0)}><meta property="og:description"${add_attribute("content", description, 0)}><!-- HEAD_svelte-1u7ey3_END -->`, ""}`;
-});
-var title$1 = "Compute-Optimal Scaling for Value-Based Deep RL";
-var link$1 = "https://arxiv.org/abs/2508.14881";
-var date$1 = /* @__PURE__ */ new Date(175608e7);
-var highlight$1 = true;
-var image_before$1 = "/assets/images/model_scaling_before.png";
-var image_after$1 = "/assets/images/model_scaling_3d.mp4";
-var resources$1 = [
-  {
-    label: "arXiv",
-    url: "https://arxiv.org/abs/2508.14881"
-  },
-  {
-    label: "Code",
-    url: "https://github.com/prestonfu/model_scaling"
-  },
-  {
-    label: "Thread",
-    url: "https://x.com/preston_fu/status/1962920781387882841"
-  },
-  {
-    label: "Poster",
-    url: "/assets/files/model_scaling_poster_neurips.pdf"
-  }
-];
-var content$1 = "[Preston Fu](https://www.prestonfu.com/)\\*,\n[Oleh Rybkin](https://olehrybkin.com/)\\*,\n[Zhiyuan Zhou](https://zhouzypaul.github.io/),\n[Michal Nauman](https://scholar.google.com/citations?user=GnEVRtQAAAAJ&hl=en),\n[Pieter Abbeel](https://people.eecs.berkeley.edu/~pabbeel/),\n[Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/),\n[Aviral Kumar](https://aviralkumar2907.github.io/)\n\n_NeurIPS_, 2025";
-const model_scaling = {
-  title: title$1,
-  link: link$1,
-  date: date$1,
-  highlight: highlight$1,
-  image_before: image_before$1,
-  image_after: image_after$1,
-  resources: resources$1,
-  content: content$1
-};
-const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  content: content$1,
-  date: date$1,
-  default: model_scaling,
-  highlight: highlight$1,
-  image_after: image_after$1,
-  image_before: image_before$1,
-  link: link$1,
-  resources: resources$1,
-  title: title$1
-}, Symbol.toStringTag, { value: "Module" }));
-var title = "Value-Based Deep RL Scales Predictably";
-var link = "https://arxiv.org/abs/2502.04327";
-var date = /* @__PURE__ */ new Date(17388e8);
-var highlight = true;
-var image_before = "/assets/images/qscaled_before.png";
-var image_after = "/assets/images/qscaled_after.gif";
-var resources = [
-  {
-    label: "arXiv",
-    url: "https://arxiv.org/abs/2502.04327"
-  },
-  {
-    label: "Code",
-    url: "https://github.com/prestonfu/qscaled"
-  },
-  {
-    label: "Thread",
-    url: "https://x.com/_oleh/status/1889016893140516880"
-  },
-  {
-    label: "Poster",
-    url: "/assets/files/utd_scaling_poster_icml.pdf"
-  }
-];
-var content = "[Oleh Rybkin](https://olehrybkin.com/),\n[Michal Nauman](https://scholar.google.com/citations?user=GnEVRtQAAAAJ&hl=en),\n[Preston Fu](https://www.prestonfu.com/),\n[Charlie Snell](https://sea-snell.github.io/),\n[Pieter Abbeel](https://people.eecs.berkeley.edu/~pabbeel/),\n[Sergey Levine](https://people.eecs.berkeley.edu/~svlevine/),\n[Aviral Kumar](https://aviralkumar2907.github.io/)\n\n_ICML_, 2025 \\\n_ICLR Robot Learning Workshop_, 2025 (**oral**)";
-const utd_scaling = {
-  title,
-  link,
-  date,
-  highlight,
-  image_before,
-  image_after,
-  resources,
-  content
-};
-const __vite_glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  content,
-  date,
-  default: utd_scaling,
-  highlight,
-  image_after,
-  image_before,
-  link,
-  resources,
-  title
-}, Symbol.toStringTag, { value: "Module" }));
-strftime.utc();
-function trimName(id) {
-  return id.match(/\.\.\/projects\/(.*)\.md$/)?.[1];
-}
-const Jumpbox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  var _a;
-  const projects = /* @__PURE__ */ Object.assign({ "../../projects/model_scaling.md": __vite_glob_0_0, "../../projects/utd_scaling.md": __vite_glob_0_1 });
-  const titleMap = Object.entries(projects).reduce(
-    (acc, [path, mod]) => {
-      const id2 = trimName(path) || path;
-      acc[id2] = mod.title;
-      return acc;
-    },
-    {}
-  );
-  let { id } = $$props;
-  const label = (_a = titleMap[id]) !== null && _a !== void 0 ? _a : id;
-  if ($$props.id === void 0 && $$bindings.id && id !== void 0)
-    $$bindings.id(id);
-  return `<a${add_attribute("href", "#" + id, 0)} class="block -mx-4 mb-4 px-4 py-2 bg-gray-100 hover:bg-slate-100 rounded transition"><span class="text-neutral-500" data-svelte-h="svelte-a7fxhe">↪</span> Our paper: <em>${escape(label)}</em></a>`;
-});
-const TakeawayBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { html } = $$props;
-  if ($$props.html === void 0 && $$bindings.html && html !== void 0)
-    $$bindings.html(html);
-  return `<div class="my-4 rounded bg-slate-50 hover:bg-sky-50/50 p-4 pb-1 border-l-4 border-sky-700 transition"><div class="text-xs font-semibold tracking-wide uppercase text-sky-700" data-svelte-h="svelte-8vdxxn">Takeaways</div> <div class="prose max-w-none mt-1"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></div>`;
-});
-const CalloutBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let meta;
-  var _a;
-  let { html } = $$props;
-  let { title: title2 = "Callout" } = $$props;
-  let { variant = "note" } = $$props;
-  const styles = {
-    note: {
-      wrap: "bg-slate-50 hover:bg-slate-100/60 border-slate-600",
-      badge: "text-slate-700",
-      label: "Note"
-    },
-    info: {
-      wrap: "bg-sky-50 hover:bg-sky-100/60 border-sky-700",
-      badge: "text-sky-800",
-      label: "Info"
-    },
-    tip: {
-      wrap: "bg-emerald-50 hover:bg-emerald-100/60 border-emerald-700",
-      badge: "text-emerald-800",
-      label: "Tip"
-    },
-    warning: {
-      wrap: "bg-amber-50 hover:bg-amber-100/60 border-amber-700",
-      badge: "text-amber-800",
-      label: "Warning"
-    }
-  };
-  if ($$props.html === void 0 && $$bindings.html && html !== void 0)
-    $$bindings.html(html);
-  if ($$props.title === void 0 && $$bindings.title && title2 !== void 0)
-    $$bindings.title(title2);
-  if ($$props.variant === void 0 && $$bindings.variant && variant !== void 0)
-    $$bindings.variant(variant);
-  meta = (_a = styles[variant]) !== null && _a !== void 0 ? _a : styles.note;
-  return `<div${add_attribute("class", `my-4 rounded p-4 pb-1 border-l-4 transition ${meta.wrap}`, 0)}>${title2 ? `<div${add_attribute("class", `text-xs font-semibold tracking-wide uppercase ${meta.badge}`, 0)}>${escape(meta.label)}: ${escape(title2)}</div>` : ``} <div class="${["prose max-w-none", title2 ? "mt-1" : ""].join(" ").trim()}"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></div>`;
-});
-const FoldBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { title: title2 = "Details" } = $$props;
-  let { open = false } = $$props;
-  let { html } = $$props;
-  if ($$props.title === void 0 && $$bindings.title && title2 !== void 0)
-    $$bindings.title(title2);
-  if ($$props.open === void 0 && $$bindings.open && open !== void 0)
-    $$bindings.open(open);
-  if ($$props.html === void 0 && $$bindings.html && html !== void 0)
-    $$bindings.html(html);
-  return `<details class="my-4 rounded border border-neutral-200 bg-white" ${open ? "open" : ""}><summary class="cursor-pointer select-none px-4 py-3 font-semibold text-neutral-900 hover:bg-neutral-50">${escape(title2)}</summary> <div class="px-4 pb-3 pt-2"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></details>`;
-});
-const css$1 = {
-  code: ".md-output h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:700}.md-output h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.md-output h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.3rem;line-height:2rem;font-weight:600}.md-output h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.md-output p{margin-bottom:1rem}.md-output strong{font-weight:600}.md-output em{font-style:italic}.md-output code{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding-left:0.25rem;padding-right:0.25rem;font-size:95%}.md-output pre{margin-bottom:1rem;overflow-x:auto;border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding:1rem}.md-output ul{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:disc}.md-output ul>:not([hidden])~.svelte-2uty9x:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ul{padding-left:1.25rem}.md-output ol{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:decimal}.md-output ol>:not([hidden])~.svelte-2uty9x:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ol{padding-left:1.25rem}.md-output li{margin-bottom:0.25rem}.math-block{margin-top:1rem;margin-bottom:1rem;text-align:center}.math-inline{vertical-align:baseline}.katex-error{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity));padding:0.25rem;--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity))}.md-output blockquote{margin-top:0.5rem;margin-bottom:0.5rem;display:inline-block;border-radius:0.25rem;border-left-width:4px;--tw-border-opacity:1;border-color:rgb(82 82 82 / var(--tw-border-opacity));--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity));padding-left:0.75rem;padding-right:0.75rem;padding-top:0.5rem;padding-bottom:0.5rem;vertical-align:middle}.md-output blockquote > :first-child{margin-top:0px}.md-output blockquote > :last-child{margin-bottom:0px}.sm-block h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.5rem;line-height:2rem;font-weight:700}.sm-block h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.3rem;line-height:2rem;font-weight:600}.sm-block h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.sm-block h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1rem;line-height:1.5rem;font-weight:600}.sm-block code{font-size:90%}pre[data-copyable]{position:relative}pre[data-copyable] .copy-btn{position:absolute;top:0.25rem;right:0.25rem;background:#f3f4f6;font-size:0.75rem;padding:0.1rem 0.4rem;border-radius:0.25rem;cursor:pointer;opacity:1;transition:opacity 0.2s}pre[data-copyable]:hover .copy-btn{opacity:1}",
-  map: null
-};
-(function(thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function(resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-});
-function renderMath(tex, displayMode) {
-  try {
-    return katex.renderToString(tex, { throwOnError: false, displayMode });
-  } catch (_a) {
-    const tag = displayMode ? "pre" : "code";
-    return `<${tag} class="katex-error">${tex}</${tag}>`;
-  }
-}
-const mathBlock = {
-  name: "mathBlock",
-  level: "block",
-  start: (src) => {
-    var _a;
-    return (_a = src.match(/\$\$/)) === null || _a === void 0 ? void 0 : _a.index;
-  },
-  tokenizer(src) {
-    const match = /^\$\$([\s\S]+?)\$\$/.exec(src);
-    if (match)
-      return {
-        type: "mathBlock",
-        raw: match[0],
-        text: match[1].trim()
-      };
-  },
-  renderer: (token) => `<div class="math math-block">${renderMath(token.text, true)}</div>`
-};
-const mathInline = {
-  name: "mathInline",
-  level: "inline",
-  start: (src) => {
-    var _a;
-    return (_a = src.match(/\$/)) === null || _a === void 0 ? void 0 : _a.index;
-  },
-  tokenizer(src) {
-    const match = /^\$([^\$\n]+?)\$/.exec(src);
-    if (match)
-      return {
-        type: "mathInline",
-        raw: match[0],
-        text: match[1].trim()
-      };
-  },
-  renderer: (token) => `<span class="math math-inline">${renderMath(token.text, false)}</span>`
-};
-const customRenderer = {
-  link(href, title2, text2) {
-    const isInternal = /^(\/|#|[A-Za-z0-9\-_]+(\.html?)?$)/.test(href);
-    let out = `<a href="${encodeURI(href)}" class="link"`;
-    if (!isInternal)
-      out += ` target="_blank" rel="external noopener noreferrer"`;
-    if (title2)
-      out += ` title="${title2}"`;
-    out += `>${text2}</a>`;
-    return out;
-  },
-  heading(text2, level, raw, slugger) {
-    const id = slugger ? slugger.slug(raw) : slugify(raw || text2);
-    return `<h${level} id="${id}">${text2}</h${level}>`;
-  },
-  blockquote(quote) {
-    return `<blockquote class="inline-block bg-neutral-50 border-l-4 border-neutral-600 rounded px-3 py-2 align-middle my-2">${quote}</blockquote>`;
-  },
-  image(href, title2, text2) {
-    if (!href || href === "__IMAGE_PLACEHOLDER__" || href.trim() === "") {
-      if (text2) {
-        return `<div class="text-center text-gray-400 italic text-sm my-4">[Image: ${text2}]</div>`;
-      }
-      return "<!-- image placeholder -->";
-    }
-    let out = `<img src="${href}" alt="${text2 || ""}" class="block mx-auto" `;
-    if (title2)
-      out += `title="${title2}" `;
-    out += "/>";
-    return out;
-  }
-};
-function slugify(s) {
-  return String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-}
-const imageAttrExtension = {
-  name: "imageAttr",
-  level: "inline",
-  start: (src) => src.indexOf("!["),
-  tokenizer(src) {
-    const re = /^!\[([^\]]*)\]\((\S+?)(?:\s+"([^"]*)")?\)\{([^}]+)\}/;
-    const match = re.exec(src);
-    if (match) {
-      const [raw, alt, srcUrl, title2, attrStr] = match;
-      const attrs = {};
-      attrStr.split(/\s+/).forEach((tok) => {
-        if (!tok)
-          return;
-        const eq = tok.indexOf("=");
-        if (eq === -1) {
-          attrs[tok] = "";
-        } else {
-          const k = tok.slice(0, eq);
-          const v = tok.slice(eq + 1).replace(/^["']|["']$/g, "");
-          if (k)
-            attrs[k] = v;
-        }
-      });
-      return {
-        type: "imageAttr",
-        raw,
-        alt,
-        src: srcUrl,
-        title: title2,
-        attrs
-      };
-    }
-  },
-  renderer(token) {
-    const isVideoSrc = /\.(mp4|webm|ogg)(\?.*)?$/i.test(token.src);
-    const declaresVideo = token.attrs["type"] === "video" || Object.prototype.hasOwnProperty.call(token.attrs, "video");
-    let out = "";
-    if (isVideoSrc || declaresVideo) {
-      const lower = token.src.toLowerCase();
-      const sourceType = token.attrs["source-type"] || (lower.endsWith(".webm") ? "video/webm" : lower.endsWith(".ogg") ? "video/ogg" : "video/mp4");
-      const freezeMs = token.attrs["freeze"] || "10000";
-      out += `<video class="block mx-auto autoplay-on-fullview md-video unselectable" aria-label="${token.alt || ""}" id="fig-${slugify(token.alt || "")}"`;
-      const hasPlaysinline = Object.prototype.hasOwnProperty.call(token.attrs, "playsinline");
-      for (const k in token.attrs) {
-        if (k === "type" || k === "video" || k === "source-type" || k === "freeze" || k === "controls")
-          continue;
-        const val = token.attrs[k];
-        out += val === "" ? ` ${k}` : ` ${k}="${val}"`;
-      }
-      out += " muted playsinline";
-      if (!hasPlaysinline)
-        out += " playsinline";
-      out += ` data-freeze-ms="${freezeMs}"`;
-      out += `><source src="${token.src}#t=0.1" type="${sourceType}" /></video>`;
-    } else {
-      out += `<img src="${token.src}" alt="${token.alt}" id="fig-${slugify(token.alt)}" class="block mx-auto unselectable"`;
-      for (const k in token.attrs) {
-        out += ` ${k}="${token.attrs[k]}"`;
-      }
-      out += " />";
-    }
-    if (token.title) {
-      out += `<div class='text-center text-gray-500 mb-4 md:px-8 lg:px-12 text-sm'>${marked.parse(token.title, { smartypants: true })}</div>`;
-    }
-    return out;
-  }
-};
-marked.use({
-  gfm: true,
-  extensions: [imageAttrExtension, mathBlock, mathInline],
-  renderer: customRenderer
-});
-const JUMP_RE = /:::jumpbox\s+id="([^"]+)"(?:\s+label="([^"]+)")?\s*:::/gm;
-const TAKE_BEGIN_RE = /:::takeaway_begin:::/gm;
-const TAKE_END_RE = /:::takeaway_end:::/gm;
-const SMALL_BEGIN_RE = /:::small_begin:::/gm;
-const SMALL_END_RE = /:::small_end:::/gm;
-const CALLOUT_BEGIN_RE = /:::callout_begin(?:\s+type="([^"]+)")?(?:\s+title="([^"]+)")?\s*:::/gm;
-const CALLOUT_END_RE = /:::callout_end:::/gm;
-const FOLD_BEGIN_RE = /:::fold_begin(?:\s+title="([^"]+)")?(?:\s+(open))?\s*:::/gm;
-const FOLD_END_RE = /:::fold_end:::/gm;
-function toHtml(md) {
-  return marked.parse(md, { smartypants: true });
-}
-const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let chunks;
-  (function(thisArg, _arguments, P, generator) {
-    function adopt(value) {
-      return value instanceof P ? value : new P(function(resolve) {
-        resolve(value);
-      });
-    }
-    return new (P || (P = Promise))(function(resolve, reject) {
-      function fulfilled(value) {
-        try {
-          step(generator.next(value));
-        } catch (e) {
-          reject(e);
-        }
-      }
-      function rejected(value) {
-        try {
-          step(generator["throw"](value));
-        } catch (e) {
-          reject(e);
-        }
-      }
-      function step(result) {
-        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-      }
-      step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-  });
-  let { source } = $$props;
-  let container = null;
-  function setupVideos(root) {
-    const videos = Array.from(root.querySelectorAll("video.autoplay-on-fullview"));
-    const fresh = videos.filter((v) => !v.dataset._wired);
-    if (fresh.length === 0)
-      return;
-    for (const v of fresh) {
-      v.controls = false;
-      v.dataset._wired = "1";
-      let is_touch = false;
-      const onFirstTouch = () => {
-        is_touch = true;
-        window.removeEventListener("touchstart", onFirstTouch);
-      };
-      window.addEventListener("touchstart", onFirstTouch, { passive: true, once: true });
-      const show = () => {
-        if (!is_touch)
-          v.controls = true;
-      };
-      const hide = () => {
-        if (!is_touch)
-          v.controls = false;
-      };
-      v.addEventListener("mouseenter", show);
-      v.addEventListener("mouseleave", hide);
-      v.addEventListener("focus", show);
-      v.addEventListener("blur", hide);
-      let restart_timer = null;
-      const clearTimer = () => {
-        if (restart_timer !== null) {
-          window.clearTimeout(restart_timer);
-          restart_timer = null;
-        }
-      };
-      const onEnded = () => {
-        const freeze_ms = parseInt(v.dataset.freezeMs || "10000", 10);
-        clearTimer();
-        restart_timer = window.setTimeout(
-          () => {
-            try {
-              v.currentTime = 0;
-            } catch (_a) {
-            }
-            const p = v.play();
-            if (p && typeof p.catch === "function")
-              p.catch(() => {
-              });
-          },
-          freeze_ms
-        );
-      };
-      ["play", "pause", "seeking", "emptied", "abort"].map((evt) => v.addEventListener(evt, clearTimer));
-      v.addEventListener("ended", onEnded);
-      v._cleanupVideo = () => {
-        v.removeEventListener("mouseenter", show);
-        v.removeEventListener("mouseleave", hide);
-        v.removeEventListener("focus", show);
-        v.removeEventListener("blur", hide);
-        v.removeEventListener("ended", onEnded);
-        clearTimer();
-      };
-    }
-    if (!setupVideos._io) {
-      const io2 = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            const v = entry.target;
-            const clear = v._clearRestartTimer;
-            if (clear)
-              clear();
-            if (entry.intersectionRatio >= 1) {
-              const p = v.play();
-              if (p && typeof p.catch === "function")
-                p.catch(() => {
-                });
-            } else {
-              v.pause();
-            }
-          }
-        },
-        { threshold: 1 }
-      );
-      setupVideos._io = io2;
-    }
-    const io = setupVideos._io;
-    fresh.forEach((v) => io.observe(v));
-  }
-  onDestroy(() => {
-    if (!setupVideos._io)
-      return;
-    return;
-  });
-  if ($$props.source === void 0 && $$bindings.source && source !== void 0)
-    $$bindings.source(source);
-  $$result.css.add(css$1);
-  chunks = (() => {
-    var _a, _b, _c, _d;
-    const out = [];
-    let pos = 0;
-    while (pos < source.length) {
-      JUMP_RE.lastIndex = pos;
-      TAKE_BEGIN_RE.lastIndex = pos;
-      SMALL_BEGIN_RE.lastIndex = pos;
-      CALLOUT_BEGIN_RE.lastIndex = pos;
-      FOLD_BEGIN_RE.lastIndex = pos;
-      const j = JUMP_RE.exec(source);
-      const t = TAKE_BEGIN_RE.exec(source);
-      const s = SMALL_BEGIN_RE.exec(source);
-      const c = CALLOUT_BEGIN_RE.exec(source);
-      const f = FOLD_BEGIN_RE.exec(source);
-      if (!j && !t && !s && !c && !f) {
-        if (pos < source.length)
-          out.push({ type: "text", content: source.slice(pos) });
-        break;
-      }
-      const j_idx = j ? j.index : Infinity;
-      const t_idx = t ? t.index : Infinity;
-      const s_idx = s ? s.index : Infinity;
-      const c_idx = c ? c.index : Infinity;
-      const f_idx = f ? f.index : Infinity;
-      const min_idx = Math.min(j_idx, t_idx, s_idx, c_idx, f_idx);
-      if (j_idx === min_idx) {
-        if (j_idx > pos)
-          out.push({
-            type: "text",
-            content: source.slice(pos, j_idx)
-          });
-        const id = j[1];
-        const label = (_a = j[2]) !== null && _a !== void 0 ? _a : id;
-        out.push({ type: "jumpbox", id, label });
-        pos = JUMP_RE.lastIndex;
-      } else if (t_idx === min_idx) {
-        const begin_idx = t.index;
-        const begin_end = begin_idx + t[0].length;
-        if (begin_idx > pos)
-          out.push({
-            type: "text",
-            content: source.slice(pos, begin_idx)
-          });
-        TAKE_END_RE.lastIndex = begin_end;
-        const tend = TAKE_END_RE.exec(source);
-        if (!tend) {
-          out.push({
-            type: "text",
-            content: source.slice(begin_idx, begin_end)
-          });
-          pos = begin_end;
-          continue;
-        }
-        const inner_md = source.slice(begin_end, tend.index).trim();
-        out.push({ type: "takeaway", content: inner_md });
-        pos = TAKE_END_RE.lastIndex;
-      } else if (s_idx === min_idx) {
-        const begin_idx = s.index;
-        const begin_end = begin_idx + s[0].length;
-        if (begin_idx > pos)
-          out.push({
-            type: "text",
-            content: source.slice(pos, begin_idx)
-          });
-        SMALL_END_RE.lastIndex = begin_end;
-        const send = SMALL_END_RE.exec(source);
-        if (!send) {
-          out.push({
-            type: "text",
-            content: source.slice(begin_idx, begin_end)
-          });
-          pos = begin_end;
-          continue;
-        }
-        const inner_md = source.slice(begin_end, send.index).trim();
-        out.push({ type: "small", content: inner_md });
-        pos = SMALL_END_RE.lastIndex;
-      } else if (c_idx === min_idx) {
-        const begin_idx = c.index;
-        const begin_end = begin_idx + c[0].length;
-        if (begin_idx > pos)
-          out.push({
-            type: "text",
-            content: source.slice(pos, begin_idx)
-          });
-        CALLOUT_END_RE.lastIndex = begin_end;
-        const cend = CALLOUT_END_RE.exec(source);
-        if (!cend) {
-          out.push({
-            type: "text",
-            content: source.slice(begin_idx, begin_end)
-          });
-          pos = begin_end;
-          continue;
-        }
-        const variantRaw = ((_b = c[1]) !== null && _b !== void 0 ? _b : "note").toLowerCase();
-        const variant = ["note", "tip", "warning", "info"].includes(variantRaw) ? variantRaw : "note";
-        const title2 = (_c = c[2]) !== null && _c !== void 0 ? _c : "";
-        const inner_md = source.slice(begin_end, cend.index).trim();
-        out.push({
-          type: "callout",
-          variant,
-          title: title2,
-          content: inner_md
-        });
-        pos = CALLOUT_END_RE.lastIndex;
-      } else {
-        const begin_idx = f.index;
-        const begin_end = begin_idx + f[0].length;
-        if (begin_idx > pos)
-          out.push({
-            type: "text",
-            content: source.slice(pos, begin_idx)
-          });
-        FOLD_END_RE.lastIndex = begin_end;
-        const fend = FOLD_END_RE.exec(source);
-        if (!fend) {
-          out.push({
-            type: "text",
-            content: source.slice(begin_idx, begin_end)
-          });
-          pos = begin_end;
-          continue;
-        }
-        const title2 = (_d = f[1]) !== null && _d !== void 0 ? _d : "Details";
-        const open = !!f[2];
-        const inner_md = source.slice(begin_end, fend.index).trim();
-        out.push({
-          type: "fold",
-          title: title2,
-          open,
-          content: inner_md
-        });
-        pos = FOLD_END_RE.lastIndex;
-      }
-    }
-    return out;
-  })();
-  return `<div class="md-output space-y-6 svelte-2uty9x"${add_attribute("this", container, 0)}>${each(chunks, (chunk, i) => {
-    return `${chunk.type === "text" ? `<div class="md-output svelte-2uty9x"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: chunk.id, label: chunk.label }, {}, {})}` : `${chunk.type === "takeaway" ? `${validate_component(TakeawayBox, "TakeawayBox").$$render($$result, { html: toHtml(chunk.content) }, {}, {})}` : `${chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-2uty9x"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
-      $$result,
-      {
-        variant: chunk.variant,
-        title: chunk.title,
-        html: toHtml(chunk.content)
-      },
-      {},
-      {}
-    )}` : `${chunk.type === "fold" ? `${validate_component(FoldBox, "FoldBox").$$render(
-      $$result,
-      {
-        title: chunk.title,
-        open: chunk.open,
-        html: toHtml(chunk.content)
-      },
-      {},
-      {}
-    )}` : ``}`}`}`}`}`}`;
-  })} </div>`;
-});
-const css = {
-  code: ":root{--meter-width:14px;--tick-length:22px;--tick-length-sub:18px;--tick-hitbox:18px;--tick-line:2px;--tick-color:#9ca3af;--tick-color-sub:#c5cbd3;--tick-color-active:#111827}.scroll-meter.svelte-lifq7d{position:fixed;left:0;top:0;bottom:0;width:var(--meter-width);pointer-events:none;z-index:50;opacity:0;transition:opacity 1000ms ease}.scroll-meter.ready.svelte-lifq7d{opacity:1}.track.svelte-lifq7d{position:absolute;inset:0;background:white;overflow:visible}.gradient.svelte-lifq7d{position:absolute;inset:0;background:linear-gradient(180deg, #77aabb 0%, #bbcc33 100%);will-change:clip-path}.tick.svelte-lifq7d{position:absolute;left:0;width:var(--tick-length);height:var(--tick-hitbox);background:transparent;transform:translateY(-1px);pointer-events:auto;text-decoration:none;z-index:2;display:block;opacity:0.9;transition:opacity 120ms ease}.tick.svelte-lifq7d::before{content:'';position:absolute;left:0;width:var(--tick-length);height:var(--tick-line);top:50%;transform:translateY(-50%);background:#595959}.tick.svelte-lifq7d::before::hover{background:neutral-900}.tick.svelte-lifq7d:hover{opacity:1}@media(max-width: 1439px){.tick.svelte-lifq7d::after{display:none !important}}.tick.sub.svelte-lifq7d::before{width:calc(var(--tick-length-sub));background:#868686}.tick.sub.svelte-lifq7d::before::hover{background:neutral-900}.tick.svelte-lifq7d::after{content:attr(data-label);position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);width:var(--meter-gutter, 220px);white-space:normal;overflow-wrap:anywhere;font-size:18px;line-height:1.2;color:#374151;padding:2px 6px;opacity:0;pointer-events:none;transition:opacity 120ms ease}.tick.svelte-lifq7d:hover::after{opacity:1}@media(max-width: 1024px){.scroll-meter.svelte-lifq7d{display:none}}",
-  map: null
-};
-const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { containerSelector = ".md-output" } = $$props;
-  let { headingsSelector = "h2, h3" } = $$props;
-  onDestroy(() => {
-  });
-  if ($$props.containerSelector === void 0 && $$bindings.containerSelector && containerSelector !== void 0)
-    $$bindings.containerSelector(containerSelector);
-  if ($$props.headingsSelector === void 0 && $$bindings.headingsSelector && headingsSelector !== void 0)
-    $$bindings.headingsSelector(headingsSelector);
-  $$result.css.add(css);
-  return ` <div class="${["scroll-meter svelte-lifq7d", ""].join(" ").trim()}" aria-hidden="true"><div class="track svelte-lifq7d"><div class="gradient svelte-lifq7d"${add_attribute(
-    "style",
-    "",
-    0
-  )}></div> ${``}</div> </div>`;
-});
-const text = `![teaser](/assets/figures/teaser.gif "Figure 1: We study the compute-optimal RL for LLM along three axis: #parallel rollouts($n$), #problems per batch($B_\\text{problem}$), and #sequential iterations($M$), where total rollout compute $C = n \\times B_\\text{problem} \\times M$. We find that (1) optimal parallel rollouts per problem ($n$) grows with  compute budget ($C$). (2) Easy and hard problems: similar scaling trends, but different mechanisms. (3) under fixed hardware constraints ($B$ = $B$<sub>problem</sub> × $n$), prioritize **large $B$<sub>problem</sub>** (small $n$) at low compute budgets, but shift to **large $n$** (small $B$<sub>problem</sub>) at high compute budgets to maximize performance (3) #problems per batch ($B$<sub>problem</sub>) has marginal impact on performance when kept in a moderate range."){width=900px}
+![](/assets/figures/teaser.gif)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>[teaser figure on compute allocation across three dimensions, to prettify]
+</p>
 
 A persistent blocker to scaling up reinforcement learning (RL) for LLMs is the absence of a ***concrete workflow*** : **a recipe that tells practitioners *what* to scale in the RL, *how* to scale it, and *what outcomes of scaling one should expect*.** In many areas of modern-day AI, such workflows emerge from [empirical](https://arxiv.org/pdf/2001.08361) [scaling laws](https://arxiv.org/pdf/2203.15556): small-scale experiments reveal how performance should grow with compute, data, or model size. These laws inform compute allocation, models to use, and hyperparameter settings.
 
@@ -735,7 +53,7 @@ We define the primary symbols and their relationships as follows:
 The total rollout compute scales as:
 
 $$
-C \\propto B \\times M
+C \propto B \times M
 $$
 
 $B$ can be further broken down into two components:
@@ -746,7 +64,7 @@ $B$ can be further broken down into two components:
 To sum up, rollout compute $C$ can be decomposed into three resources, that we can allocate:
 
 $$
-C \\propto B_{\\text{problem}} \\times n \\times M
+C \propto B_{\text{problem}} \times n \times M
 $$
 
 ### Problem Statement
@@ -780,10 +98,10 @@ The first factor that informs the health of an RL run is the composition of the 
 - ***Easy*** problem set: **avg@16 in [0.3, 0.6]** (6k samples), with a 300-sample in-domain validation set.
 - ***Hard*** problem set: **avg@16 in** **[0.0, 0.0625]** (5k samples), with a 300-sample in-domain validation set.
 
-![Figure2](/assets/figures/sec2_data_dist.png "Figure 2: Distributions of problem difficulty for the Easy and Hard problem sets. Difficulty is quantified using avg@16, the average pass rate over 16 generations per problem."){width=500px}
+![**Figure 2: Distributions of problem difficulty for the Easy and Hard problem sets.** Difficulty is quantified using avg@16, the average pass rate over 16 generations per problem.](/assets/figures/sec2_data_dist.png){width=500px}
 
 <p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>
+<b>Figure 2: Distributions of problem difficulty for the Easy and Hard problem sets.</b> Difficulty is quantified using avg@16, the average pass rate over 16 generations per problem.
 </p>
 
 Beyond these primary Easy and Hard sets for our experiments, we also curate a **Heterogeneous** set (mixing easy and hard set in different proportions) and an **Extremely Hard** (pass@128 = 0) for extending our observations. We default to utilizing the recipe for the Hard set on these problem sets as well. We discuss results on this set later in this post (see the section titled “The Bigger Picture”).
@@ -798,10 +116,10 @@ Even with zero-variance filtering applied, problems in which rare positives are 
 
 **Experiment setup.** We use Qwen2.5-7B-Instruct as the base model with a max output length of 8,192 tokens and employ the [GRPO](https://arxiv.org/abs/2402.03300) algorithm. We fix $B$<sub>problem</sub> = 256 and $n$ = 16. On both the Easy and Hard sets, we perform ablations over (1) the presence of KL and entropy regularization and (2) the application of the zero-variance filter, including variants where the filter is applied only to the KL and entropy loss terms.
 
-![Figure 3](/assets/figures/sec2_kl_ent_ablation.png "Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set. On the Easy set, all configurations improve steadily, with standard “KL+entropy” achieving the highest reward (left). On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training (right)."){width=900px}
+![**Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set.** On the Easy set, **all configurations improve steadily, with standard "KL+entropy" achieving the highest reward ***(left)***. On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training ***(right)***.]( /assets/figures/sec2_kl_ent_ablation.png)
 
 <p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
-<b>
+<b>Figure 3: Ablations of KL+entropy and zero-var filter across the Easy and Hard problem set.</b> On the Easy set, all configurations improve steadily, with standard “KL+entropy” achieving the highest reward <b>$(left)$</b>. On the Hard set, while applying zero-variance filtering to the KL and entropy terms helps mitigate instability, disabling these regularizers entirely results in significantly more stable training <b>$(right)$</b>.
 </p>
 
 ### Factor 3: Learning-Rate Scaling
@@ -816,8 +134,13 @@ Building on the perspective of stable entropy and KL dynamics, the **learning ra
 
 As shown in Figure 4 below, we observe that ***square-root scaling enables faster convergence while avoiding the instability seen in linear scaling.*** Although we ran this experiment on the easy problem set, we expect the same learning rate scaling strategy to apply across problem sets of varying difficulty. Conceptually, the way the learning rate should scale with batch size is governed by gradient variance and noise. While problem difficulty may change the optimal *absolute* learning rate, it should not fundamentally change the underlying scaling relationship as batch size increases.
 
-![Figure 4: Base LR selection and scaling strategy validation.](/assets/figures/sec2_lr_scaling.png "Figure 4: Base LR selection and scaling strategy validation. We sweep of the base learning rate at $B$=1024, and identify $\\eta=10^{-6}$ as the baselineLR ***(left)***. We then compare LR scaling methods at a larger batch size ($B$=8192). **Square-root scaling** enables faster convergence without the instability observed in linear scaling, validating it as the robust choice for large-scale training ***(right)***."){width=900px}
+![**Figure 4: Base LR selection and scaling strategy validation.** We sweep of the base learning rate at $B=1024$, and identify $\eta=10^{-6}$ as the baselineLR ***(left)***. We then compare LR scaling methods at a larger batch size ($B=8192$). **Square-root scaling** enables faster convergence without the instability observed in linear scaling, validating it as the robust choice for large-scale training ***(right)***.]( /assets/figures/sec2_lr_scaling.png)
 
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 4: Base LR selection and scaling strategy validation.</b> We sweep of the base learning rate at $B$ = 1024, and identify *η* = 10<sup>-6</sup> as the baselineLR <b>$(left)$</b>. We then compare LR scaling methods at a larger batch size ($B$ = 8192). <b>Square-root scaling</b> enables faster convergence without the instability observed in linear scaling, validating it as the robust choice for large-scale training <b>$(right)$</b>.
+</p>
+
+[add configuration table to be clear]
 
 :::takeaway_begin:::
 **Key Takeaways**:
@@ -847,42 +170,54 @@ We concretely study compute-optimal allocation rules in three settings that allo
 ### Question 1:  Trading Off Parallel Sampling $n$ with Sequential Iterations $M$
 
 $$
-C \\propto \\underbrace{B_{\\text{problem}}}_{\\text{fixed}}
-\\times \\color{blue}\\underbrace{{n \\times M}}_{\\color{blue}{\\text{user allocated}}}
+C \propto \underbrace{B_{\text{problem}}}_{\text{fixed}}
+\times \color{blue}\underbrace{{n \times M}}_{\color{blue}{\text{user allocated}}}
 
 $$
 
 We now examine compute allocation with the number of problems $B$<sub>problem</sub> held constant, focusing on **the trade-off between parallel samples $n$ and sequential iterations $M$** under a fixed compute budget.
 
-**Fitting workflow.** We plot reward vs compute $C$ curves for each fixed $n$ and fit a **monotonic sigmoid** to summarize how the validation set reward (avg@4) scales with compute for that $n$. As mentioned above, we then define the **compute-optimal frontier** as the upper envelope of these fitted curves (see Figure 5). Then, to indicate which $n$ lies on the frontier at each compute level, we color the frontier in Figure 5 by *n*\\*($C$), which is the value of $n$ whose fitted compute–reward curve achieves the compute-optimal frontier at $C$. Finally, in Figure 6, we fit a log-log plot to show  *n*\\*($C$) as a function of  $C$ to summarize the empirical scaling behavior. We make four important observations in this setting.
+**Fitting workflow.** We plot reward vs compute $C$ curves for each fixed $n$ and fit a **monotonic sigmoid** to summarize how the validation set reward (avg@4) scales with compute for that $n$. As mentioned above, we then define the **compute-optimal frontier** as the upper envelope of these fitted curves (see Figure 5). Then, to indicate which $n$ lies on the frontier at each compute level, we color the frontier in Figure 5 by *n*\*($C$), which is the value of $n$ whose fitted compute–reward curve achieves the compute-optimal frontier at $C$. Finally, in Figure 6, we fit a log-log plot to show  *n*\*($C$) as a function of  $C$ to summarize the empirical scaling behavior. We make four important observations in this setting.
 
-**1) The value of $n$ that lies on the compute-optimal frontier shifts systematically higher as the sampling compute** $C$ **increases (Figure 5).** It is natural to expect larger values of $n$ to be generally favorable at higher compute budgets, since increasing $n$ reduces noise in advantage estimates and lowers policy-gradient variance but eats up more sampling compute. Consistent with this, the frontier-attaining *n*\\*($C$) shifts to larger values as $C$ grows, and we observe the same trend in both the Easy and Hard problem sets. Smaller values of $n$ exhibit rapid initial gains but plateau at a relatively lower compute regime, whereas larger $n$ sustain improvement over a broader compute range (*Figure 5*). This behavior also suggests that parallel and sequential compute are not exactly interchangeable. Choosing $n$ so that we are able to perform a sufficient number of sequential updates $M$ is necessary to achieve strong performance. 
+**1) The value of $n$ that lies on the compute-optimal frontier shifts systematically higher as the sampling compute** $C$ **increases (Figure 5).** It is natural to expect larger values of $n$ to be generally favorable at higher compute budgets, since increasing $n$ reduces noise in advantage estimates and lowers policy-gradient variance but eats up more sampling compute. Consistent with this, the frontier-attaining *n*\*($C$) shifts to larger values as $C$ grows, and we observe the same trend in both the Easy and Hard problem sets. Smaller values of $n$ exhibit rapid initial gains but plateau at a relatively lower compute regime, whereas larger $n$ sustain improvement over a broader compute range (*Figure 5*). This behavior also suggests that parallel and sequential compute are not exactly interchangeable. Choosing $n$ so that we are able to perform a sufficient number of sequential updates $M$ is necessary to achieve strong performance. 
 
-![Figure 5. Reward frontier a function of compute ($B$<sub>problem</sub> = 32)](/assets/figures/sec3_q1_fixBprob_frontier.png "Figure 5. Reward frontier a function of compute ($B$<sub>problem</sub> = 32), where the frontier is computed by maximizing over values of $n$. The compute-optimal frontier shifts to larger $n$ with more $C$, showing that more parallelism becomes optimal at higher budgets. For easy problems **(left)**, **small** $n$ improves fast but plateaus; larger **$n$ sustains gains and dominates at high compute. For the hard ones****(right)**,  the same trend holds, but rewards are lower and saturate earlier, with the frontier reaching a smaller value than $n$ on the easy problems."){width=900px}
+![image.png](/assets/figures/sec3_q1_fixBprob_frontier.png)
 
-**2) Compute-optimal values of $n$ are well-approximated by a sigmoid function of** $C$  **(Figure 6).**  We next seek to fit a functional relationship for the compute optimal value *n*\\*($C$) as a function of the available compute $C$. A natural first step is to hypothesize an appropriate functional form. As shown in Figure 5, increasing $C$ admits larger compute optimal values of $n$, and over a substantial range this relationship appears approximately linear on a log-log scale. The key question is whether this growth continues indefinitely or eventually saturates. Empirically, we observe a clear saturation in Figure 6. Even when evaluating rollout widths up to $n$ = 2,048, values significantly larger than the saturation point, they fail to extend the frontier, with $n$ = 512 continuing to dominate.
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 5. Reward frontier a function of compute ($B$<sub>problem</sub> = 32),</b> where the frontier is computed by maximizing over values of $n$. The compute-optimal frontier shifts to larger $n$ with more $C$, showing that more parallelism becomes optimal at higher budgets. For easy problems <b>$(left)$</b>, <b>small</b> $n$ improves fast but plateaus; larger <b>$n$ sustains gains and dominates at high compute. For the hard ones</b><b>$(right)$</b>,  the same trend holds, but rewards are lower and saturate earlier, with the frontier reaching a smaller value than $n$ on the easy problems.
+</p>
+
+**2) Compute-optimal values of $n$ are well-approximated by a sigmoid function of** $C$  **(Figure 6).**  We next seek to fit a functional relationship for the compute optimal value *n*\*($C$) as a function of the available compute $C$. A natural first step is to hypothesize an appropriate functional form. As shown in Figure 5, increasing $C$ admits larger compute optimal values of $n$, and over a substantial range this relationship appears approximately linear on a log-log scale. The key question is whether this growth continues indefinitely or eventually saturates. Empirically, we observe a clear saturation in Figure 6. Even when evaluating rollout widths up to $n$ = 2,048, values significantly larger than the saturation point, they fail to extend the frontier, with $n$ = 512 continuing to dominate.
 
 We argue that this behavior is expected for a fixed base model and a fixed problem set. To build intuition, it is helpful to view increasing $n$ as analogous to spending more compute per gradient step. In empirical risk minimization, increasing capacity alone does not reduce validation error beyond a certain point unless additional training data is available or the train-test gap is reduced. This principle also underlies pre-training scaling rules from [Chinchilla](https://arxiv.org/abs/2203.15556) that prescribe scaling both pre-training data and model capacity together. Perhaps most closely related to our RL training setup, [our prior work](https://arxiv.org/abs/2406.14532) on rejection fine-tuning shows that the optimal value of $n$ on the training set is often capped by an upper bound. Increasing $n$ alone cannot overcome limitations imposed by a fixed problem set for training or base model. As a result, the compute optimal value of $n$ must eventually saturate even for RL, which is precisely what we observe empirically. We empirically validate this hypothesis regarding model-data interaction in the later analysis section, where we demonstrate how the saturation point shifts given *a different base model, problem set size, and distribution*.
 
-![Figure 6: Compute-optimal scaling of the parallel compute $n$ ($B$<sub>problem</sub> = 32)](/assets/figures/sec3_q1_fixBprob_sigmoid.png "Figure 6: Compute-optimal scaling of the parallel compute $n$ ($B$<sub>problem</sub> = 32). The optimal value of rollouts $n$ **shifts systematically higher** as the total sampling compute increases. Points show a running-average estimate of the frontier-attaining *n*\\*($C$) at each compute budget (colored by reward), and the red curves fit a sigmoid parameterizing log $n$ as a function of log $C$. For both the easy set **(left)** and hard set **(right)**, *n*\\*($C$) rises from small to very large values as compute increases. On the hard set, the final  value converges significantly below the maximal value of $n$ (2^10), and this value is lower than the easy set."){width=900px}
+![image.png](/assets/figures/sec3_q1_fixBprob_sigmoid.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 6: Compute-optimal scaling of the parallel compute $n$</b> ($B$<sub>problem</sub> = 32)<b>.</b> The optimal value of rollouts $n$ <b>shifts systematically higher</b> as the total sampling compute increases. Points show a running-average estimate of the frontier-attaining *n*\*($C$) at each compute budget (colored by reward), and the red curves fit a sigmoid parameterizing log $n$ as a function of log $C$. For both the easy set <b>$(left)$</b> and hard set <b>$(right)$</b>, *n*\*($C$) rises from small to very large values as compute increases. On the hard set, the final  value converges significantly below the maximal value of $n$ (2<sup>10</sup>), and this value is lower than the easy set.
+</p>
 
 **3) Next**, **we find that the compute-optimal allocation *trend* remains consistent across difficulty levels, although we find harder sets prefer smaller values of** $n$ **(Figure 6)**. We find that the qualitative compute optimal allocation trend remains consistent across problem difficulty. On both easy and hard problem sets, the compute optimal value of $n$ increases with total compute $C$ before eventually plateauing. However, the plateau occurs at markedly ***smaller*** values of $n$ on harder problems. In particular, very large values of $n$, such as $n$ = 512, yield lower final performance on the hard set and do not lie on the compute optimal frontier. ***This suggests that task difficulty imposes an upper bound on how large $n$ can be used effectively**. **While it may seem intuitive that harder problems should benefit from larger $n$ due to increased sampling, we observe the opposite behavior in practice.*** On sufficiently hard problem sets, increasing $n$ allocates substantial compute to problems where the model receives little or no learning signal. In contrast, smaller values of $n$ focus optimization on the subset of prompts where nonzero signal is already present and meaningful improvement is possible. **Therefore, if compute is bounded**, it is better to use a smaller value of $n$ to increase the frequency of parameter updates (small $n$, large $M$, more epochs on the same prompt set) that exploits reachable gains, rather than large parallel compute on problems that are persistently unsolved (large $n$, small $M$, fewer training epochs).
 
-**4) Implications on optimization dynamics on the easy and hard sets and the role of various performance metrics (Figure 7).** We saw in point 3 above that a smaller value of $n$ was more preferable for optimizing validation *average reward* (avg@4 per problem), and we attributed this behavior to the underlying optimization dynamics (i.e., solving more problems vs producing more correct rollouts on the same problem). In this point, we aim to better **understand this optimization dynamics and evaluate how *n*\\*($C$) changes if we were to change the target performance metric we study.**
+**4) Implications on optimization dynamics on the easy and hard sets and the role of various performance metrics (Figure 7).** We saw in point 3 above that a smaller value of $n$ was more preferable for optimizing validation *average reward* (avg@4 per problem), and we attributed this behavior to the underlying optimization dynamics (i.e., solving more problems vs producing more correct rollouts on the same problem). In this point, we aim to better **understand this optimization dynamics and evaluate how *n*\*($C$) changes if we were to change the target performance metric we study.**
 
 In particular, we consider two performance metrics: ***best@k** (or pass@k)* and ***worst@k*:** Recall the definitions:
 
 - **best@k:** the proportion of problems where *at least one* generated response out of *k* is correct. This measures the model's **coverage** over the validation problem set.
 - ***worst@k*:** the proportion of problems where all *k* generated responses are correct, also referred to as *perfect solvability.* This measures the robustness of the training procedure (i.e., the degree to which it can “**sharpen**” around the right solution).
 
-Modulo compute-optimality, a larger value of $n$ coupled with as many sequential update steps as needed, should in principle, result in higher values for both best@k and worst@k on a training dataset. However, this is not quite the case when compute is bounded. We empirically identify the optimal values of *n*\\*($C$) for obtaining the highest best@k and worst@k scores on the validation set, across different $B$<sub>problem</sub> values for the largest value of $C$, and show this number in Figure 7 below. We choose *k*=4, much smaller than any value of $n$ we study ($n$ ≫ *k*), so that none of the trends in Figure 7 are “edge” cases or artifacts of empirical/fitting/workflow/statistical error. Perhaps surprisingly, we now see an interesting divergence in trends of compute-optimal $n$ that impacts the Easy and Hard sets differently. 
+Modulo compute-optimality, a larger value of $n$ coupled with as many sequential update steps as needed, should in principle, result in higher values for both best@k and worst@k on a training dataset. However, this is not quite the case when compute is bounded. We empirically identify the optimal values of *n*\*($C$) for obtaining the highest best@k and worst@k scores on the validation set, across different $B$<sub>problem</sub> values for the largest value of $C$, and show this number in Figure 7 below. We choose *k*=4, much smaller than any value of $n$ we study ($n$ ≫ *k*), so that none of the trends in Figure 7 are “edge” cases or artifacts of empirical/fitting/workflow/statistical error. Perhaps surprisingly, we now see an interesting divergence in trends of compute-optimal $n$ that impacts the Easy and Hard sets differently. 
 
 1. On the easy set, **a larger $n$ is compute-optimal for worst@4 (sharpening) performance, whereas relatively smaller values of $n$ are compute-optimal for the best@4 performance.** This means that a larger $n$ primarily improves by sharpening more on easy problems, while a smaller $n$ suffices to sample one correct rollout (expected since the set is easy).
 2. Conversely, for hard problems, **a larger $n$ is more critical for pushing the best@4 (coverage) boundary, while a relatively smaller $n$ is compute-optimal for improving worst@4 (sharpening).** However, there is a limit beyond which a larger $n$ does not improve coverage on new problems in a compute-optimal manner, as indicated by Figure 7 that optimal values here remain generally lower than on the easy set. On the *Extremely Hard* set consisting of all pass@128=0 problems (shown in the later analysis section), we see a clearer tradeoff of coverage and sharpening: while larger $n$ improves best@k, excessive $n$ degrades worst@k and lowers the average reward. Thus, if targeting average reward, the optimal $n$ on hard problems is the value that balances coverage and sharpening well. 
 
 The net effect of these distinct optimization dynamics is a similar trend of compute-optimal $n$ on the validation average reward (Figures 5 & 6), but these results imply that the target performance metric itself dictates the landscape of compute-optimal $n$. 
 
-![Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different $B_\\text{problem}$ values](/assets/figures/sec3_q1_fixBprob_bestworstk.png "Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different $B_\\text{problem}$ values, when evaluated at the largest allowed compute budget. On the Easy set ***(left)***, the compute-optimal $n$ is smaller for best@4 (blue) than for worst@4 (red), indicating that improving robustness (worst@4) requires substantially more parallel rollouts than improving coverage. In contrast, this trend reverses on the Hard set ***(right)***: a larger $n$ is needed to improve best@4 compute-optimally, while worst@4 saturates at smaller $n$."){width=900px}
+![**Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different** $B_\text{problem}$ **values, when evaluated at the largest allowed compute budget.** On the Easy set ***(left)***, the compute-optimal $n$ is smaller for best@4 (blue) than for worst@4 (red), indicating that improving robustness (worst@4) requires substantially more parallel rollouts than improving coverage. In contrast, this trend reverses on the Hard set ***(right)***: a larger $n$ is needed to improve best@4 compute-optimally, while worst@4 saturates at smaller $n$.](/assets/figures/sec3_q1_fixBprob_bestworstk.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different</b> $B$<sub>problem</sub> <b>values, when evaluated at the largest allowed compute budget.</b> On the Easy set <b>$(left)$</b>, the compute-optimal $n$ is smaller for best@4 (blue) than for worst@4 (red), indicating that improving robustness (worst@4) requires substantially more parallel rollouts than improving coverage. In contrast, this trend reverses on the Hard set <b>$(right)$</b>: a larger $n$ is needed to improve best@4 compute-optimally, while worst@4 saturates at smaller $n$.
+</p>
 
 :::takeaway_begin:::
 **Key Result Takeaways**:
@@ -897,37 +232,53 @@ The net effect of these distinct optimization dynamics is a similar trend of com
 - Depending upon the composition of the problem set, and how effectively can the base model learn on this set, we might see different underlying mechanisms for performance improvement. It is advisable to evaluate the mode of performance improvement for your base model on your prompt set, and accordingly use it to set $n$ as a function of the available $C$.
 :::takeaway_end:::
 
+<!-- [](__IMAGE_PLACEHOLDER__)
+
+[](__IMAGE_PLACEHOLDER__) -->
+
 ### Question 2: Bounded Parallel Compute: Trading off $B$<sub>problem</sub> with $n$
 
 $$
-C \\propto \\underbrace{B}_{\\text{fixed}} \\times M = {\\color{blue}\\underbrace{B_{\\text{problem}} \\times n}_{\\text{user allocated}}} \\times M
+C \propto \underbrace{B}_{\text{fixed}} \times M = {\color{blue}\underbrace{B_{\text{problem}} \times n}_{\text{user allocated}}} \times M
 $$
 
 Next, we study a different scaling question, where wish to allocate a fixed total batch size $B$ into the number of prompts used and the number of rollouts per prompt used. This question is important in practical settings where hardware parallelism (e.g., number of GPUs / data-parallel workers) is fixed, and a practitioner needs to make this compute allocation. In such cases, $B$ is often chosen as the largest rollout batch size that saturates sampling throughput (”system batch size”). 
 
 We specify the number of sequential iterations $M$ ***a priori*** and seek allocations of $B$<sub>problem</sub> and $n$ under a fixed total batch budget $B$<sub>problem</sub> × $n$ ≤ $B$ that maximize performance. We observe the following:
 
-**1) On the easy problems, allocate more parallel compute $n$ when sequential steps $M$ is large.** In this regime, we examine the compute-optimal value of $n$ under a fixed total batch size (illustrated with $B$ = 8,192 for brevity), as $M$ varies. As shown in Figure 8, the optimal choice *n*\\*($M$) exhibits a sigmoidal dependence on $M$. This behavior suggests that when more sequential update steps are available, it is generally preferable to allocate additional compute toward increasing $n$, rather than increasing $B$<sub>problem</sub>. In contrast, when $M$ is small, allocating batch size toward a larger $B$<sub>problem</sub> is more effective, as it enables many more epochs of training on the same problems within a limited number of sequential updates. 
+**1) On the easy problems, allocate more parallel compute $n$ when sequential steps $M$ is large.** In this regime, we examine the compute-optimal value of $n$ under a fixed total batch size (illustrated with $B$ = 8,192 for brevity), as $M$ varies. As shown in Figure 8, the optimal choice *n*\*($M$) exhibits a sigmoidal dependence on $M$. This behavior suggests that when more sequential update steps are available, it is generally preferable to allocate additional compute toward increasing $n$, rather than increasing $B$<sub>problem</sub>. In contrast, when $M$ is small, allocating batch size toward a larger $B$<sub>problem</sub> is more effective, as it enables many more epochs of training on the same problems within a limited number of sequential updates. 
 
-On the Hard set, however, the scaling behavior is less consistent. The compute-optimal value *n*\\*($M$) exhibits a non-monotonic dependence on $M$ (see Appendix A, Figure x), which implies a similarly irregular trend for the optimal $B$<sub>problem</sub>.
+On the Hard set, however, the scaling behavior is less consistent. The compute-optimal value *n*\*($M$) exhibits a non-monotonic dependence on $M$ (see Appendix A, Figure x), which implies a similarly irregular trend for the optimal $B$<sub>problem</sub>.
 
-![Figure 8.  Compute-optimal allocation shifts from $B_{\\text{problem}}$ to $n$ under a fixed total batch size constraint ($B=8,192$) on easy problems](/assets/figures/sec3_q2_fixB_sigmoid.png "Figure 8.  Compute-optimal allocation shifts from $B_{\\text{problem}}$ to $n$ under a fixed total batch size constraint ($B=8,192$) on easy problems. We fix the total rollout budget per step ($B = B_{\\text{problem}} \\times n$) and sweep the number of sequential iterations ($M$). A sigmoid curve can explain the frontier of optimal $n$ per problem. This curve indicates that $n^*(M)$ increases with $M$, a proxy of total compute $C$ given a fixed $B$ ***(left).*** The corresponding compute-optimal number of prompts $B_{\\text{problem}}^*(M)$ decreases with the available sampling compute according to an (inverse) sigmoid ***(right)***. These indicate the strategic shift toward higher per-problem sampling at larger compute budgets."){width=900px}
+![**Figure 8.  Compute-optimal allocation shifts from $B_{\text{problem}}$ to $n$ under a fixed total batch size constraint ($B=8,192$) on easy problems**. We fix the total rollout budget per step ($B = B_{\text{problem}} \times n$) and sweep the number of sequential iterations ($M$). A sigmoid curve can explain the frontier of optimal $n$ per problem. This curve indicates that $n^*(M)$ increases with $M$, a proxy of total compute $C$ given a fixed $B$ **(*left).*** The corresponding compute-optimal number of prompts $B_{\text{problem}}^*(M)$ decreases with the available sampling compute according to an (inverse) sigmoid ***(right)***. These indicate the strategic shift toward higher per-problem sampling at larger compute budgets.](/assets/figures/sec3_q2_fixB_sigmoid.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 8.  Compute-optimal allocation shifts from $B$<sub>problem</sub> to $n$ under a fixed total batch size constraint ($B$ = 8,192) on easy problems.</b> We fix the total rollout budget per step ($B$ = $B$<sub>problem</sub> × $n$) and sweep the number of sequential iterations ($M$). A sigmoid curve can explain the frontier of optimal $n$ per problem. This curve indicates that *n*\*($M$) increases with $M$, a proxy of total compute $C$ given a fixed $B$ <b>$(left).$</b> The corresponding compute-optimal number of prompts $B$<sub>problem</sub>*($M$) decreases with the available sampling compute according to an (inverse) sigmoid <b>$(right)$</b>. These indicate the strategic shift toward higher per-problem sampling at larger compute budgets.
+</p>
 
 **2) The *transition point* to a larger $n$ value on the compute-optimal consistently happens when that larger $n$ run reaches approximately one epoch (Figure 9).** An epoch is defined as the problem set size *D* divided by the batch size $B$<sub>problem</sub>. This offers an explanation for the finding “small $n$ for small $C$; larger $n$ for larger $C$”, consistent across Question1 (fix $B$<sub>problem</sub>) and Question2 (fix $B$): in a small $C$ regime, the larger $n$ underperforms because it hasn't yet seen the full problem set. However, once the larger $n$ completes a full pass (i.e., one epoch), the smaller $n$, which is now iterating over seen data, begins to yield diminishing returns. Thus, the larger $n$ overtakes the small $n$ at large $C$ regime.
 
-![Figure 9. Compute-optimal frontiers (under a fixed $B=8,192$) and analysis of training epochs at transition points.](/assets/figures/sec3_q2_fixB_frontierepoch.png "Figure 9. Compute-optimal frontiers (under a fixed $B=8,192$) and analysis of training epochs at transition points. Larger $n$ outperforms smaller $n$ as compute increases. Vertical drop-lines mark the transition points where switching to a larger $n$ becomes optimal ***(left).*** These transitions consistently occur at about one epoch ***(right)***. This indicates that larger $n$ overtakes smaller $n$ after a full pass over the training problems, offering one perspective to explain the scaling behavior: \\"small $n$ for small $C$; large $n$ for large $C$."){width=900px}
+![**Figure 9. Compute-optimal frontiers (under a fixed $B=8,192$) and analysis of training epochs at transition points.** Larger $n$ outperforms smaller $n$ as compute increases. Vertical drop-lines mark the transition points where switching to a larger $n$ becomes optimal ***(left).*** These transitions consistently occur at about one epoch ***(right)***. This indicates that larger $n$ overtakes smaller $n$ after a full pass over the training problems, offering one perspective to explain the scaling behavior: "small $n$ for small $C$; large $n$ for large $C$.](/assets/figures/sec3_q2_fixB_frontierepoch.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 9. Compute-optimal frontiers (under a fixed $B$ = 8,192) and analysis of training epochs at transition points.</b> Larger $n$ outperforms smaller $n$ as compute increases. Vertical drop-lines mark the transition points where switching to a larger $n$ becomes optimal <b>$(left).$</b> These transitions consistently occur at about one epoch <b>$(right)$</b>. This indicates that larger $n$ overtakes smaller $n$ after a full pass over the training problems, offering one perspective to explain the scaling behavior: “small $n$ for small $C$; large $n$ for large $C$.”
+</p>
 
 A natural follow-up question is: what role does $B$<sub>problem</sub> play? So far, we have shown larger $n$ is preferred for larger $C$. However, given the constraint $B$ = $B$<sub>problem</sub> × $n$, we do not expect the trend to be monotonic due to the confounding effect of $B$<sub>problem</sub>. To disentangle this, we analyze the sensitivity of performance to $B$<sub>problem</sub> while holding $n$ fixed.
 
 $$
-C \\propto {\\color{blue}\\underbrace{B_{\\text{problem}}}_{\\text{user allocated}}} \\times \\underbrace{n}_{\\text{fixed}} \\times {\\color{blue}\\underbrace{M}_{\\text{user allocated}}}
+C \propto {\color{blue}\underbrace{B_{\text{problem}}}_{\text{user allocated}}} \times \underbrace{n}_{\text{fixed}} \times {\color{blue}\underbrace{M}_{\text{user allocated}}}
 $$
 
 **3) $B$<sub>problem</sub> has a marginal effect on validation performance when fixing $n$ on easy problems.**  As shown in Figure 10, when fixing $n$, varying $B$<sub>problem</sub> provides little variance on validation reward. In contrast, increasing $n$ (fixing $B$<sub>problem</sub>) shows a strong correlation with improved validation scores, up to the saturation point discussed in Question 1. This explains the sigmoidal trend in Figure 9: since $n$ is the primary driver of performance and $B$<sub>problem</sub> yields little difference, increasing $n$ is preferred for large $C$ and $B$<sub>problem</sub> decreases in return ($B$<sub>problem</sub> = $B$/$n$). 
 
 Overall, we find that setting a large $n$ (up to the saturation point), combined with a moderate $B$<sub>problem</sub> is the most robust strategy. For example, in our experiments, we observed no significant threshold effects for $B$<sub>problem</sub> between 32 and 1024 on the Easy set. However, on the Hard set or a skewed problem distribution, we speculate they may require a higher minimum $B$<sub>problem</sub> for effective training. This behavior is intuitive. On a uniformly constructed Easy set (Figure 2), a relatively small but representative subset of problems already provides a good estimate of the underlying expectation. In contrast, for hard problems to the base model, training on a larger set of problems is necessary, since a small subset of problems that receive early learning signal can otherwise dominate the training distribution. At the same time, the value of $n$ remains important. The resulting trade-off between problem coverage and per-problem $n$ leads to less predictable behavior on the Hard set.
 
-![Figure 10: Differences in validation reward  attained when varying $B_\\text{problem}$ (fixed $n=16$; *left*) vs. varying $n$ (fixed $B_\\text{problem}=32$; *right*).](/assets/figures/sec3_q2_fixn_varyBprob.png "Figure 10: Differences in validation reward  attained when varying $B_\\text{problem}$ (fixed $n=16$; *left*) vs. varying $n$ (fixed $B_\\text{problem}=32$; *right*). We observe that even in the setting where $B_\\text{problem} \\times n$ is fixed, modifying the value of $n$ has a substantially larger influence on the validation reward compared to a much smaller variation in results when varying the number of problems during training."){width=900px}
+![**Figure 10: Differences in validation reward  attained when varying $B_\text{problem}$ (fixed $n=16$; *left*) vs. varying $n$ (fixed $B_\text{problem}=32$; *right*).** We observe that even in the setting where $B_\text{problem} \times n$ is fixed, modifying the value of $n$ has a substantially larger influence on the validation reward compared to a much smaller variation in results when varying the number of problems during training.](/assets/figures/sec3_q2_fixn_varyBprob.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 10: Differences in validation reward  attained when varying $B$<sub>problem</sub> (fixed $n$ = 16; $left$) vs. varying $n$ (fixed $B$<sub>problem</sub> = 32; $right$).</b> We observe that even in the setting where $B$<sub>problem</sub> × $n$ is fixed, modifying the value of $n$ has a substantially larger influence on the validation reward compared to a much smaller variation in results when varying the number of problems during training.
+</p>
 
 ---
 
@@ -946,15 +297,23 @@ Overall, we find that setting a large $n$ (up to the saturation point), combined
 ### Question 3: Putting It All Together
 
 $$
-C \\propto \\color{blue}\\underbrace{{B_{\\text{problem}} \\cdot n \\cdot M}}_{\\color{blue}{\\text{varying}}}
+C \propto \color{blue}\underbrace{{B_{\text{problem}} \cdot n \cdot M}}_{\color{blue}{\text{varying}}}
 
 $$
 
-Finally, we relax all constraints and optimize ($B$<sub>problem</sub>, $n$, $M$) jointly under a fixed compute budget. Consistent with our previous findings, **the compute-optimal strategy is primarily defined by scaling $n$**. As shown in Figure 12, the optimal *n*\\*($C$) follows a clean sigmoidal trajectory as compute increases, regardless of problem difficulty. In this regime, $B$<sub>problem</sub> acts as a stability constraint rather than a performance driver. We find that $B$<sub>problem</sub> fluctuates within a moderate range (e.g., maintaining $B$<sub>problem</sub> ≥ 32 for Hard tasks) but does not exhibit a distinct scaling law. Thus, the practical recipe is simple: **scale $n$ with compute** according to the sigmoidal fit, while keeping $B$<sub>problem</sub> large enough to stabilize training.
+Finally, we relax all constraints and optimize ($B$<sub>problem</sub>, $n$, $M$) jointly under a fixed compute budget. Consistent with our previous findings, **the compute-optimal strategy is primarily defined by scaling $n$**. As shown in Figure 12, the optimal *n*\*($C$) follows a clean sigmoidal trajectory as compute increases, regardless of problem difficulty. In this regime, $B$<sub>problem</sub> acts as a stability constraint rather than a performance driver. We find that $B$<sub>problem</sub> fluctuates within a moderate range (e.g., maintaining $B$<sub>problem</sub> ≥ 32 for Hard tasks) but does not exhibit a distinct scaling law. Thus, the practical recipe is simple: **scale $n$ with compute** according to the sigmoidal fit, while keeping $B$<sub>problem</sub> large enough to stabilize training.
 
-![Figure 11. The frontier reward curve as a function of compute](/assets/figures/sec3_q3_frontier.png "Figure 11. The frontier reward curve as a function of compute , where the frontier is computed by maximizing over values of $n$, $B_\\text{problem}$, $M$. Curves are monotonic sigmoid fits; colors mark $n$. The compute-optimal frontier still shifts to larger $n$ as compute increases, showing that higher-rollout parallelism becomes optimal at higher budgets for both the easy and hard problem sets. On the other, the value of $B_\\text{problem}$ for each segment is either constant (e.g., 64 on the hard set) or varies substantially (on the easy set), but this variation results in only little fluctuation in performance (see Figure 11 for sensitivity of this choice)."){width=900px}
+![image.png](/assets/figures/sec3_q3_frontier.png)
 
-![Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization).](/assets/figures/sec3_q3_sigmoid.png "Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization). We sweep all hyperparameters ($n, B_{\\text{problem}}, M$) to find the global optimal configuration at each compute budget. Left (Easy) & Right (Hard): The optimal $n$ increases monotonically with compute, well-fitted by a sigmoid function (dashed black lines). Note that despite the freedom to vary $B_{\\text{problem}}$, the scaling behavior is dominated by $n$, which saturates at a lower value on the Hard set compared to the Easy set."){width=900px}
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 11. The frontier reward curve as a function of compute ,</b> where the frontier is computed by maximizing over values of $n$, $B$<sub>problem</sub>, $M$. Curves are monotonic sigmoid fits; colors mark $n$<b>.</b> The compute-optimal frontier still shifts to larger $n$ as compute increases, showing that higher-rollout parallelism becomes optimal at higher budgets for both the easy and hard problem sets. On the other, the value of $B$<sub>problem</sub> for each segment is either constant (e.g., 64 on the hard set) or varies substantially (on the easy set), but this variation results in only little fluctuation in performance (see Figure 11 for sensitivity of this choice).
+</p>
+
+![**Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization).** We sweep all hyperparameters ($n, B_{\text{problem}}, M$) to find the global optimal configuration at each compute budget. **Left (Easy) & Right (Hard):** The optimal $n$ increases monotonically with compute, well-fitted by a sigmoid function (dashed black lines). Note that despite the freedom to vary $B_{\text{problem}}$, the scaling behavior is dominated by $n$, which saturates at a lower value on the Hard set compared to the Easy set.](/assets/figures/sec3_q3_sigmoid.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 12. Compute-optimal parallel rollouts *n*\* as a function of total compute $C$ (Joint Optimization).</b> We sweep all hyperparameters ($n$, $B$<sub>problem</sub>, $M$) to find the global optimal configuration at each compute budget. <b>Left (Easy) & Right (Hard):</b> The optimal $n$ increases monotonically with compute, well-fitted by a sigmoid function (dashed black lines). Note that despite the freedom to vary $B$<sub>problem</sub>, the scaling behavior is dominated by $n$, which saturates at a lower value on the Hard set compared to the Easy set.
+</p>
 
 :::takeaway_begin:::
 **Key Takeaways:** 
@@ -992,21 +351,37 @@ We attribute this effect to [interference](https://www.notion.so/IsoFLOPs-Playbo
 
 **We also evaluate whether our scaling conclusions extend to other datasets.** To understand if interference makes prediction infeasible on some datasets, we train on several Heterogeneous mixtures of Easy and Hard problems (Figure 13), as well as on an “extra hard” set consisting of problems on which the base model attains an empirical pass@128 of 0. These mixtures induce different degrees of dataset skew, which we expect to affect the rate at which pass@1 improves during training (a smaller $n$ is likely to now improve pass@1 more on easier problems in the subset resulting in more interference, while a larger $n$ should somewhat alleviate this issue). Despite this variation, Figure 13 reveals a **consistent crossover trend:** beyond a dataset-dependent compute threshold, larger values of $n$ outperform smaller ones across most validation sets. On particularly hard validation sets, larger $n$ often dominates almost entirely, or the range of compute over which smaller $n$ is optimal shrinks substantially. This behavior aligns with our findings from Question 1 and suggests that the rate of pass@1 improvement controls both the width of the compute range over which a given $n$ is optimal and the minimum compute-optimal value of $n$. **Crucially, our central takeaway remains unchanged:** larger compute budgets $C$ consistently support larger compute-optimal values of $n$, even across diverse and highly skewed dataset mixtures.
 
-![Figure 13.](/assets/figures/sec4_skewed_data_dist.png "Figure 13: Results across difficulty levels for small ($n$ = 8) and large ($n$ = 64) budgets under different training data distributions (each with 5K total samples) using Qwen2.5-7B-Instruct. Data Definitions: Hard (pass@128=0), Easy (pass@128 ∈ [0.3, 0.6]), and Very Easy (pass@128 ∈ [0.6, 0.9]). Training Settings: Row 1: Hard Only (100% Hard); Row 2: Dual Mix (50% Hard, 50% Easy); Row 3: Tri Mix (50% Hard, 25% Easy, 25% Very Easy, i.e., the J-shaped distribution recommended in [Polaris](https://www.notion.so/1dfa954ff7c38094923ec7772bf447a1?pvs=21)). On each data distribution, we observe a consistent trend that larger $n$ performs better at higher compute in in-domain evaluations, except for the very easy eval (Column 3). This task is likely so easy that added sequential or parallel compute does not make much difference in learning. Putting it all together, we see that training on all hard problems causes significant catastrophic forgetting on (very) easy problems, where the model could have decent pass rates, likely due to large distribution shift. When mixing easy problems in training, the catastrophic forgetting is largely mitigated on both easy and very easy problems, in exchange for a slight drop (~2%) on hard problems. A notable phenomenon is that mixing very easy problems (Row 3) doesn’t even help the in-domain very easy evaluation set, and degrades both easy and hard performance (compare with Row 2). These indicate: (1) if the focus is only on improving hard problem performance, it helps to train on all hard data; (2) otherwise, mixing easy data largely helps maintain the model’s capability, but very easy data are not useful."){width=900px}
+![**Figure 13.**](/assets/figures/sec4_skewed_data_dist.png)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 13: Results across difficulty levels for small ($n$ = 8) and large ($n$ = 64) budgets under different training data distributions (each with 5K total samples) using Qwen2.5-7B-Instruct. Data Definitions:</b> Hard (pass@128=0), Easy (pass@128 ∈ [0.3, 0.6]), and Very Easy (pass@128 ∈ [0.6, 0.9]). <b>Training Settings:</b> Row 1: Hard Only (100% Hard); Row 2: Dual Mix (50% Hard, 50% Easy); Row 3: Tri Mix (50% Hard, 25% Easy, 25% Very Easy, i.e., the J-shaped distribution recommended in [Polaris](https://www.notion.so/1dfa954ff7c38094923ec7772bf447a1?pvs=21)). On each data distribution, we observe a consistent trend that larger $n$ performs better at higher compute in in-domain evaluations, except for the very easy eval (Column 3). This task is likely so easy that added sequential or parallel compute <b>does not</b> make much difference in learning. Putting it all together, we see that training on all hard problems causes significant catastrophic forgetting on (very) easy problems, where the model could have decent pass rates, likely due to large distribution shift. When mixing easy problems in training, the catastrophic forgetting is largely mitigated on both easy and very easy problems, in exchange for a slight drop (~2%) on hard problems. A notable phenomenon is that mixing very easy problems (Row 3) doesn’t even help the in-domain very easy evaluation set, and degrades both easy and hard performance (compare with Row 2). These indicate: (1) if the focus is only on improving hard problem performance, it helps to <b>train on all hard data</b>; (2) otherwise, mixing easy data largely helps <b>maintain the model’s capability</b>, but very easy data are not useful.
+</p>
 
 Of course, interference does depend on the choice of the base model, and indeed we see that ***different base models may respond to interference in qualitatively different ways.*** While we did observe that some models, such as Qwen2.5-7B-Instruct, made roughly uniform progress across problems on the easy set (or on a subset of problems in the hard set), we found that other models such as Llama3.1-8B-Instruct did not. This heterogeneity affects how increasing $n$ influences per-prompt optimization dynamics and, in turn, shifts the range of $n$ values that appear compute-optimal in practice. For instance, as shown in Figure 14, although a larger $n$ = 16 outperforms $n$ = 8 at higher compute budgets, the compute-optimal $n$ for Llama3.1-8B-Instruct is substantially smaller than that of Qwen2.5-7B-Instruct. Notably, the training reward for Llama3.1 plateaus at $n$ = 128, suggesting the model struggles to effectively optimize for a high degree of parallel rollouts. We further experiment on Qwen3-4B-Instruct (Figure 15) and observe larger $n$ = 64 yields better results than $n$ = 8. While the validation reward ceases to rise at $n$ = 128, the training reward continues to rise at high compute. Thus, the degradation on the validation set is likely attributable to a train-test gap, which we investigate in the subsequent section.
 
-![Figure 14: Compute-optimal frontiers for Llama3.1-8B-Instruct on the Easy set](/assets/figures/sec4_llama_easy.png "Figure 14: Compute-optimal frontiers for Llama3.1-8B-Instruct on the Easy set (initial pass rate 0.3–0.6) for different values of $n$. While $n = 16$ outperforms $n = 8$ at higher compute budgets, further increasing $n$ to $128$ degrades both training and validation performance, indicating optimization difficulties at large $n$."){width=900px}
+![**Figure 14:** **Compute-optimal frontiers for Llama3.1-8B-Instruct on the Easy set** (initial pass rate 0.3–0.6) for different values of $n$. While $n = 16$ outperforms $n = 8$ at higher compute budgets, further increasing $n$ to $128$ degrades both training and validation performance, indicating optimization difficulties at large $n$.](/assets/figures/sec4_llama_easy.png){width=800px}
 
-![Figure 15: Compute-optimal frontiers for Qwen3-4B-Instruct on the Easy set](/assets/figures/sec4_qwen3_easy.png "Figure 15: Compute-optimal frontiers for Qwen3-4B-Instruct on the Easy set (initial pass rate 0.3–0.6) for different values of $n$. Larger $n$ values, such as $n = 64$, outperform smaller ones (e.g., $n = 8$) at higher compute. Notably, training rewards for $n = 128$ remain high and in fact, $n=128$ appears on the compute-optimal frontier after a considerable amount of compute has been spent (right), but it falls below the compute-optimal frontier on the validation set (left). This is due to early overfitting before the benefits of larger $n$ can be realized and highlights a clear train–test gap."){width=900px}
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 14:</b> <b>Compute-optimal frontiers for Llama3.1-8B-Instruct on the Easy set</b> (initial pass rate 0.3–0.6) for different values of $n$. While $n$ = 16 outperforms $n$ = 8 at higher compute budgets, further increasing $n$ to 128 degrades both training and validation performance, indicating optimization difficulties at large $n$.
+</p>
+
+![**Figure 15:** **Compute-optimal frontiers for Qwen3-4B-Instruct on the Easy set** (initial pass rate 0.3–0.6) for different values of $n$. Larger $n$ values, such as $n = 64$, outperform smaller ones (e.g., $n = 8$) at higher compute. Notably, training rewards for $n = 128$ remain high and in fact, $n=128$ appears on the compute-optimal frontier after a considerable amount of compute has been spent (right), but it falls below the compute-optimal frontier on the validation set (left). This is due to early overfitting before the benefits of larger $n$ can be realized and highlights a clear train–test gap.](/assets/figures/sec4_qwen3_easy.png){width=800px}
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 15:</b> <b>Compute-optimal frontiers for Qwen3-4B-Instruct on the Easy set</b> (initial pass rate 0.3–0.6) for different values of $n$. Larger $n$ values, such as $n$ = 64, outperform smaller ones (e.g., $n$ = 8) at higher compute. Notably, training rewards for $n$ = 128 remain high and in fact, $n$ = 128 appears on the compute-optimal frontier after a considerable amount of compute has been spent (right), but it falls below the compute-optimal frontier on the validation set (left). This is due to early overfitting before the benefits of larger $n$ can be realized and highlights a clear train–test gap.
+</p>
 
 **3) Train-test gap.** Finally, our scaling results are reported on validation metrics, even though optimization dynamics are primarily driven by the training set composition. As a result, the emergence of scaling laws on the validation set depends on sustained transfer of performance from the training to the test set, which is not guaranteed. For instance, when the prompt set is too small, training may overfit prematurely within a fixed number of gradient steps. In such cases, larger values of $n$ may no longer appear compute-optimal at higher compute budgets, simply because additional training beyond some number of training steps fails to improve test-set performance (see Figure 13 as an example, where $n$ = 128 is never compute-optimal). 
 
-When overfitting dominates, scaling laws may only hold for certain ranges of hyperparameters that avoid the overfitting regime, but naively plotting scaling trends using our workflow above will result in incorrect conclusions. To illustrate this, we run training with different prompt set sizes, including sets substantially smaller than the default size of 6,000 problems used above. We observe that the compute-optimal values of $n$ cap out at much smaller levels when the prompt set is smaller. This behavior is expected, as validation performance begins to degrade with additional training compute in the small-prompt regime due to overfitting, meaning that there is no way for larger $n$ values to achieve the frontier. As discussed above, this also justifies the sigmoid shape of the hypothesized relationship between *n*\\*($C$) and $C$ in Figure 6. 
+When overfitting dominates, scaling laws may only hold for certain ranges of hyperparameters that avoid the overfitting regime, but naively plotting scaling trends using our workflow above will result in incorrect conclusions. To illustrate this, we run training with different prompt set sizes, including sets substantially smaller than the default size of 6,000 problems used above. We observe that the compute-optimal values of $n$ cap out at much smaller levels when the prompt set is smaller. This behavior is expected, as validation performance begins to degrade with additional training compute in the small-prompt regime due to overfitting, meaning that there is no way for larger $n$ values to achieve the frontier. As discussed above, this also justifies the sigmoid shape of the hypothesized relationship between *n*\*($C$) and $C$ in Figure 6. 
 
 Technically, we can also plot compute-optimal scaling laws for training performance instead of validation in the hope that compute-optimal hyperparameter configurations for best training rewards also results in best validation performance. We find evidence to the contrary as in many cases  training runs with smaller values of $n$ (keeping $B$<sub>problem</sub> fixed) result in better training rewards for the same amount of total training compute spent (see Figure 16). While this result appears contradictory at first, ***it is perhaps expected as training reward (in our logging scheme) logs rewards on samples that were used for training: hence, logging statistics on this set results in a natural bias.*** More mechanistically, on the training set: 1) RL runs with smaller values of $n$ are able to epoch faster on the training problems for the same amount of sampling compute as runs with larger values of $n$; and 2) when we run RL with small values of $n$  then we are able to improve training performance quickly on easy problems without making any progress on the hard ones, which means that the total training performance is dominated by only one set of the data (easy problems), which rightly does not reflect in good validation performance. 
 
-![Figure 16: Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set).](/assets/figures/sec3_varyD.png "Figure 16: Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set). With a larger dataset ($D$=6k), we continues to improve with more parallel rollouts ($n$ = 512; ***left***). With a smaller dataset ($D$=500), performance peaks at $n$ = 256, and a larger $n$ leads to degradation ($n$ = 256)."){width=900px}
+![](/assets/figures/sec3_varyD.png){width=800px}
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 16:</b> <b>Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set).</b> With a larger dataset ($D$=6k), we continues to improve with more parallel rollouts ($n$ = 512; <b>$left$</b>). With a smaller dataset ($D$=500), performance peaks at $n$ = 256, and a larger $n$ leads to degradation ($n$ = 256).
+</p>
 
 :::takeaway_begin:::
 **Key Takeaways:**
@@ -1024,10 +399,81 @@ A central takeaway from this work is that **healthy RL recipes are inherently de
 
 Our analysis also surfaces an important open challenge for future work: **interference across problems**. In an idealized single-problem setting, one might expect clean exponential improvements with increasing sampling compute. In practice, however, RL is performed over mixtures of problems, where progress on some tasks can interfere with learning on others. This population-level interference alters both the coefficients and effective hyperparameter values in observed scaling laws.
 
-A promising direction is to identify sufficient statistics early in training that capture the degree of interference across problems, enabling more accurate predictions of how additional compute will translate into subsequent learning progress. We believe that tracking changes in the pass@1 distribution over the course of training provides a natural starting point for studying interference. Developing such models would be a critical step toward predictive scaling laws for RL on heterogeneous data mixtures. Mathematically, this points toward approximate closed-form rules for compute-optimal hyperparameters that generalize across base models and prompt distributions by estimating a small number of statistics that summarize the pass@1 landscape and incorporating them into scaling-law fits. This remains an interesting direction for future work.`;
-export {
-  Markdown as M,
-  Seo as S,
-  ScrollMeter as a,
-  text as t
-};
+A promising direction is to identify sufficient statistics early in training that capture the degree of interference across problems, enabling more accurate predictions of how additional compute will translate into subsequent learning progress. We believe that tracking changes in the pass@1 distribution over the course of training provides a natural starting point for studying interference. Developing such models would be a critical step toward predictive scaling laws for RL on heterogeneous data mixtures. Mathematically, this points toward approximate closed-form rules for compute-optimal hyperparameters that generalize across base models and prompt distributions by estimating a small number of statistics that summarize the pass@1 landscape and incorporating them into scaling-law fits. This remains an interesting direction for future work.
+
+---
+
+## Appendices
+
+:::fold_begin title="A. Additional compute-optimal results":::
+
+### A. Additional compute-optimal results
+
+In the main results, we show one fixed value for $B$<sub>problem</sub> = 32 for brevity. Figures 1x and 1x demonstrate that the scaling trend described in the main text, where larger compute budgets favor increased parallel rollouts ($n$), holds across different fixed values of $B$<sub>problem</sub>. While it appears that larger $B$<sub>problem</sub> settings saturate at lower $n$ values (e.g., $n$ = 16 at $B$<sub>problem</sub> = 1,024), this might be attributable to the total batch size constraint ($B$<sub>max</sub> ≥ $B$<sub>problem</sub> · $n$) in the sweep experiments. The precise interaction between $B$<sub>problem</sub> and the saturation point of $n$ remains an open question for future investigation.
+
+<!-- ![**Figure 1x.** **Compute-optimal frontiers across varying problem batch sizes ($B_\text{problem}$) on the Easy set. Each subplot fixed $B_\text{problem}$ and sweeps $n$.**](__IMAGE_PLACEHOLDER__) -->
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 1x.</b> <b>Compute-optimal frontiers across varying problem batch sizes ($B$<sub>problem</sub>) on the Easy set. Each subplot fixed $B$<sub>problem</sub> and sweeps $n$.</b>
+</p>
+
+<!-- ![**Figure 1x.** **Compute-optimal frontiers across varying problem batch sizes ($B_\text{problem}$) on the Hard set.** Each subplot fixed $B_\text{problem}$ and sweeps $n$.](__IMAGE_PLACEHOLDER__) -->
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+<b>Figure 1x.</b> <b>Compute-optimal frontiers across varying problem batch sizes ($B$<sub>problem</sub>) on the Hard set.</b> Each subplot fixed $B$<sub>problem</sub> and sweeps $n$.
+</p>
+
+Besides, here we show more results under different fixed B on the 2 sets showing similar trend as we demonstrate on Section 3.2 that it’s increasingly preferable to allocate more parallel rollouts per problem given higher sampling budgets.
+
+Fix B, easy
+
+<!-- ![image.png](__IMAGE_PLACEHOLDER__) -->
+
+Fix B, hard
+
+<!-- ![image.png](__IMAGE_PLACEHOLDER__) -->
+
+:::fold_end:::
+
+:::fold_begin title="B. Generalization to OOD tasks":::
+
+### B. Generalization to OOD tasks
+
+In the main text, we prioritize in-domain validation results to minimize the influence of train-test distribution shifts, thereby allowing for a cleaner analysis of compute allocation scaling. In reality, practical post-training workflows require models to generalize to unseen distributions like downstream tasks. We examine whether the benefits of increasing parallel rollouts ($n$) extend to out-of-domain (OOD) downstream tasks. As illustrated in Figure 1x, we observe that larger values of $n$ lead to higher performance on AIME24.
+
+![Figure 1x: AIME 24 scores trained with varying parallel rollouts ($n$) under a fixed problem batch size ($B_\text{problem}=32$).](__IMAGE_PLACEHOLDER__)
+
+<p align="left" style="color: #666; font-size: 0.9em; margin-top: 5px;">
+Figure 1x: AIME 24 scores trained with varying parallel rollouts ($n$) under a fixed problem batch size ($B$<sub>problem</sub> = 32).
+</p>
+
+<!-- ![image.png](__IMAGE_PLACEHOLDER__) -->
+
+<!-- ![image.png](__IMAGE_PLACEHOLDER__) -->
+
+:::fold_end:::
+
+:::fold_begin title="C. Effects of baseline estimation variance":::
+
+### C. Effects of baseline estimation variance
+
+We discuss in the main content how and why larger $n$ could outperform small $n$ at high compute regime from exploration and optimization perspective. Another theoretical advantage of larger $n$ in the GRPO algorithm is that it provides a more robust estimator for the baseline (group average reward), thereby reducing the variance of the advantage estimates. To isolate the performance gain attributed specifically to precise baseline estimation versus simply training on more data, we conducted an ablation study with a fixed problem batch size of ($B$<sub>problem</sub> = 128). We compared three settings:
+
+1. **Large $n$ = 256**
+2. **Small** $n$ = 64
+3. **Decoupled: small $n$ = 64 for policy update and large $n$ = 256 for baseline estimation.** We generate 256 rollouts to compute high-precision advantage estimates, but randomly subsample only 64 rollouts to compute the policy gradient update.
+
+We observe a performance **(1) > (3) > (2)**. 
+
+- (3) > (2) confirms that a lower-variance baseline estimator contributes to the gains.
+- The standard (1) $n$ = 256 run still outperforms the (3) setting, suggesting that while baseline precision matters, the primary benefit of scaling $n$ comes from the broader exploration.
+
+<!-- ![image.png](__IMAGE_PLACEHOLDER__) -->
+
+### (optional) D. Off-policy
+
+### (optional) E. pope qwen3
+
+<!-- ![image.png](__IMAGE_PLACEHOLDER__) -->
+
+:::fold_end:::
