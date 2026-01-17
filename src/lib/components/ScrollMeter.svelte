@@ -19,6 +19,49 @@
   let raf_id: number;
   let hydrated = false;
   let isHovering = false;
+  let hideToc = false;
+  const SIDE_DATASET_KEY = "sidecols";
+  let lastPublishedSide: "on" | "off" | null = null;
+  let watchTimer: number | null = null;
+  let lastWatchDpr = -1;
+  let lastWatchVw = -1;
+  let hideByWidth = false;
+
+  function onTocWheel(e: WheelEvent) {
+    if (!meterEl) return;
+    // If the TOC is scrollable, use the wheel to scroll it and keep the page from scrolling.
+    const max = meterEl.scrollHeight - meterEl.clientHeight;
+    if (max <= 0) return;
+
+    const prev = meterEl.scrollTop;
+    const next = Math.max(0, Math.min(max, prev + e.deltaY));
+    if (next === prev) return;
+
+    meterEl.scrollTop = next;
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function publishSideCols(side: "on" | "off") {
+    if (!browser) return;
+    const root = document.documentElement;
+    if (root?.dataset) root.dataset[SIDE_DATASET_KEY] = side;
+    if (lastPublishedSide === side) return;
+    lastPublishedSide = side;
+    window.dispatchEvent(new CustomEvent("sidecolschange", { detail: { side } }));
+  }
+
+  function canHorizontallyScrollPage(): boolean {
+    if (!browser) return false;
+    const se = (document.scrollingElement || document.documentElement) as HTMLElement | null;
+    if (!se) return false;
+    const prev = se.scrollLeft;
+    // Probe: if scrollLeft can change, horizontal scrolling is possible.
+    se.scrollLeft = prev + 1;
+    const changed = se.scrollLeft !== prev;
+    se.scrollLeft = prev;
+    return changed;
+  }
 
   function doc_y(el: Element) {
     const r = el.getBoundingClientRect();
@@ -85,8 +128,47 @@
     visibleHeadings = headings;
     showAll = true;
     visibleIdSet = null;
+    updateVisibility();
     updateLabelWidth();
     update_progress();
+  }
+
+  function updateVisibility() {
+    if (!browser) return;
+    if (!container_el) {
+      hideToc = false;
+      return;
+    }
+    const root = document.documentElement;
+    const vw = root?.clientWidth || window.innerWidth || 0;
+    const hasHScroll = canHorizontallyScrollPage();
+
+    // Hide if: (no horizontal scroll AND main text occupies >= 1/2 of viewport).
+    // Add hysteresis to prevent flicker when layout fluctuates near the threshold.
+    const RATIO_HIDE = 1 / 2;
+    const RATIO_SHOW = 0.5; // must be < RATIO_HIDE
+
+    if (hasHScroll || vw <= 0) {
+      hideByWidth = false;
+    } else {
+      const MAIN_MAX_PX = 800; // keep in sync with Markdown main column max
+      // Important: use the intended main-column width (not measured width) to avoid
+      // a feedback loop where hiding side cols changes the measured width, causing
+      // flicker during zoom.
+      const ratio = MAIN_MAX_PX / vw;
+
+      if (!hideByWidth) {
+        if (ratio >= RATIO_HIDE) hideByWidth = true;
+      } else if (ratio <= RATIO_SHOW) {
+        hideByWidth = false;
+      }
+    }
+
+    hideToc = hideByWidth;
+
+    // Publish a single source of truth for "side columns on/off" so footnotes can
+    // bind to the TOC visibility.
+    publishSideCols(hideToc ? "off" : "on");
   }
 
   function update_progress() {
@@ -138,15 +220,42 @@
 
   function updateLabelWidth() {
     if (!meterEl) return;
-    // Prefer the main content container for accurate left margin
-    const contentEl =
-      (container_el?.closest(".layout-md") as HTMLElement | null) || container_el;
-    if (!contentEl) return;
-    const rect = contentEl.getBoundingClientRect();
+    if (!container_el) return;
+    const rect = container_el.getBoundingClientRect();
     const leftMargin = Math.max(rect.left, 0);
-    // Max label width is 2/3 of left margin
-    const maxWidth = Math.max(180, Math.floor((leftMargin * 2) / 3));
+    const gapVar = getComputedStyle(document.documentElement).getPropertyValue("--toc-gap")
+      || getComputedStyle(document.documentElement).getPropertyValue("--side-gap");
+    const gap = Math.max(0, Math.round(parseFloat(gapVar || "32") || 32)); // px between toc and main text
+    const minLeftVar =
+      getComputedStyle(document.documentElement).getPropertyValue("--toc-min-left");
+    const minLeft = Math.max(0, Math.round(parseFloat(minLeftVar || "16") || 16));
+
+    const items = meterEl.querySelectorAll<HTMLAnchorElement>(".toc-item:not(.hidden)");
+    let contentWidth = 0;
+    items.forEach((item) => {
+      // Measure the "natural" (unwrapped) label width; `getBoundingClientRect().width`
+      // is unreliable here because `.toc-item` is styled as `width: 100%` to keep a
+      // consistent clickable area, and zoom/resizes can otherwise lock us into the
+      // previous constrained width.
+      const prevWidth = item.style.width;
+      const prevWS = item.style.whiteSpace;
+      item.style.width = "max-content";
+      item.style.whiteSpace = "nowrap";
+      const w = Math.ceil(item.getBoundingClientRect().width);
+      item.style.width = prevWidth;
+      item.style.whiteSpace = prevWS;
+      contentWidth = Math.max(contentWidth, w);
+    });
+    if (contentWidth === 0) return;
+
+    const available = Math.max(0, Math.floor(leftMargin - gap));
+    const maxWidth = available > 0 ? Math.min(contentWidth, available) : contentWidth;
     meterEl.style.setProperty("--toc-max-width", `${maxWidth}px`);
+
+    // Position the TOC so it "hugs" the main text: place it to the left of the main
+    // text column with a small gap.
+    const left = Math.max(minLeft, Math.round(rect.left - maxWidth - gap));
+    meterEl.style.setProperty("--toc-left", `${left}px`);
   }
 
   let onScroll: () => void;
@@ -177,7 +286,24 @@
       }
 
       // Initialize label width once layout is ready
-      setTimeout(() => updateLabelWidth(), 100);
+      setTimeout(() => {
+        updateVisibility();
+        updateLabelWidth();
+      }, 100);
+      requestAnimationFrame(() => updateVisibility());
+
+      // Zoom changes (browser zoom) do not reliably trigger resize events, so we
+      // watch viewport width and refresh TOC visibility + placement when it changes.
+      watchTimer = window.setInterval(() => {
+        const root = document.documentElement;
+        const vw = root?.clientWidth || window.innerWidth || 0;
+        const dpr = window.devicePixelRatio || 1;
+        if (vw === lastWatchVw && dpr === lastWatchDpr) return;
+        lastWatchVw = vw;
+        lastWatchDpr = dpr;
+        updateVisibility();
+        updateLabelWidth();
+      }, 250);
     }
   });
 
@@ -185,6 +311,16 @@
     if (browser) {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+    }
+    if (browser && watchTimer !== null) {
+      window.clearInterval(watchTimer);
+      watchTimer = null;
+    }
+    if (browser) {
+      const root = document.documentElement;
+      if (root?.dataset?.[SIDE_DATASET_KEY]) delete root.dataset[SIDE_DATASET_KEY];
+      lastPublishedSide = null;
+      window.dispatchEvent(new CustomEvent("sidecolschange", { detail: { side: "on" } }));
     }
     if (ro) ro.disconnect();
     if (raf_id) cancelAnimationFrame(raf_id);
@@ -203,6 +339,8 @@
   aria-hidden="true"
   class:ready={ready}
   class:in-body={!showAll}
+  class:hidden={hideToc}
+  on:wheel={onTocWheel}
   on:mouseenter={() => {
     isHovering = true;
     update_progress();
@@ -217,6 +355,7 @@
       <a
         href={`#${h.id}`}
         class={`toc-item ${h.level === 3 ? 'sub' : ''} ${i === active_index ? 'active' : ''} ${!showAll && visibleIdSet && !visibleIdSet.has(h.id) ? 'hidden' : ''}`}
+        title={h.label}
       >
         {h.label}
       </a>
@@ -227,27 +366,41 @@
 <style>
   :root {
     --toc-max-width: 280px;
+    --toc-left: 28px;
   }
 
   .toc {
     position: fixed;
-    left: 28px;
-    top: 120px;
+    left: var(--toc-left, 28px);
+    top: 50%;
+    transform: translateY(-50%);
     width: var(--toc-max-width, 280px);
-    max-height: calc(100vh - 160px);
-    overflow: auto;
-    padding-right: 8px;
+    height: calc(100vh - 180px);
+    max-height: calc(100vh - 180px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0;
     z-index: 50;
     opacity: 0;
     transition: opacity 400ms ease;
+    text-align: left;
   }
 
   .toc.ready {
     opacity: 1;
   }
 
+  .toc.hidden {
+    display: none;
+  }
+
   .toc-item {
     display: block;
+    width: 100%;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: break-word;
     color: #6b7280;
     font-size: 14px;
     line-height: 1.6;
@@ -274,7 +427,7 @@
   }
 
   .toc-item.sub {
-    margin-left: 14px;
+    padding-left: 14px;
     color: #9ca3af;
     font-size: 13px;
   }
@@ -284,9 +437,6 @@
     pointer-events: none;
   }
 
-  @media (max-width: 1024px) {
-    .toc {
-      display: none; /* hide on small screens */
-    }
-  }
+  /* Do NOT hide the TOC via media queries; visibility is controlled by `hideToc`
+     so we can keep TOC and footnotes bound to the same state. */
 </style>

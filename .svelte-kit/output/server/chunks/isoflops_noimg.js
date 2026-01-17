@@ -185,7 +185,7 @@ const FoldBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<details class="my-4 rounded border border-neutral-200 bg-white" ${open ? "open" : ""}><summary class="cursor-pointer select-none px-4 py-3 font-semibold text-neutral-900 hover:bg-neutral-50">${escape(title2)}</summary> <div class="px-4 pb-3 pt-2"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></details>`;
 });
 const css$1 = {
-  code: ".md-output h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:700}.md-output h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.md-output h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.3rem;line-height:2rem;font-weight:600}.md-output h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.md-output p{margin-bottom:1rem}.md-output strong{font-weight:600}.md-output em{font-style:italic}.md-output code{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding-left:0.25rem;padding-right:0.25rem;font-size:95%}.md-output pre{margin-bottom:1rem;overflow-x:auto;border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding:1rem}.md-output ul{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:disc}.md-output ul>:not([hidden])~.svelte-2uty9x:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ul{padding-left:1.25rem}.md-output ol{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:decimal}.md-output ol>:not([hidden])~.svelte-2uty9x:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ol{padding-left:1.25rem}.md-output li{margin-bottom:0.25rem}.math-block{margin-top:1rem;margin-bottom:1rem;text-align:center}.math-inline{vertical-align:baseline}.katex-error{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity));padding:0.25rem;--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity))}.md-output blockquote{margin-top:0.5rem;margin-bottom:0.5rem;display:inline-block;border-radius:0.25rem;border-left-width:4px;--tw-border-opacity:1;border-color:rgb(82 82 82 / var(--tw-border-opacity));--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity));padding-left:0.75rem;padding-right:0.75rem;padding-top:0.5rem;padding-bottom:0.5rem;vertical-align:middle}.md-output blockquote > :first-child{margin-top:0px}.md-output blockquote > :last-child{margin-bottom:0px}.sm-block h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.5rem;line-height:2rem;font-weight:700}.sm-block h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.3rem;line-height:2rem;font-weight:600}.sm-block h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.sm-block h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1rem;line-height:1.5rem;font-weight:600}.sm-block code{font-size:90%}pre[data-copyable]{position:relative}pre[data-copyable] .copy-btn{position:absolute;top:0.25rem;right:0.25rem;background:#f3f4f6;font-size:0.75rem;padding:0.1rem 0.4rem;border-radius:0.25rem;cursor:pointer;opacity:1;transition:opacity 0.2s}pre[data-copyable]:hover .copy-btn{opacity:1}",
+  code: '.md-output h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:700}.md-output h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.md-output h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.3rem;line-height:2rem;font-weight:600}.md-output h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.md-output p{margin-bottom:1rem}.md-output strong{font-weight:600}.md-output em{font-style:italic}.md-output code{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding-left:0.25rem;padding-right:0.25rem;font-size:95%}.md-output pre{margin-bottom:1rem;overflow-x:auto;border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding:1rem}.md-output ul{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:disc}.md-output ul>:not([hidden])~.svelte-c8zg2i.svelte-c8zg2i:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ul{padding-left:1.25rem}.md-output ol{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:decimal}.md-output ol>:not([hidden])~.svelte-c8zg2i.svelte-c8zg2i:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ol{padding-left:1.25rem}.md-output li{margin-bottom:0.25rem}.math-block{margin-top:1rem;margin-bottom:1rem;text-align:center}.math-inline{vertical-align:baseline}.katex-error{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity));padding:0.25rem;--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity))}.md-output blockquote{margin-top:0.5rem;margin-bottom:0.5rem;display:inline-block;border-radius:0.25rem;border-left-width:4px;--tw-border-opacity:1;border-color:rgb(82 82 82 / var(--tw-border-opacity));--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity));padding-left:0.75rem;padding-right:0.75rem;padding-top:0.5rem;padding-bottom:0.5rem;vertical-align:middle}.md-output blockquote > :first-child{margin-top:0px}.md-output blockquote > :last-child{margin-bottom:0px}.sm-block h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.5rem;line-height:2rem;font-weight:700}.sm-block h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.3rem;line-height:2rem;font-weight:600}.sm-block h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.sm-block h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1rem;line-height:1.5rem;font-weight:600}.sm-block code{font-size:90%}.md-shell.svelte-c8zg2i.svelte-c8zg2i{position:relative}.md-shell.svelte-c8zg2i:not([data-fn-aligned="1"]) .md-footnotes.svelte-c8zg2i{opacity:0}.md-grid.svelte-c8zg2i.svelte-c8zg2i{display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 850px) minmax(0, 1fr);-moz-column-gap:var(--toc-gap, var(--side-gap, 32px));column-gap:var(--toc-gap, var(--side-gap, 32px));align-items:start}.md-output.svelte-c8zg2i.svelte-c8zg2i{grid-column:2;min-width:0}.md-footnotes.svelte-c8zg2i.svelte-c8zg2i{position:relative;grid-column:3;width:260px;justify-self:start;padding-left:calc(var(--footnote-gap, 48px) - var(--toc-gap, var(--side-gap, 32px)));font-size:14px;line-height:1.6;color:#6b7280}.md-footnotes.svelte-c8zg2i ol.svelte-c8zg2i{list-style:none;padding:0;margin:0;position:relative;min-height:100%}.md-footnotes.svelte-c8zg2i li.svelte-c8zg2i{display:flex;gap:8px;width:100%;margin-bottom:var(--footnote-item-gap, 28px)}.md-footnotes.svelte-c8zg2i li.svelte-c8zg2i:last-child{margin-bottom:0}.md-footnotes.svelte-c8zg2i .fn-label.svelte-c8zg2i{font-variant-numeric:tabular-nums;color:#6b7280}.md-footnotes.svelte-c8zg2i .fn-text.svelte-c8zg2i p{margin:0}.md-footnotes.svelte-c8zg2i .fn-text.svelte-c8zg2i a{text-decoration-line:underline;text-decoration-color:#a3a3a3;text-underline-offset:3px}.footnote-ref{font-size:0.75em;vertical-align:super;margin-left:1px}.footnote-ref a{color:#6b7280;text-decoration:none}.footnote-ref a:hover{color:#111827}@media(max-width: 1024px){.md-grid.svelte-c8zg2i.svelte-c8zg2i{grid-template-columns:minmax(0, 1fr);row-gap:16px}.md-output.svelte-c8zg2i.svelte-c8zg2i{grid-column:1}.md-footnotes.svelte-c8zg2i.svelte-c8zg2i{position:static;grid-column:1;width:auto}}pre[data-copyable]{position:relative}pre[data-copyable] .copy-btn{position:absolute;top:0.25rem;right:0.25rem;background:#f3f4f6;font-size:0.75rem;padding:0.1rem 0.4rem;border-radius:0.25rem;cursor:pointer;opacity:1;transition:opacity 0.2s}pre[data-copyable]:hover .copy-btn{opacity:1}',
   map: null
 };
 (function(thisArg, _arguments, P, generator) {
@@ -215,6 +215,9 @@ const css$1 = {
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
 });
+function normalizeFootnoteId(id) {
+  return String(id).replace(/[^a-zA-Z0-9\-_]/g, "");
+}
 function renderMath(tex, displayMode) {
   try {
     return katex.renderToString(tex, { throwOnError: false, displayMode });
@@ -410,6 +413,85 @@ const CALLOUT_BEGIN_RE = /:::callout_begin(?:\s+type="([^"]+)")?(?:\s+title="([^
 const CALLOUT_END_RE = /:::callout_end:::/gm;
 const FOLD_BEGIN_RE = /:::fold_begin(?:\s+title="([^"]+)")?(?:\s+(open))?\s*:::/gm;
 const FOLD_END_RE = /:::fold_end:::/gm;
+function extractFootnotes(md) {
+  const lines = md.split("\n");
+  const mainLines = [];
+  const footnotes = [];
+  let current = null;
+  for (const line of lines) {
+    const match = line.match(/^\[\^([^\]]+)\]:\s*(.*)$/);
+    if (match) {
+      if (current)
+        footnotes.push(current);
+      const id = match[1];
+      current = {
+        id,
+        safeId: normalizeFootnoteId(id),
+        raw: [match[2]]
+      };
+      continue;
+    }
+    if (current) {
+      if (/^\s{2,}|\t/.test(line)) {
+        current.raw.push(line.replace(/^\s+/, ""));
+        continue;
+      }
+      footnotes.push(current);
+      current = null;
+    }
+    mainLines.push(line);
+  }
+  if (current)
+    footnotes.push(current);
+  const cleaned = mainLines.join("\n");
+  const notes = footnotes.map((fn) => ({
+    id: fn.id,
+    safeId: fn.safeId,
+    html: marked.parse(fn.raw.join("\n"), { smartypants: true })
+  }));
+  return { main: cleaned, notes };
+}
+function computeFootnoteNumbering(main, notes) {
+  const order = [];
+  const seen = /* @__PURE__ */ new Set();
+  const re = /\[\^([^\]]+)\]/g;
+  let m;
+  while ((m = re.exec(main)) !== null) {
+    const safeId = normalizeFootnoteId(m[1]);
+    if (!safeId || seen.has(safeId))
+      continue;
+    seen.add(safeId);
+    order.push(safeId);
+  }
+  const noteBySafeId = new Map(notes.map((n) => [n.safeId, n]));
+  const numbered = [];
+  const idToNum = /* @__PURE__ */ new Map();
+  let next = 1;
+  for (const safeId of order) {
+    const n = noteBySafeId.get(safeId);
+    if (!n)
+      continue;
+    idToNum.set(safeId, next);
+    numbered.push(Object.assign(Object.assign({}, n), { num: next }));
+    next += 1;
+  }
+  for (const n of notes) {
+    if (idToNum.has(n.safeId))
+      continue;
+    idToNum.set(n.safeId, next);
+    numbered.push(Object.assign(Object.assign({}, n), { num: next }));
+    next += 1;
+  }
+  return { idToNum, numbered };
+}
+function replaceFootnoteRefs(md, idToNum) {
+  return md.replace(/\[\^([^\]]+)\]/g, (_m, id) => {
+    const safeId = normalizeFootnoteId(id);
+    const num = idToNum.get(safeId);
+    const label = num ? String(num) : String(id);
+    return `<sup class="footnote-ref"><a href="#fn-${safeId}" data-fn="${safeId}">${label}</a></sup>`;
+  });
+}
 function toHtml(md) {
   return marked.parse(md, { smartypants: true });
 }
@@ -443,7 +525,12 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
     });
   });
   let { source } = $$props;
+  let processedSource = source;
+  let footnotes = [];
   let container = null;
+  let footnoteAside = null;
+  let footnoteList = null;
+  let shellEl = null;
   function setupVideos(root) {
     const videos = Array.from(root.querySelectorAll("video.autoplay-on-fullview"));
     const fresh = videos.filter((v) => !v.dataset._wired);
@@ -538,6 +625,14 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   if ($$props.source === void 0 && $$bindings.source && source !== void 0)
     $$bindings.source(source);
   $$result.css.add(css$1);
+  {
+    {
+      const { main, notes } = extractFootnotes(source || "");
+      const { idToNum, numbered } = computeFootnoteNumbering(main, notes);
+      processedSource = replaceFootnoteRefs(main, idToNum);
+      footnotes = numbered;
+    }
+  }
   chunks = (() => {
     var _a, _b, _c, _d;
     const out = [];
@@ -554,8 +649,11 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
       const c = CALLOUT_BEGIN_RE.exec(source);
       const f = FOLD_BEGIN_RE.exec(source);
       if (!j && !t && !s && !c && !f) {
-        if (pos < source.length)
-          out.push({ type: "text", content: source.slice(pos) });
+        if (pos < processedSource.length)
+          out.push({
+            type: "text",
+            content: processedSource.slice(pos)
+          });
         break;
       }
       const j_idx = j ? j.index : Infinity;
@@ -568,7 +666,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (j_idx > pos)
           out.push({
             type: "text",
-            content: source.slice(pos, j_idx)
+            content: processedSource.slice(pos, j_idx)
           });
         const id = j[1];
         const label = (_a = j[2]) !== null && _a !== void 0 ? _a : id;
@@ -580,7 +678,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: source.slice(pos, begin_idx)
+            content: processedSource.slice(pos, begin_idx)
           });
         TAKE_END_RE.lastIndex = begin_end;
         const tend = TAKE_END_RE.exec(source);
@@ -592,7 +690,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
           pos = begin_end;
           continue;
         }
-        const inner_md = source.slice(begin_end, tend.index).trim();
+        const inner_md = processedSource.slice(begin_end, tend.index).trim();
         out.push({ type: "takeaway", content: inner_md });
         pos = TAKE_END_RE.lastIndex;
       } else if (s_idx === min_idx) {
@@ -601,7 +699,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: source.slice(pos, begin_idx)
+            content: processedSource.slice(pos, begin_idx)
           });
         SMALL_END_RE.lastIndex = begin_end;
         const send = SMALL_END_RE.exec(source);
@@ -613,7 +711,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
           pos = begin_end;
           continue;
         }
-        const inner_md = source.slice(begin_end, send.index).trim();
+        const inner_md = processedSource.slice(begin_end, send.index).trim();
         out.push({ type: "small", content: inner_md });
         pos = SMALL_END_RE.lastIndex;
       } else if (c_idx === min_idx) {
@@ -622,7 +720,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: source.slice(pos, begin_idx)
+            content: processedSource.slice(pos, begin_idx)
           });
         CALLOUT_END_RE.lastIndex = begin_end;
         const cend = CALLOUT_END_RE.exec(source);
@@ -637,7 +735,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         const variantRaw = ((_b = c[1]) !== null && _b !== void 0 ? _b : "note").toLowerCase();
         const variant = ["note", "tip", "warning", "info"].includes(variantRaw) ? variantRaw : "note";
         const title2 = (_c = c[2]) !== null && _c !== void 0 ? _c : "";
-        const inner_md = source.slice(begin_end, cend.index).trim();
+        const inner_md = processedSource.slice(begin_end, cend.index).trim();
         out.push({
           type: "callout",
           variant,
@@ -651,7 +749,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: source.slice(pos, begin_idx)
+            content: processedSource.slice(pos, begin_idx)
           });
         FOLD_END_RE.lastIndex = begin_end;
         const fend = FOLD_END_RE.exec(source);
@@ -665,7 +763,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         }
         const title2 = (_d = f[1]) !== null && _d !== void 0 ? _d : "Details";
         const open = !!f[2];
-        const inner_md = source.slice(begin_end, fend.index).trim();
+        const inner_md = processedSource.slice(begin_end, fend.index).trim();
         out.push({
           type: "fold",
           title: title2,
@@ -677,8 +775,8 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
     }
     return out;
   })();
-  return `<div class="md-output space-y-6 svelte-2uty9x"${add_attribute("this", container, 0)}>${each(chunks, (chunk, i) => {
-    return `${chunk.type === "text" ? `<div class="md-output svelte-2uty9x"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: chunk.id, label: chunk.label }, {}, {})}` : `${chunk.type === "takeaway" ? `${validate_component(TakeawayBox, "TakeawayBox").$$render($$result, { html: toHtml(chunk.content) }, {}, {})}` : `${chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-2uty9x"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
+  return `<div class="md-shell svelte-c8zg2i"${add_attribute("this", shellEl, 0)}><div class="md-grid svelte-c8zg2i"><div class="md-output space-y-6 svelte-c8zg2i"${add_attribute("this", container, 0)}>${each(chunks, (chunk, i) => {
+    return `${chunk.type === "text" ? `<div class="md-output svelte-c8zg2i"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: chunk.id, label: chunk.label }, {}, {})}` : `${chunk.type === "takeaway" ? `${validate_component(TakeawayBox, "TakeawayBox").$$render($$result, { html: toHtml(chunk.content) }, {}, {})}` : `${chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-c8zg2i"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
       $$result,
       {
         variant: chunk.variant,
@@ -697,10 +795,12 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
       {},
       {}
     )}` : ``}`}`}`}`}`}`;
-  })} </div>`;
+  })}</div> ${footnotes.length ? `<aside class="md-footnotes svelte-c8zg2i" aria-label="Footnotes"${add_attribute("this", footnoteAside, 0)}><ol class="svelte-c8zg2i"${add_attribute("this", footnoteList, 0)}>${each(footnotes, (fn) => {
+    return `<li${add_attribute("id", `fn-${fn.safeId}`, 0)}${add_attribute("title", fn.id, 0)} class="svelte-c8zg2i"><span class="fn-label svelte-c8zg2i">${escape(fn.num)}</span> <span class="fn-text svelte-c8zg2i"><!-- HTML_TAG_START -->${fn.html}<!-- HTML_TAG_END --></span> </li>`;
+  })}</ol></aside>` : ``}</div> </div>`;
 });
 const css = {
-  code: ":root{--toc-max-width:280px}.toc.svelte-7oalz7.svelte-7oalz7{position:fixed;left:28px;top:120px;width:var(--toc-max-width, 280px);max-height:calc(100vh - 160px);overflow:auto;padding-right:8px;z-index:50;opacity:0;transition:opacity 400ms ease}.toc.ready.svelte-7oalz7.svelte-7oalz7{opacity:1}.toc-item.svelte-7oalz7.svelte-7oalz7{display:block;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-7oalz7.svelte-7oalz7:hover{color:#111827}.toc-item.active.svelte-7oalz7.svelte-7oalz7{color:#111827;font-weight:600}.toc.in-body.svelte-7oalz7 .toc-item.active.svelte-7oalz7{color:#6b7280}.toc.in-body.svelte-7oalz7 .toc-item.active.sub.svelte-7oalz7{color:#9ca3af}.toc-item.sub.svelte-7oalz7.svelte-7oalz7{margin-left:14px;color:#9ca3af;font-size:13px}.toc-item.hidden.svelte-7oalz7.svelte-7oalz7{visibility:hidden;pointer-events:none}@media(max-width: 1024px){.toc.svelte-7oalz7.svelte-7oalz7{display:none}}",
+  code: ":root{--toc-max-width:280px;--toc-left:28px}.toc.svelte-1b2oh2w.svelte-1b2oh2w{position:fixed;left:var(--toc-left, 28px);top:50%;transform:translateY(-50%);width:var(--toc-max-width, 280px);height:calc(100vh - 180px);max-height:calc(100vh - 180px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding-right:0;z-index:50;opacity:0;transition:opacity 400ms ease;text-align:left}.toc.ready.svelte-1b2oh2w.svelte-1b2oh2w{opacity:1}.toc.hidden.svelte-1b2oh2w.svelte-1b2oh2w{display:none}.toc-item.svelte-1b2oh2w.svelte-1b2oh2w{display:block;width:100%;text-align:left;overflow-wrap:anywhere;word-break:break-word;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-1b2oh2w.svelte-1b2oh2w:hover{color:#111827}.toc-item.active.svelte-1b2oh2w.svelte-1b2oh2w{color:#111827;font-weight:600}.toc.in-body.svelte-1b2oh2w .toc-item.active.svelte-1b2oh2w{color:#6b7280}.toc.in-body.svelte-1b2oh2w .toc-item.active.sub.svelte-1b2oh2w{color:#9ca3af}.toc-item.sub.svelte-1b2oh2w.svelte-1b2oh2w{padding-left:14px;color:#9ca3af;font-size:13px}.toc-item.hidden.svelte-1b2oh2w.svelte-1b2oh2w{visibility:hidden;pointer-events:none}",
   map: null
 };
 const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -715,15 +815,15 @@ const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) 
     $$bindings.headingsSelector(headingsSelector);
   $$result.css.add(css);
   return ` <nav class="${[
-    "toc svelte-7oalz7",
-    " "
+    "toc svelte-1b2oh2w",
+    "  "
   ].join(" ").trim()}" aria-hidden="true"${add_attribute("this", meterEl, 0)}>${``} </nav>`;
 });
 const text = `![teaser](/assets/figures/teaser.gif "Figure 1: We study the compute-optimal RL for LLM along three axis: #parallel rollouts($n$), #problems per batch($B_\\text{problem}$), and #sequential iterations($M$), where total rollout compute $C = n \\times B_\\text{problem} \\times M$. We find that (1) optimal parallel rollouts per problem ($n$) grows with  compute budget ($C$). (2) Easy and hard problems: similar scaling trends, but different mechanisms. (3) under fixed hardware constraints ($B$ = $B$<sub>problem</sub> × $n$), prioritize **large $B$<sub>problem</sub>** (small $n$) at low compute budgets, but shift to **large $n$** (small $B$<sub>problem</sub>) at high compute budgets to maximize performance (3) #problems per batch ($B$<sub>problem</sub>) has marginal impact on performance when kept in a moderate range."){width=900px}
 
-A persistent blocker to scaling up reinforcement learning (RL) for LLMs is the absence of a ***concrete workflow*** : **a recipe that tells practitioners *what* to scale in the RL, *how* to scale it, and *what outcomes of scaling one should expect*.** In many areas of modern-day AI, such workflows emerge from [empirical](https://arxiv.org/pdf/2001.08361) [scaling laws](https://arxiv.org/pdf/2203.15556): small-scale experiments reveal how performance should grow with compute, data, or model size. These laws inform compute allocation, models to use, and hyperparameter settings.
+A persistent blocker to scaling up reinforcement learning (RL) for LLMs is the absence of a ***concrete workflow*** : **a recipe that tells practitioners *what* to scale in the RL, *how* to scale it, and *what outcomes of scaling one should expect*.** In many areas of modern-day AI, such workflows emerge from empirical scaling laws[^kaplan-2001][^chinchilla-2203]: small-scale experiments reveal how performance should grow with compute, data, or model size. These laws inform compute allocation, models to use, and hyperparameter settings.
 
-For RL, scaling laws remain far less understood compared to pre-training or supervised learning due to the interplay between data collection (***exploration***) and optimization (***learning from data***). Recent works have begun to sketch what these laws might look like in classical [deep](https://arxiv.org/abs/2104.03113) [RL](https://value-scaling.github.io/) [settings](https://arxiv.org/abs/2301.13442). But in the LLM setting, this line of work is still in its infancy. The [most relevant prior results](https://arxiv.org/abs/2510.13786) show that, under **specific conditions** (a particular problem mixture), reward curves in RL follow a clean sigmoidal shape when run for longer. Another [prior work](https://arxiv.org/abs/2509.25300) shows that RL training exhibits similar scaling behavior as pre-training in the model size, but ignores other hyperparameters. Simply fitting the shape of a learning curve or showing gains with larger models however does not answer one major question scaling laws intend to address: ***resource allocation** to set up an RL run under the conditions that a downstream user faces*. Given a base model, a problem set, and a total budget on compute, how should one spend this compute? If we had 10x more compute, how should that be spent? Which hyperparameters affect this resource allocation question the most and why? How does resource allocation change when the base model changes?
+For RL, scaling laws remain far less understood compared to pre-training or supervised learning due to the interplay between data collection (***exploration***) and optimization (***learning from data***). Recent works have begun to sketch what these laws might look like in classical deep RL settings[^deep-rl-2104][^value-scaling][^deep-rl-2301]. But in the LLM setting, this line of work is still in its infancy. The most relevant prior results in the LLM-RL setting[^rl-sigmoid-2510] show that, under **specific conditions** (a particular problem mixture), reward curves in RL follow a clean sigmoidal shape when run for longer. Another prior work[^cite-2509] shows that RL training exhibits similar scaling behavior as pre-training in the model size, but ignores other hyperparameters. Simply fitting the shape of a learning curve or showing gains with larger models however does not answer one major question scaling laws intend to address: ***resource allocation** to set up an RL run under the conditions that a downstream user faces*. Given a base model, a problem set, and a total budget on compute, how should one spend this compute? If we had 10x more compute, how should that be spent? Which hyperparameters affect this resource allocation question the most and why? How does resource allocation change when the base model changes?
 
 We have been working toward answering these questions. This article aims to frame the core scaling issues and provide practical guidance for allocating compute in on-policy RL for LLMs, with a particular focus on compute spent on **online sampling (rollouts)**. The picture that emerges is nuanced: ***scaling behavior depends not only on the total compute budget, but also on the interaction between the base model and the prompt distribution.*** Nevertheless, we find that **predictable allocation rules for key hyperparameters emerge as sampling compute increases**. Concretely, as we discuss in detail, for on-policy RL algorithms that optimize policies using multiple parallel rollouts per sequential gradient step, we observe the following:
 
@@ -843,23 +943,22 @@ Building on the perspective of stable entropy and KL dynamics, the **learning ra
 
 As shown in Figure 4 below, we observe that ***square-root scaling enables faster convergence while avoiding the instability seen in linear scaling.*** Although we ran this experiment on the easy problem set, we expect the same learning rate scaling strategy to apply across problem sets of varying difficulty. Conceptually, the way the learning rate should scale with batch size is governed by gradient variance and noise. While problem difficulty may change the optimal *absolute* learning rate, it should not fundamentally change the underlying scaling relationship as batch size increases.
 
-![Figure 4: Base LR selection and scaling strategy validation.](/assets/figures/sec2_lr_scaling.png "Figure 4: Base LR selection and scaling strategy validation. We sweep of the base learning rate at $B$=1024, and identify $\\eta=10^{-6}$ as the baselineLR ***(left)***. We then compare LR scaling methods at a larger batch size ($B$=8192). **Square-root scaling** enables faster convergence without the instability observed in linear scaling, validating it as the robust choice for large-scale training ***(right)***."){width=900px}
-
-
 :::takeaway_begin:::
 **Key Takeaways**:
 
 1. RL training exhibits distinct training behaviors depending on problem difficulty. We therefore explicitly **curate and control for both Easy and Hard datasets** to ensure the recipe is robust to different saturation points and exploration requirements. On heterogeneous datasets that we discuss later, we simply use the recipe corresponding to the Hard dataset to avoid instability.
 2. The necessity of regularization changes based on the difficulty level. **Easy tasks** benefit from KL divergence and entropy constraints to prevent premature collapse, whereas **Hard tasks** achieve peak performance when these constraints are removed to allow unconstrained exploration. Training on mixed datasets is most stable when no KL divergence or entropy are used.
 3. Learning rate should not be fixed as the total batch size $B$ changes. Of the schemes we compared, the **square-root learning rate scaling** strategy is the best.
+
 :::takeaway_end:::
+
 ---
 
 ## Results: Compute-Optimal Allocation of Sampling FLOPs in LLM RL
 
 We now turn to our central question: ***given a fixed sampling compute budget, how should we allocate it across the RL sampling knobs to maximize performance?*** Recall that the rollout compute $C$ scales ∝ $B$<sub>problem</sub> × $n$ × $M$. Our goal is ***not*** to tune a single best configuration for training, but to identify **allocation workflows** for distributing a fixed sampling budget across problems per batch $B$<sub>problem</sub> and rollouts $n$ sampled for each problem in the batch. Across all experiments in this section, we sweep ($n$, $B$<sub>problem</sub>, $M$) across a range of compute budgets $C$. For a fixed compute budget $C$ = $C$<sub>0</sub>, we evaluate multiple allocations and define the ***compute-optimal frontier*** as the highest IID validation set reward achievable using total compute $C$<sub>0</sub>. We get different plots on the frontier as we increase and sweep over values of $C$<sub>0</sub>.
 
-**Data analysis workflow.** To make our scaling law prescriptions, we subsample the data from runs to only a smaller set of ***record-breaking*** points on a learning curve of reward (or any other performance metric) as a function of increasing compute. A record-breaking point is defined as the first point in a run that attains a higher validation reward relative to all previous points. For computing this higher reward, we first bucketize the reward into discrete bins and then pick the first points where the bucket increments. See [this] footnote for a detailed explanation on why utilizing record-breaking points for deriving the fit is sufficient. We then fit a monotonic function to the record-breaking points to obtain prescriptions for compute-optimal values of $n$, $B$<sub>problem</sub>, and $M$. Because this pre-processing is order-preserving, this procedure does not introduce spurious non-monotonicity and yields the same frontier in practice as fitting over all points.
+**Data analysis workflow.** To make our scaling law prescriptions, we subsample the data from runs to only a smaller set of ***record-breaking*** points on a learning curve of reward (or any other performance metric) as a function of increasing compute. A record-breaking point is defined as the first point in a run that attains a higher validation reward relative to all previous points. For computing this higher reward, we first bucketize the reward into discrete bins and then pick the first points where the bucket increments. See this footnote[^record-breaking] for a detailed explanation on why utilizing record-breaking points for deriving the fit is sufficient. We then fit a monotonic function to the record-breaking points to obtain prescriptions for compute-optimal values of $n$, $B$<sub>problem</sub>, and $M$. Because this pre-processing is order-preserving, this procedure does not introduce spurious non-monotonicity and yields the same frontier in practice as fitting over all points.
 
 Unless otherwise stated, we use Qwen2.5-7B-Instruct as the base model with the max output length 8,192 and the healthy *RL* recipe from above. We use on-policy updates with an Adam optimizer, scaling the learning rate proportionally to √$B$, where the rollout batch size $B$ = $B$<sub>problem</sub> × $n$ (base LR = 1e-6 at $B$=1024); KL and entropy regularization are enabled on the Easy set and disabled on the Hard set (as discussed above); we fix the sampling temperature to 0.6 and top_p to 1.0 for training and evaluation; we use GRPO to estimate advantages and truncated importance sampling ([TIS](https://fengyao.notion.site/flash-rl)) to mitigate training-inference logit mismatch. 
 
@@ -1051,7 +1150,16 @@ A central takeaway from this work is that **healthy RL recipes are inherently de
 
 Our analysis also surfaces an important open challenge for future work: **interference across problems**. In an idealized single-problem setting, one might expect clean exponential improvements with increasing sampling compute. In practice, however, RL is performed over mixtures of problems, where progress on some tasks can interfere with learning on others. This population-level interference alters both the coefficients and effective hyperparameter values in observed scaling laws.
 
-A promising direction is to identify sufficient statistics early in training that capture the degree of interference across problems, enabling more accurate predictions of how additional compute will translate into subsequent learning progress. We believe that tracking changes in the pass@1 distribution over the course of training provides a natural starting point for studying interference. Developing such models would be a critical step toward predictive scaling laws for RL on heterogeneous data mixtures. Mathematically, this points toward approximate closed-form rules for compute-optimal hyperparameters that generalize across base models and prompt distributions by estimating a small number of statistics that summarize the pass@1 landscape and incorporating them into scaling-law fits. This remains an interesting direction for future work.`;
+A promising direction is to identify sufficient statistics early in training that capture the degree of interference across problems, enabling more accurate predictions of how additional compute will translate into subsequent learning progress. We believe that tracking changes in the pass@1 distribution over the course of training provides a natural starting point for studying interference. Developing such models would be a critical step toward predictive scaling laws for RL on heterogeneous data mixtures. Mathematically, this points toward approximate closed-form rules for compute-optimal hyperparameters that generalize across base models and prompt distributions by estimating a small number of statistics that summarize the pass@1 landscape and incorporating them into scaling-law fits. This remains an interesting direction for future work.
+
+[^cite-2509]: Prior work on RL scaling behavior vs pre-training model size. https://arxiv.org/abs/2509.25300
+[^kaplan-2001]: Kaplan et al., "Scaling Laws for Neural Language Models." https://arxiv.org/abs/2001.08361
+[^chinchilla-2203]: Hoffmann et al., "Training Compute-Optimal Large Language Models" (Chinchilla). https://arxiv.org/abs/2203.15556
+[^deep-rl-2104]: Deep RL scaling-law style analyses in classical RL settings. https://arxiv.org/abs/2104.03113
+[^value-scaling]: "Value Scaling" (collection of scaling-law results/notes for RL). https://value-scaling.github.io/
+[^deep-rl-2301]: Additional work on scaling behavior in (deep) RL settings. https://arxiv.org/abs/2301.13442
+[^rl-sigmoid-2510]: Prior results showing sigmoidal reward curves in LLM-RL under a fixed problem mixture. https://arxiv.org/abs/2510.13786
+[^record-breaking]: Why record-breaking points are enough: if we assume the learning curve is (approximately) monotone in compute but noisy, then only *new maxima* constrain any monotone fit—the intermediate points below the running maximum are redundant for determining the upper envelope/frontier. Bucketizing reward into coarse bins further reduces sensitivity to tiny fluctuations and logging noise; selecting the first point where the bucket increases is a stable way to pick representative “frontier updates” along the run. Fitting on these record-breaking points therefore preserves the same practical frontier as fitting on all points, while greatly reducing sample count and making the monotone regression numerically more stable.`;
 export {
   Markdown as M,
   Seo as S,

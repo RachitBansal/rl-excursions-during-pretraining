@@ -14,7 +14,7 @@
 <div>
   <ScrollMeter containerSelector=".md-output" />
 
-  <div class="layout-md text-lg space-y-12">
+  <div class="layout-xl text-lg space-y-12">
     <Markdown source={text} />
   </div>
 </div>

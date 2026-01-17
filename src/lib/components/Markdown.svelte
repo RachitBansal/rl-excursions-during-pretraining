@@ -3,6 +3,11 @@
   import katex from "katex";
   import "katex/dist/katex.min.css";
 
+  function normalizeFootnoteId(id: string) {
+    // Keep in sync with the renderer/link ids; allow common id chars like '-' and '_'.
+    return String(id).replace(/[^a-zA-Z0-9\-_]/g, "");
+  }
+
   function renderMath(tex: string, displayMode: boolean) {
     try {
       return katex.renderToString(tex, { throwOnError: false, displayMode });
@@ -216,6 +221,8 @@
 
   export let source: string;
 
+  type Footnote = { id: string; safeId: string; num: number; html: string };
+
   type Chunk =
     | { type: "text"; content: string }
     | { type: "jumpbox"; id: string; label: string }
@@ -236,6 +243,101 @@
   const FOLD_BEGIN_RE =
     /:::fold_begin(?:\s+title="([^"]+)")?(?:\s+(open))?\s*:::/gm;
   const FOLD_END_RE = /:::fold_end:::/gm;
+
+  function extractFootnotes(md: string) {
+    const lines = md.split("\n");
+    const mainLines: string[] = [];
+    const footnotes: { id: string; safeId: string; raw: string[] }[] = [];
+    let current: { id: string; safeId: string; raw: string[] } | null = null;
+
+    for (const line of lines) {
+      const match = line.match(/^\[\^([^\]]+)\]:\s*(.*)$/);
+      if (match) {
+        if (current) footnotes.push(current);
+        const id = match[1];
+        current = { id, safeId: normalizeFootnoteId(id), raw: [match[2]] };
+        continue;
+      }
+
+      if (current) {
+        if (/^\s{2,}|\t/.test(line)) {
+          current.raw.push(line.replace(/^\s+/, ""));
+          continue;
+        }
+        footnotes.push(current);
+        current = null;
+      }
+
+      mainLines.push(line);
+    }
+
+    if (current) footnotes.push(current);
+
+    const cleaned = mainLines.join("\n");
+    const notes = footnotes.map((fn) => ({
+      id: fn.id,
+      safeId: fn.safeId,
+      html: marked.parse(fn.raw.join("\n"), { smartypants: true }),
+    }));
+
+    return { main: cleaned, notes };
+  }
+
+  function computeFootnoteNumbering(main: string, notes: { id: string; safeId: string; html: string }[]) {
+    // Number by first appearance in the main text.
+    const order: string[] = [];
+    const seen = new Set<string>();
+    const re = /\[\^([^\]]+)\]/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(main)) !== null) {
+      const safeId = normalizeFootnoteId(m[1]);
+      if (!safeId || seen.has(safeId)) continue;
+      seen.add(safeId);
+      order.push(safeId);
+    }
+
+    const noteBySafeId = new Map(notes.map((n) => [n.safeId, n]));
+    const numbered: Footnote[] = [];
+    const idToNum = new Map<string, number>();
+    let next = 1;
+
+    for (const safeId of order) {
+      const n = noteBySafeId.get(safeId);
+      if (!n) continue;
+      idToNum.set(safeId, next);
+      numbered.push({ ...n, num: next });
+      next += 1;
+    }
+
+    // Append any defined-but-unreferenced notes at the end (rare, but keep deterministic).
+    for (const n of notes) {
+      if (idToNum.has(n.safeId)) continue;
+      idToNum.set(n.safeId, next);
+      numbered.push({ ...n, num: next });
+      next += 1;
+    }
+
+    return { idToNum, numbered };
+  }
+
+  function replaceFootnoteRefs(md: string, idToNum: Map<string, number>) {
+    return md.replace(/\[\^([^\]]+)\]/g, (_m, id) => {
+      const safeId = normalizeFootnoteId(id);
+      const num = idToNum.get(safeId);
+      const label = num ? String(num) : String(id);
+      return `<sup class="footnote-ref"><a href="#fn-${safeId}" data-fn="${safeId}">${label}</a></sup>`;
+    });
+  }
+
+  let processedSource = source;
+  let footnotes: Footnote[] = [];
+
+  $: {
+    const { main, notes } = extractFootnotes(source || "");
+    const { idToNum, numbered } = computeFootnoteNumbering(main, notes);
+    processedSource = replaceFootnoteRefs(main, idToNum);
+    footnotes = numbered;
+  }
 
   function toHtml(md: string) {
     return marked.parse(md, { smartypants: true });
@@ -262,8 +364,8 @@
 
       // No more markers → push rest as text and stop
       if (!j && !t && !s && !c && !f) {
-        if (pos < source.length)
-          out.push({ type: "text", content: source.slice(pos) });
+        if (pos < processedSource.length)
+          out.push({ type: "text", content: processedSource.slice(pos) });
         break;
       }
 
@@ -278,7 +380,7 @@
       if (j_idx === min_idx) {
         // Emit pre-text
         if (j_idx > pos)
-          out.push({ type: "text", content: source.slice(pos, j_idx) });
+          out.push({ type: "text", content: processedSource.slice(pos, j_idx) });
 
         const id = j![1];
         const label = j![2] ?? id;
@@ -293,7 +395,7 @@
 
         // Emit pre-text
         if (begin_idx > pos)
-          out.push({ type: "text", content: source.slice(pos, begin_idx) });
+          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
 
         // Find matching end after the begin
         TAKE_END_RE.lastIndex = begin_end;
@@ -309,7 +411,7 @@
           continue;
         }
 
-        const inner_md = source.slice(begin_end, tend.index).trim();
+        const inner_md = processedSource.slice(begin_end, tend.index).trim();
         out.push({ type: "takeaway", content: inner_md });
 
         // Advance past the end marker
@@ -321,7 +423,7 @@
 
         // Emit pre-text
         if (begin_idx > pos)
-          out.push({ type: "text", content: source.slice(pos, begin_idx) });
+          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
 
         // Find matching end after the begin
         SMALL_END_RE.lastIndex = begin_end;
@@ -337,7 +439,7 @@
           continue;
         }
 
-        const inner_md = source.slice(begin_end, send.index).trim();
+        const inner_md = processedSource.slice(begin_end, send.index).trim();
         out.push({ type: "small", content: inner_md });
 
         // Advance past the end marker
@@ -348,7 +450,7 @@
         const begin_end = begin_idx + c![0].length;
 
         if (begin_idx > pos)
-          out.push({ type: "text", content: source.slice(pos, begin_idx) });
+          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
 
         CALLOUT_END_RE.lastIndex = begin_end;
         const cend = CALLOUT_END_RE.exec(source);
@@ -364,7 +466,7 @@
             ? variantRaw
             : "note") as any;
         const title = c![2] ?? "";
-        const inner_md = source.slice(begin_end, cend.index).trim();
+        const inner_md = processedSource.slice(begin_end, cend.index).trim();
         out.push({ type: "callout", variant, title, content: inner_md });
 
         pos = CALLOUT_END_RE.lastIndex;
@@ -374,7 +476,7 @@
         const begin_end = begin_idx + f![0].length;
 
         if (begin_idx > pos)
-          out.push({ type: "text", content: source.slice(pos, begin_idx) });
+          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
 
         FOLD_END_RE.lastIndex = begin_end;
         const fend = FOLD_END_RE.exec(source);
@@ -386,7 +488,7 @@
 
         const title = f![1] ?? "Details";
         const open = !!f![2];
-        const inner_md = source.slice(begin_end, fend.index).trim();
+        const inner_md = processedSource.slice(begin_end, fend.index).trim();
         out.push({ type: "fold", title, open, content: inner_md });
 
         pos = FOLD_END_RE.lastIndex;
@@ -399,6 +501,129 @@
   import { onMount, afterUpdate, onDestroy } from "svelte";
 
   let container: HTMLDivElement | null = null;
+  let footnoteAside: HTMLElement | null = null;
+  let footnoteList: HTMLOListElement | null = null;
+  let shellEl: HTMLDivElement | null = null;
+  let sideMO: MutationObserver | null = null;
+  // Side column visibility is controlled by the TOC (ScrollMeter) via
+  // `document.documentElement.dataset.sidecols` + the `sidecolschange` event.
+
+  let alignRaf: number | null = null;
+  let alignRO: ResizeObserver | null = null;
+  let sideRO: ResizeObserver | null = null;
+
+  function scheduleAlign() {
+    if (alignRaf !== null) return;
+    alignRaf = requestAnimationFrame(() => {
+      alignRaf = null;
+      alignFootnotes();
+    });
+  }
+
+  function updateSideVisibility() {
+    if (!shellEl || !container || typeof window === "undefined") return;
+    const root = document.documentElement;
+    const sideFromToc = root?.dataset?.sidecols;
+    if (sideFromToc === "on" || sideFromToc === "off") {
+      shellEl.dataset.side = sideFromToc;
+      return;
+    }
+    // If the TOC hasn't published visibility yet, don't override the current state.
+    // We'll sync on the next `sidecolschange` event / resize / update.
+    return;
+  }
+
+  function alignFootnotes() {
+    if (!container || !footnoteAside || !footnoteList) return;
+    if (shellEl?.dataset.side === "off") return;
+    const refs = Array.from(
+      container.querySelectorAll<HTMLAnchorElement>(".footnote-ref a[data-fn]"),
+    );
+    if (!refs.length) return;
+
+    const items = new Map<string, HTMLLIElement>();
+    footnoteAside
+      .querySelectorAll<HTMLLIElement>("li[id^='fn-']")
+      .forEach((li) => items.set(li.id.replace(/^fn-/, ""), li));
+
+    const listRect = footnoteList.getBoundingClientRect();
+    const footnoteStyles = getComputedStyle(footnoteAside);
+    const fontSize = parseFloat(footnoteStyles.fontSize || "14");
+    const lineHeightRaw = footnoteStyles.lineHeight;
+    const lineHeight =
+      lineHeightRaw === "normal"
+        ? fontSize * 1.6
+        : parseFloat(lineHeightRaw || String(fontSize * 1.6));
+    const used = new Set<string>();
+
+    // Collect desired positions first, then resolve overlaps (citations close together).
+    const entries: { id: string; li: HTMLLIElement; desiredTop: number; height: number }[] =
+      [];
+
+    // Position each footnote at the same vertical line as its reference
+    for (const ref of refs) {
+      const id = ref.dataset.fn;
+      if (!id || used.has(id)) continue;
+      const li = items.get(id);
+      if (!li) continue;
+      used.add(id);
+
+      // The ref is rendered as a <sup> (see renderer), so its own rect is *not*
+      // representative of the containing text line. Use a collapsed Range to
+      // obtain the actual line box at the ref position.
+      const supEl = ref.closest("sup.footnote-ref") as HTMLElement | null;
+      const anchorEl = supEl ?? ref;
+      let lineRect: DOMRect | null = null;
+      try {
+        const range = document.createRange();
+        range.setStartBefore(anchorEl);
+        range.collapse(true);
+        const rects = range.getClientRects();
+        if (rects && rects.length) lineRect = rects[rects.length - 1] as DOMRect;
+      } catch {
+        // ignore; fallback below
+      }
+      if (!lineRect) lineRect = anchorEl.getBoundingClientRect();
+
+      // `li` is absolutely positioned *inside* the <ol>, so convert viewport Y → <ol>-local Y.
+      const lineMidY = lineRect.top + lineRect.height / 2;
+      const desiredTop = lineMidY - lineHeight / 2 - listRect.top;
+
+      // Stage for measurement; final placement happens after overlap resolution.
+      li.style.position = "absolute";
+      li.style.top = `0px`;
+      li.style.marginTop = "0px";
+      entries.push({ id, li, desiredTop, height: 0 });
+    }
+
+    if (entries.length) {
+      // Measure heights after we've ensured absolute positioning.
+      for (const e of entries) {
+        e.height = e.li.getBoundingClientRect().height || lineHeight;
+      }
+
+      // Resolve overlaps by pushing down later notes.
+      entries.sort((a, b) => a.desiredTop - b.desiredTop);
+      const gapVar = getComputedStyle(document.documentElement).getPropertyValue(
+        "--footnote-item-gap",
+      );
+      const gap = Math.max(0, Math.round(parseFloat(gapVar || "28") || 28)); // px between notes
+      let prevBottom = -Infinity;
+      for (const e of entries) {
+        const top = Math.max(e.desiredTop, prevBottom + gap);
+        e.li.style.top = `${Math.round(top)}px`;
+        prevBottom = top + e.height;
+      }
+
+      // Ensure the <ol> is tall enough so pushed-down notes don't get clipped.
+      const needed = Math.ceil(prevBottom + 12);
+      const current = footnoteList.getBoundingClientRect().height;
+      footnoteList.style.minHeight = `${Math.max(needed, Math.ceil(current))}px`;
+    }
+
+    // Mark as aligned to avoid initial "jump" while fonts/layout are settling.
+    if (shellEl) shellEl.dataset.fnAligned = "1";
+  }
 
   function setupVideos(root: HTMLElement) {
     const videos = Array.from(
@@ -540,6 +765,52 @@
     if (container) {
       setupVideos(container);
       makeCodeBlocksCopyable(container);
+      updateSideVisibility();
+      scheduleAlign();
+      // Recompute once after layout settles (grid, fonts, etc.)
+      requestAnimationFrame(() => updateSideVisibility());
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", scheduleAlign, { passive: true });
+      window.addEventListener("resize", updateSideVisibility, { passive: true });
+      // Sync footnotes visibility to TOC visibility changes (dataset updates)
+      // even when the change doesn't trigger a resize.
+      window.addEventListener("sidecolschange", updateSideVisibility as any, {
+        passive: true,
+      } as any);
+
+      // Extra safety: observe dataset changes directly, in case an event is missed.
+      if ("MutationObserver" in window) {
+        const root = document.documentElement;
+        sideMO = new MutationObserver((mutations) => {
+          for (const m of mutations) {
+            if (m.type === "attributes" && m.attributeName === "data-sidecols") {
+              updateSideVisibility();
+              break;
+            }
+          }
+        });
+        sideMO.observe(root, { attributes: true, attributeFilter: ["data-sidecols"] });
+      }
+    }
+
+    // Re-align when layout changes (fonts load, images settle, markdown reflows).
+    if (typeof window !== "undefined" && "ResizeObserver" in window) {
+      alignRO = new ResizeObserver(() => scheduleAlign());
+      if (container) alignRO.observe(container);
+      if (footnoteAside) alignRO.observe(footnoteAside);
+    }
+    if (typeof window !== "undefined" && "ResizeObserver" in window) {
+      sideRO = new ResizeObserver(() => updateSideVisibility());
+      if (container) sideRO.observe(container);
+    }
+    // Fonts loading often causes a delayed reflow without a resize event.
+    const fonts = (document as any).fonts;
+    if (fonts?.ready && typeof fonts.ready.then === "function") {
+      fonts.ready.then(() => {
+        updateSideVisibility();
+        scheduleAlign();
+      });
     }
   });
 
@@ -547,6 +818,8 @@
     if (container) {
       setupVideos(container); // handle markdown re-render
       makeCodeBlocksCopyable(container);
+      updateSideVisibility();
+      scheduleAlign();
     }
   });
 
@@ -559,29 +832,57 @@
       const cleanup = (v as any)._cleanupVideo;
       if (cleanup) cleanup();
     });
+    if (typeof window !== "undefined") {
+      window.removeEventListener("resize", scheduleAlign);
+      window.removeEventListener("resize", updateSideVisibility);
+      window.removeEventListener("sidecolschange", updateSideVisibility as any);
+    }
+    if (sideMO) {
+      sideMO.disconnect();
+      sideMO = null;
+    }
+    if (alignRO) alignRO.disconnect();
+    if (sideRO) sideRO.disconnect();
   });
 </script>
 
-<div class="md-output space-y-6" bind:this={container}>
-  {#each chunks as chunk, i (i)}
-    {#if chunk.type === "text"}
-      <div class="md-output">{@html toHtml(chunk.content)}</div>
-    {:else if chunk.type === "jumpbox"}
-      <Jumpbox id={chunk.id} label={chunk.label} />
-    {:else if chunk.type === "takeaway"}
-      <TakeawayBox html={toHtml(chunk.content)} />
-    {:else if chunk.type === "small"}
-      <div class="md-output text-sm sm-block">{@html toHtml(chunk.content)}</div>
-    {:else if chunk.type === "callout"}
-      <CalloutBox
-        variant={chunk.variant}
-        title={chunk.title}
-        html={toHtml(chunk.content)}
-      />
-    {:else if chunk.type === "fold"}
-      <FoldBox title={chunk.title} open={chunk.open} html={toHtml(chunk.content)} />
+<div class="md-shell" bind:this={shellEl}>
+  <div class="md-grid">
+    <div class="md-output space-y-6" bind:this={container}>
+      {#each chunks as chunk, i (i)}
+        {#if chunk.type === "text"}
+          <div class="md-output">{@html toHtml(chunk.content)}</div>
+        {:else if chunk.type === "jumpbox"}
+          <Jumpbox id={chunk.id} label={chunk.label} />
+        {:else if chunk.type === "takeaway"}
+          <TakeawayBox html={toHtml(chunk.content)} />
+        {:else if chunk.type === "small"}
+          <div class="md-output text-sm sm-block">{@html toHtml(chunk.content)}</div>
+        {:else if chunk.type === "callout"}
+          <CalloutBox
+            variant={chunk.variant}
+            title={chunk.title}
+            html={toHtml(chunk.content)}
+          />
+        {:else if chunk.type === "fold"}
+          <FoldBox title={chunk.title} open={chunk.open} html={toHtml(chunk.content)} />
+        {/if}
+      {/each}
+    </div>
+
+    {#if footnotes.length}
+      <aside class="md-footnotes" bind:this={footnoteAside} aria-label="Footnotes">
+        <ol bind:this={footnoteList}>
+          {#each footnotes as fn}
+            <li id={`fn-${fn.safeId}`} title={fn.id}>
+              <span class="fn-label">{fn.num}</span>
+              <span class="fn-text">{@html fn.html}</span>
+            </li>
+          {/each}
+        </ol>
+      </aside>
     {/if}
-  {/each}
+  </div>
 </div>
 
 <style lang="postcss">
@@ -654,6 +955,117 @@
   :global(.sm-block code) { @apply text-[90%]; }
   /* Optional: tighten paragraphs slightly in small blocks */
   /* :global(.sm-block p) { @apply mb-3; } */
+
+  .md-shell {
+    position: relative;
+  }
+
+  /* Hide footnotes until we've aligned them once to avoid initial flash at top. */
+  .md-shell:not([data-fn-aligned="1"]) .md-footnotes {
+    opacity: 0;
+  }
+  .md-shell[data-fn-aligned="1"] .md-footnotes {
+    opacity: 1;
+    transition: opacity 120ms ease;
+  }
+
+  .md-grid {
+    display: grid;
+    /* 3 columns: left margin | main text | right margin (footnotes live in the right margin) */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 850px) minmax(0, 1fr);
+    column-gap: var(--toc-gap, var(--side-gap, 32px));
+    align-items: start;
+  }
+
+  /* If the main column becomes > 1/2 of the viewport, hide side columns and collapse layout. */
+  .md-shell[data-side="off"] .md-grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 16px;
+  }
+  .md-shell[data-side="off"] .md-output {
+    grid-column: 1;
+  }
+  .md-shell[data-side="off"] .md-footnotes {
+    display: none;
+  }
+
+  /* Keep main text centered and at a readable width, regardless of footnotes. */
+  .md-output {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  .md-footnotes {
+    position: relative;
+    grid-column: 3;
+    width: 260px;
+    justify-self: start;
+    padding-left: calc(var(--footnote-gap, 48px) - var(--toc-gap, var(--side-gap, 32px)));
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+  }
+
+  .md-footnotes ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    min-height: 100%;
+  }
+
+  .md-footnotes li {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: var(--footnote-item-gap, 28px);
+  }
+  .md-footnotes li:last-child {
+    margin-bottom: 0;
+  }
+
+  .md-footnotes .fn-label {
+    font-variant-numeric: tabular-nums;
+    color: #6b7280;
+  }
+
+  .md-footnotes .fn-text :global(p) {
+    margin: 0;
+  }
+
+  .md-footnotes .fn-text :global(a) {
+    @apply underline underline-offset-[3px] decoration-neutral-400;
+  }
+
+  :global(.footnote-ref) {
+    font-size: 0.75em;
+    vertical-align: super;
+    margin-left: 1px;
+  }
+
+  :global(.footnote-ref a) {
+    color: #6b7280;
+    text-decoration: none;
+  }
+
+  :global(.footnote-ref a:hover) {
+    color: #111827;
+  }
+
+  @media (max-width: 1024px) {
+    .md-grid {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 16px;
+    }
+    .md-output {
+      grid-column: 1;
+    }
+    .md-footnotes {
+      position: static;
+      grid-column: 1;
+      width: auto;
+    }
+  }
 
   :global(pre[data-copyable]) {
     position: relative;
