@@ -283,7 +283,8 @@
       }
     }
     active_index = ans;
-    showAll = isHovering || active_index < 0;
+    const allFolded = areAllH2SectionsFolded();
+    showAll = isHovering || active_index < 0 || allFolded;
     visibleIdSet = showAll ? null : computeVisibleIdSet(active_index);
   }
 
@@ -309,6 +310,15 @@
       ids.add(headings[i].id);
     }
     return ids;
+  }
+
+  function areAllH2SectionsFolded() {
+    if (!container_el) return false;
+    const folds = Array.from(
+      container_el.querySelectorAll<HTMLDetailsElement>("details[data-h2fold]"),
+    );
+    if (!folds.length) return false;
+    return folds.every((d) => !d.open);
   }
 
   function schedule_progress() {
