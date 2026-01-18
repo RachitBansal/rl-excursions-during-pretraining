@@ -952,7 +952,7 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   })}</ol></aside>` : ``}</div> </div>`;
 });
 const css = {
-  code: ":root{--toc-max-width:280px;--toc-left:28px;--toc-max-width-cap:220px}.toc.svelte-bsu6pv{position:fixed;left:var(--toc-left, 28px);top:50%;transform:translateY(-50%);width:var(--toc-max-width, 280px);height:calc(100vh - 180px);max-height:calc(100vh - 180px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding-right:0;z-index:50;opacity:0;transition:opacity 400ms ease;text-align:left}.toc.ready.svelte-bsu6pv{opacity:1}.toc.hidden.svelte-bsu6pv{display:none}.toc-item.svelte-bsu6pv{display:block;width:100%;text-align:left;overflow-wrap:anywhere;word-break:break-word;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-bsu6pv:hover{color:#111827}.toc-item.active.svelte-bsu6pv{color:#111827;font-weight:600}.toc-item.sub.svelte-bsu6pv{padding-left:14px;color:#9ca3af;font-size:13px}",
+  code: ":root{--toc-max-width:280px;--toc-left:28px;--toc-max-width-cap:220px}.toc.svelte-ic96q8{position:fixed;left:var(--toc-left, 28px);top:50%;transform:translateY(-50%);width:var(--toc-max-width, 280px);height:calc(100vh - 180px);max-height:calc(100vh - 180px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding-right:0;z-index:50;opacity:0;transition:opacity 400ms ease;text-align:left}.toc.ready.svelte-ic96q8{opacity:1}.toc.hidden.svelte-ic96q8{display:none}.toc-item.hidden.svelte-ic96q8{visibility:hidden;pointer-events:none}.toc-item.svelte-ic96q8{display:block;width:100%;text-align:left;overflow-wrap:anywhere;word-break:break-word;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-ic96q8:hover{color:#111827}.toc-item.active.svelte-ic96q8{color:#111827;font-weight:600}.toc-item.sub.svelte-ic96q8{padding-left:14px;color:#9ca3af;font-size:13px}",
   map: null
 };
 const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -969,7 +969,7 @@ const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) 
   if ($$props.tocMaxWidthCap === void 0 && $$bindings.tocMaxWidthCap && tocMaxWidthCap !== void 0)
     $$bindings.tocMaxWidthCap(tocMaxWidthCap);
   $$result.css.add(css);
-  return ` <nav class="${["toc svelte-bsu6pv", " "].join(" ").trim()}" aria-hidden="true"${add_attribute("this", meterEl, 0)}>${``} </nav>`;
+  return ` <nav class="${["toc svelte-ic96q8", " "].join(" ").trim()}" aria-hidden="true"${add_attribute("this", meterEl, 0)}>${``} </nav>`;
 });
 const text = `![teaser](/assets/figures/teaser.gif "Figure 1: We study the compute-optimal RL for LLM along three axis: #parallel rollouts($n$), #problems per batch($B_\\text{problem}$), and #sequential iterations($M$), where total rollout compute $C = n \\times B_\\text{problem} \\times M$. We find that (1) optimal parallel rollouts per problem ($n$) grows with  compute budget ($C$). (2) Easy and hard problems: similar scaling trends, but different mechanisms. (3) under fixed hardware constraints ($B$ = $B$<sub>problem</sub> × $n$), prioritize **large $B$<sub>problem</sub>** (small $n$) at low compute budgets, but shift to **large $n$** (small $B$<sub>problem</sub>) at high compute budgets to maximize performance (3) #problems per batch ($B$<sub>problem</sub>) has marginal impact on performance when kept in a moderate range."){width=900px}
 

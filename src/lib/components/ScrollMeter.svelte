@@ -16,6 +16,7 @@
     label: string;
     inSummary: boolean;
     inClosedDetails: boolean;
+    el: HTMLElement;
   };
 
   let headings: Heading[] = [];
@@ -212,13 +213,11 @@
           label: sanitizeHeadingLabel(h.textContent || ''),
           inSummary,
           inClosedDetails,
+          el: h,
         };
       });
 
     visibleHeadings = headings;
-    // Always show full TOC (no in-body collapsing).
-    showAll = true;
-    visibleIdSet = null;
     updateVisibility();
     updateLabelWidth();
     update_progress();
@@ -265,18 +264,12 @@
   function update_progress() {
     if (!browser) return;
     const y = window.scrollY + 8;
-    // Binary search for the last heading with top <= y.
-    let lo = 0;
-    let hi = headings.length - 1;
     let ans = -1;
-    while (lo <= hi) {
-      const mid = (lo + hi) >> 1;
-      if (headings[mid].top <= y) {
-        ans = mid;
-        lo = mid + 1;
-      } else {
-        hi = mid - 1;
-      }
+    // Recompute top on the fly; folds/images can shift layout after recompute().
+    for (let i = 0; i < headings.length; i += 1) {
+      const h = headings[i];
+      h.top = effectiveTopForHeading(h.el);
+      if (h.top <= y) ans = i;
     }
     if (ans >= 0) {
       const top = headings[ans].top;
@@ -290,9 +283,32 @@
       }
     }
     active_index = ans;
-    // Always show full TOC; hover does not change visibility.
-    showAll = true;
-    visibleIdSet = null;
+    showAll = isHovering || active_index < 0;
+    visibleIdSet = showAll ? null : computeVisibleIdSet(active_index);
+  }
+
+  function computeVisibleIdSet(activeIdx: number) {
+    if (activeIdx < 0) return null;
+    let h2Idx = -1;
+    for (let i = activeIdx; i >= 0; i -= 1) {
+      if (headings[i].level === 2) {
+        h2Idx = i;
+        break;
+      }
+    }
+    if (h2Idx < 0) return null;
+    let end = headings.length;
+    for (let i = h2Idx + 1; i < headings.length; i += 1) {
+      if (headings[i].level === 2) {
+        end = i;
+        break;
+      }
+    }
+    const ids = new Set<string>();
+    for (let i = h2Idx; i < end; i += 1) {
+      ids.add(headings[i].id);
+    }
+    return ids;
   }
 
   function schedule_progress() {
@@ -460,7 +476,7 @@
     {#each visibleHeadings as h, i}
       <a
         href={`#${h.id}`}
-        class={`toc-item ${h.level === 3 ? 'sub' : ''} ${i === active_index ? 'active' : ''}`}
+        class={`toc-item ${h.level === 3 ? 'sub' : ''} ${i === active_index ? 'active' : ''} ${!showAll && visibleIdSet && !visibleIdSet.has(h.id) ? 'hidden' : ''}`}
         title={h.label}
         on:click|preventDefault={() => gotoHeading(h.id)}
       >
@@ -501,6 +517,11 @@
 
   .toc.hidden {
     display: none;
+  }
+
+  .toc-item.hidden {
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .toc-item {
