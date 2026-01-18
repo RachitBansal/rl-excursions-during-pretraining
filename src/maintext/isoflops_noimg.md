@@ -67,13 +67,13 @@ $$
 
 Our central scaling question, put informally is:
 
-:::callout_begin type="info":::
+:::callout_begin type="tip" title=" ":::
 **Given a base model and a problem set, how should we spend a fixed amount of sampling compute to achieve the highest possible post-training performance?**
 :::callout_end:::
 
 This simple question abstracts all of the complexity of modern LLM RL. We make a simplifying assumption and assume that response length, on an average, is captured in the constants, we are now left to allocate sampling compute into $B$<sub>problem</sub>, $n$, and $M$. In principle, we could carry out our analysis accounting for the compute spent in terms of the total tokens sampled instead of the total rollouts. However, in our experiments we observed that although response length might vary across settings, these variations manifest primarily as a constant offset in log-log space, leaving the fundamental scaling trends intact. Hence, our conclusions would be similar whether or not we accounted for the sequence length, and we chose to ignore it for simplicity. Our scaling study is based on one model and a problem set, so we do not count them as resources. Hence, our formal resource allocation question is given by:
 
-:::callout_begin type="tip":::
+:::callout_begin type="tip" title=" ":::
 **Given a base model, a problem set, and a sampling budget $C$ ≤ $C$<sub>max</sub>, find the configurations of $n$, $M$, $B$<sub>problem</sub> that attain the best possible performance as measured by a target performance metric.**
 :::callout_end:::
 
@@ -122,14 +122,15 @@ Building on the perspective of stable entropy and KL dynamics, the **learning ra
 
 As shown in Figure 4 below, we observe that ***square-root scaling enables faster convergence while avoiding the instability seen in linear scaling.*** Although we ran this experiment on the easy problem set, we expect the same learning rate scaling strategy to apply across problem sets of varying difficulty. Conceptually, the way the learning rate should scale with batch size is governed by gradient variance and noise. While problem difficulty may change the optimal *absolute* learning rate, it should not fundamentally change the underlying scaling relationship as batch size increases.
 
-:::takeaway_begin:::
+:::callout_begin type="info":::
+
 **Key Takeaways**:
 
 1. RL training exhibits distinct training behaviors depending on problem difficulty. We therefore explicitly **curate and control for both Easy and Hard datasets** to ensure the recipe is robust to different saturation points and exploration requirements. On heterogeneous datasets that we discuss later, we simply use the recipe corresponding to the Hard dataset to avoid instability.
 2. The necessity of regularization changes based on the difficulty level. **Easy tasks** benefit from KL divergence and entropy constraints to prevent premature collapse, whereas **Hard tasks** achieve peak performance when these constraints are removed to allow unconstrained exploration. Training on mixed datasets is most stable when no KL divergence or entropy are used.
 3. Learning rate should not be fixed as the total batch size $B$ changes. Of the schemes we compared, the **square-root learning rate scaling** strategy is the best.
 
-:::takeaway_end:::
+:::callout_end:::
 
 ---
 
@@ -189,18 +190,17 @@ The net effect of these distinct optimization dynamics is a similar trend of com
 
 ![Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different $B_\text{problem}$ values](/assets/figures/sec3_q1_fixBprob_bestworstk.png "Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different $B_\text{problem}$ values, when evaluated at the largest allowed compute budget. On the Easy set ***(left)***, the compute-optimal $n$ is smaller for best@4 (blue) than for worst@4 (red), indicating that improving robustness (worst@4) requires substantially more parallel rollouts than improving coverage. In contrast, this trend reverses on the Hard set ***(right)***: a larger $n$ is needed to improve best@4 compute-optimally, while worst@4 saturates at smaller $n$."){width=900px}
 
-:::takeaway_begin:::
-**Key Result Takeaways**:
+:::callout_begin type="info" title="Key Result Takeaways":::
 
 1. The compute-optimal $n$ frontier **shifts systematically higher** as the total sampling compute increases. The trend remains consistent **across training dataset difficulties.**
 2. The source of gain from large $n$ **shifts based on the training data difficulty**: scaling $n$ improves **sharpening** (worst@4) on the Easy set, but expands **coverage** (best@4) on the Hard set. 
-:::takeaway_end:::
+:::callout_end:::
 
-:::takeaway_begin:::
-**Workflow Takeaways:**
+
+:::callout_begin type="info" title="Workflow Takeaways":::
 
 - Depending upon the composition of the problem set, and how effectively can the base model learn on this set, we might see different underlying mechanisms for performance improvement. It is advisable to evaluate the mode of performance improvement for your base model on your prompt set, and accordingly use it to set $n$ as a function of the available $C$.
-:::takeaway_end:::
+:::callout_end:::
 
 ### Question 2: Bounded Parallel Compute: Trading off $B$<sub>problem</sub> with $n$
 
@@ -236,17 +236,17 @@ Overall, we find that setting a large $n$ (up to the saturation point), combined
 
 ---
 
-:::takeaway_begin:::
-**Key Result Takeaways**:
+:::callout_begin type="info" title="Key Result Takeaways":::
 
 1. With a fixed total batch size $B$, increasing compute favors allocating more rollouts ($n$) per problem and fewer problems per batch ($B$<sub>problem</sub>). On the Easy set, this trend is especially clean, since large $B$<sub>problem</sub> leads to rapid overfitting (as a result of multi-epoch training).
 2. On the Easy set, the compute-optimal value of $n$ increases with the allowed number of sequential iterations $M$ and eventually saturates, following a sigmoidal scaling pattern.
 3. For the Hard dataset, $B$<sub>problem</sub> must exceed a minimum threshold when sequential compute is unconstrained. Here, incomplete optimization of training reward, rather than overfitting, limits validation performance, making overly small $B$<sub>problem</sub> suboptimal. However, $n$ is still the more critical resource to allocate, and it generally increases as total $B$ is scaled up.
+:::callout_end:::
 
-**Workflow Takeaways:**
+:::callout_begin type="info" title="Workflow Takeaways:":::
 
 - It is preferable to train on fewer problems with a sampling large budget $n$ if we are allowed training for multiple epochs on the same problem set. On the other hand, if multi-epoch training is not possible, then it might be preferable to include on more problems in a batch.
-:::takeaway_end:::
+:::callout_end:::
 
 ### Question 3: Putting It All Together
 
@@ -261,13 +261,12 @@ Finally, we relax all constraints and optimize ($B$<sub>problem</sub>, $n$, $M$)
 
 ![Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization).](/assets/figures/sec3_q3_sigmoid.png "Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization). We sweep all hyperparameters ($n, B_{\text{problem}}, M$) to find the global optimal configuration at each compute budget. Left (Easy) & Right (Hard): The optimal $n$ increases monotonically with compute, well-fitted by a sigmoid function (dashed black lines). Note that despite the freedom to vary $B_{\text{problem}}$, the scaling behavior is dominated by $n$, which saturates at a lower value on the Hard set compared to the Easy set."){width=900px}
 
-:::takeaway_begin:::
-**Key Takeaways:** 
+:::callout_begin type="info":::
 
 1. When jointly optimizing across all hyperparameters ($n$, $B$<sub>problem</sub>, $M$), the compute-optimal value of $n$ still increases with $C$, similar to the findings from Questions 1 & 2.
 2. Note the best total rollout size $B$ must generally increase as $C$ increases, though the compute-optimal value of $B$<sub>problem</sub> can be roughly chosen to be a constant at all compute budgets.
 3. Our prescribed workflow suggests tuning $n$ first for a new model or new run, followed by allocating $B$<sub>problem</sub> to a reasonable value and setting $M$ accordingly to the remaining compute. This provides the practical recommendation for users.
-:::takeaway_end:::
+:::callout_end:::
 
 ---
 
@@ -313,13 +312,12 @@ Technically, we can also plot compute-optimal scaling laws for training performa
 
 ![Figure 16: Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set).](/assets/figures/sec3_varyD.png "Figure 16: Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set). With a larger dataset ($D$=6k), we continues to improve with more parallel rollouts ($n$ = 512; ***left***). With a smaller dataset ($D$=500), performance peaks at $n$ = 256, and a larger $n$ leads to degradation ($n$ = 256)."){width=900px}
 
-:::takeaway_begin:::
-**Key Takeaways:**
+:::callout_begin type="info" title="Key Takeaways:":::
 
 1. While sequential and parallel computation are perfectly interchangeable in a tabular setting, interference across problems prevents a perfect exchange in practical LLM training. As a result, allocating compute toward parallel sampling to achieve a roughly uniform rate of improvement across training problems is often preferable to more sequential training iterations.
 2. Although different base models exhibit different levels of interference on different problem sets, we observe similar scaling rules for how compute should be allocated to the number of parallel rollouts across different prompt set combinations and base models, although the underlying causes of those scaling trends are different. 
 3. The size of the training problem set manifests as a train–test gap: when the training set is small, validation performance saturates early. This leads to lower saturation values for $n$ and $M$, and correspondingly higher optimal values of $B$<sub>problem</sub>.
-:::takeaway_end:::
+:::callout_end:::
 
 ---
 

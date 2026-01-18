@@ -1,7 +1,10 @@
+<script context="module" lang="ts">
+  export type CalloutVariant = "note" | "tip" | "warning" | "info" | "takeaway";
+</script>
+
 <script lang="ts">
-  export type CalloutVariant = "note" | "tip" | "warning" | "info";
   export let html: string; // already-marked HTML
-  export let title: string = "Callout";
+  export let title: string = "";
   export let variant: CalloutVariant = "note";
 
   const styles: Record<CalloutVariant, { wrap: string; badge: string; label: string }> = {
@@ -13,7 +16,7 @@
     info: {
       wrap: "bg-sky-50 hover:bg-sky-100/60 border-sky-700",
       badge: "text-sky-800",
-      label: "Info",
+      label: "Takeaways",
     },
     tip: {
       wrap: "bg-emerald-50 hover:bg-emerald-100/60 border-emerald-700",
@@ -25,18 +28,23 @@
       badge: "text-amber-800",
       label: "Warning",
     },
+    takeaway: {
+      wrap: "bg-slate-50 hover:bg-sky-50/50 border-sky-700",
+      badge: "text-sky-700",
+      label: "Takeaways",
+    },
   };
 
   $: meta = styles[variant] ?? styles.note;
+  // If a custom title is provided, use it; otherwise use the default label
+  $: displayLabel = title || meta.label;
 </script>
 
 <div class={`my-4 rounded p-4 pb-1 border-l-4 transition ${meta.wrap}`}>
-  {#if title}
-    <div class={`text-xs font-semibold tracking-wide uppercase ${meta.badge}`}>
-      {meta.label}: {title}
-    </div>
-  {/if}
-  <div class="prose max-w-none" class:mt-1={title}>
+  <div class={`text-xs font-semibold tracking-wide uppercase ${meta.badge}`}>
+    {displayLabel}
+  </div>
+  <div class="prose max-w-none mt-1">
     <div class="md-output">{@html html}</div>
   </div>
 </div>

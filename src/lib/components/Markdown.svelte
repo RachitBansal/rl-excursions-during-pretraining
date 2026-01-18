@@ -215,7 +215,6 @@
 
 <script lang="ts">
   import Jumpbox from "./Jumpbox.svelte";
-  import TakeawayBox from "./TakeawayBox.svelte";
   import CalloutBox from "./CalloutBox.svelte";
   import FoldBox from "./FoldBox.svelte";
 
@@ -225,11 +224,30 @@
 
   type Chunk =
     | { type: "text"; content: string }
-    | { type: "jumpbox"; id: string; label: string }
-    | { type: "takeaway"; content: string }
+    | { type: "jumpbox"; id: string }
     | { type: "small"; content: string }
-    | { type: "callout"; variant: "note" | "tip" | "warning" | "info"; title: string; content: string }
-    | { type: "fold"; title: string; open: boolean; content: string };
+    | { type: "callout"; variant: "note" | "tip" | "warning" | "info" | "takeaway"; title: string; content: string }
+    | { type: "fold"; title: string; open: boolean; content: string }
+    | { type: "h2"; id: string; text: string }
+    | { type: "h3"; id: string; text: string };
+
+  type RenderChunk = Exclude<Chunk, { type: "h2"; id: string; text: string }>;
+
+  type H3SectionItem =
+    | { type: "chunk"; chunk: RenderChunk }
+    | {
+        type: "subsection";
+        heading: { id: string; text: string; html: string };
+        children: RenderChunk[];
+      };
+
+  type SectionItem =
+    | { type: "chunk"; chunk: RenderChunk }
+    | {
+        type: "section";
+        heading: { id: string; text: string; html: string };
+        children: RenderChunk[];
+      };
 
   // Regexes (global + multiline). We scan by hand using lastIndex.
   const JUMP_RE = /:::jumpbox\s+id="([^"]+)"(?:\s+label="([^"]+)")?\s*:::/gm;
@@ -243,6 +261,20 @@
   const FOLD_BEGIN_RE =
     /:::fold_begin(?:\s+title="([^"]+)")?(?:\s+(open))?\s*:::/gm;
   const FOLD_END_RE = /:::fold_end:::/gm;
+  const H2_RE = /^##(?!#)\s+(.+?)\s*$/gm;
+  const H3_RE = /^###(?!#)\s+(.+?)\s*$/gm;
+
+  function createSlugger() {
+    const seen = new Map<string, number>();
+    return {
+      slug(raw: string) {
+        const base = slugify(raw || "") || "section";
+        const prev = seen.get(base) ?? 0;
+        seen.set(base, prev + 1);
+        return prev === 0 ? base : `${base}-${prev}`;
+      },
+    };
+  }
 
   function extractFootnotes(md: string) {
     const lines = md.split("\n");
@@ -331,41 +363,54 @@
 
   let processedSource = source;
   let footnotes: Footnote[] = [];
+  const htmlCache = new Map<string, string>();
 
   $: {
     const { main, notes } = extractFootnotes(source || "");
     const { idToNum, numbered } = computeFootnoteNumbering(main, notes);
     processedSource = replaceFootnoteRefs(main, idToNum);
     footnotes = numbered;
+    // Best-effort: avoid unbounded growth. Source changes are rare; clear on change.
+    htmlCache.clear();
   }
 
   function toHtml(md: string) {
-    return marked.parse(md, { smartypants: true });
+    const key = md || "";
+    const cached = htmlCache.get(key);
+    if (cached !== undefined) return cached;
+    const html = marked.parse(key, { smartypants: true }) as string;
+    htmlCache.set(key, html);
+    return html;
   }
 
   // One-pass tokenizer across the whole document
   $: chunks = (() => {
     const out: Chunk[] = [];
     let pos = 0;
+    const slugger = createSlugger();
+    const doc = processedSource || "";
 
-    while (pos < source.length) {
+    while (pos < doc.length) {
       // Find next possible jumpbox or takeaway-begin after pos
       JUMP_RE.lastIndex = pos;
       TAKE_BEGIN_RE.lastIndex = pos;
       SMALL_BEGIN_RE.lastIndex = pos;
       CALLOUT_BEGIN_RE.lastIndex = pos;
       FOLD_BEGIN_RE.lastIndex = pos;
+      H2_RE.lastIndex = pos;
+      H3_RE.lastIndex = pos;
 
-      const j = JUMP_RE.exec(source);
-      const t = TAKE_BEGIN_RE.exec(source);
-      const s = SMALL_BEGIN_RE.exec(source);
-      const c = CALLOUT_BEGIN_RE.exec(source);
-      const f = FOLD_BEGIN_RE.exec(source);
+      const j = JUMP_RE.exec(doc);
+      const t = TAKE_BEGIN_RE.exec(doc);
+      const s = SMALL_BEGIN_RE.exec(doc);
+      const c = CALLOUT_BEGIN_RE.exec(doc);
+      const f = FOLD_BEGIN_RE.exec(doc);
+      const h2 = H2_RE.exec(doc);
+      const h3 = H3_RE.exec(doc);
 
       // No more markers → push rest as text and stop
-      if (!j && !t && !s && !c && !f) {
-        if (pos < processedSource.length)
-          out.push({ type: "text", content: processedSource.slice(pos) });
+      if (!j && !t && !s && !c && !f && !h2 && !h3) {
+        if (pos < doc.length) out.push({ type: "text", content: doc.slice(pos) });
         break;
       }
 
@@ -375,16 +420,39 @@
       const s_idx = s ? s.index : Infinity;
       const c_idx = c ? c.index : Infinity;
       const f_idx = f ? f.index : Infinity;
-      const min_idx = Math.min(j_idx, t_idx, s_idx, c_idx, f_idx);
+      const h2_idx = h2 ? h2.index : Infinity;
+      const h3_idx = h3 ? h3.index : Infinity;
+      const min_idx = Math.min(j_idx, t_idx, s_idx, c_idx, f_idx, h2_idx, h3_idx);
 
-      if (j_idx === min_idx) {
+      if (h2_idx === min_idx) {
+        const begin_idx = h2!.index;
+        const begin_end = begin_idx + h2![0].length;
+        if (begin_idx > pos)
+          out.push({ type: "text", content: doc.slice(pos, begin_idx) });
+
+        const text = (h2![1] ?? "").trim();
+        const id = slugger.slug(text);
+        out.push({ type: "h2", id, text });
+
+        pos = begin_end;
+      } else if (h3_idx === min_idx) {
+        const begin_idx = h3!.index;
+        const begin_end = begin_idx + h3![0].length;
+        if (begin_idx > pos)
+          out.push({ type: "text", content: doc.slice(pos, begin_idx) });
+
+        const text = (h3![1] ?? "").trim();
+        const id = slugger.slug(text);
+        out.push({ type: "h3", id, text });
+
+        pos = begin_end;
+      } else if (j_idx === min_idx) {
         // Emit pre-text
         if (j_idx > pos)
-          out.push({ type: "text", content: processedSource.slice(pos, j_idx) });
+          out.push({ type: "text", content: doc.slice(pos, j_idx) });
 
         const id = j![1];
-        const label = j![2] ?? id;
-        out.push({ type: "jumpbox", id, label });
+        out.push({ type: "jumpbox", id });
 
         // Advance past this jumpbox
         pos = JUMP_RE.lastIndex;
@@ -395,24 +463,24 @@
 
         // Emit pre-text
         if (begin_idx > pos)
-          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
+          out.push({ type: "text", content: doc.slice(pos, begin_idx) });
 
         // Find matching end after the begin
         TAKE_END_RE.lastIndex = begin_end;
-        const tend = TAKE_END_RE.exec(source);
+        const tend = TAKE_END_RE.exec(doc);
 
         if (!tend) {
           // No closing marker → treat the begin marker as plain text (no guessing)
           out.push({
             type: "text",
-            content: source.slice(begin_idx, begin_end),
+            content: doc.slice(begin_idx, begin_end),
           });
           pos = begin_end;
           continue;
         }
 
-        const inner_md = processedSource.slice(begin_end, tend.index).trim();
-        out.push({ type: "takeaway", content: inner_md });
+        const inner_md = doc.slice(begin_end, tend.index).trim();
+        out.push({ type: "callout", variant: "takeaway", title: "", content: inner_md });
 
         // Advance past the end marker
         pos = TAKE_END_RE.lastIndex;
@@ -423,23 +491,23 @@
 
         // Emit pre-text
         if (begin_idx > pos)
-          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
+          out.push({ type: "text", content: doc.slice(pos, begin_idx) });
 
         // Find matching end after the begin
         SMALL_END_RE.lastIndex = begin_end;
-        const send = SMALL_END_RE.exec(source);
+        const send = SMALL_END_RE.exec(doc);
 
         if (!send) {
           // No closing marker → treat the begin marker as plain text
           out.push({
             type: "text",
-            content: source.slice(begin_idx, begin_end),
+            content: doc.slice(begin_idx, begin_end),
           });
           pos = begin_end;
           continue;
         }
 
-        const inner_md = processedSource.slice(begin_end, send.index).trim();
+        const inner_md = doc.slice(begin_end, send.index).trim();
         out.push({ type: "small", content: inner_md });
 
         // Advance past the end marker
@@ -450,23 +518,23 @@
         const begin_end = begin_idx + c![0].length;
 
         if (begin_idx > pos)
-          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
+          out.push({ type: "text", content: doc.slice(pos, begin_idx) });
 
         CALLOUT_END_RE.lastIndex = begin_end;
-        const cend = CALLOUT_END_RE.exec(source);
+        const cend = CALLOUT_END_RE.exec(doc);
         if (!cend) {
-          out.push({ type: "text", content: source.slice(begin_idx, begin_end) });
+          out.push({ type: "text", content: doc.slice(begin_idx, begin_end) });
           pos = begin_end;
           continue;
         }
 
         const variantRaw = (c![1] ?? "note").toLowerCase();
         const variant =
-          (["note", "tip", "warning", "info"].includes(variantRaw)
+          (["note", "tip", "warning", "info", "takeaway"].includes(variantRaw)
             ? variantRaw
             : "note") as any;
         const title = c![2] ?? "";
-        const inner_md = processedSource.slice(begin_end, cend.index).trim();
+        const inner_md = doc.slice(begin_end, cend.index).trim();
         out.push({ type: "callout", variant, title, content: inner_md });
 
         pos = CALLOUT_END_RE.lastIndex;
@@ -476,19 +544,19 @@
         const begin_end = begin_idx + f![0].length;
 
         if (begin_idx > pos)
-          out.push({ type: "text", content: processedSource.slice(pos, begin_idx) });
+          out.push({ type: "text", content: doc.slice(pos, begin_idx) });
 
         FOLD_END_RE.lastIndex = begin_end;
-        const fend = FOLD_END_RE.exec(source);
+        const fend = FOLD_END_RE.exec(doc);
         if (!fend) {
-          out.push({ type: "text", content: source.slice(begin_idx, begin_end) });
+          out.push({ type: "text", content: doc.slice(begin_idx, begin_end) });
           pos = begin_end;
           continue;
         }
 
         const title = f![1] ?? "Details";
         const open = !!f![2];
-        const inner_md = processedSource.slice(begin_end, fend.index).trim();
+        const inner_md = doc.slice(begin_end, fend.index).trim();
         out.push({ type: "fold", title, open, content: inner_md });
 
         pos = FOLD_END_RE.lastIndex;
@@ -497,6 +565,67 @@
 
     return out;
   })();
+
+  $: sections = (() => {
+    const out: SectionItem[] = [];
+    let current:
+      | {
+          heading: { id: string; text: string; html: string };
+          children: RenderChunk[];
+        }
+      | null =
+      null;
+
+    for (const ch of chunks) {
+      if (ch.type === "h2") {
+        if (current) out.push({ type: "section", ...current });
+        const inline = marked.parseInline(ch.text, { smartypants: true } as any) as any as string;
+        const h2Html = `<h2 id="${ch.id}">${inline}</h2>`;
+        current = {
+          heading: { id: ch.id, text: ch.text, html: h2Html },
+          children: [],
+        };
+        continue;
+      }
+
+      const renderable = ch as RenderChunk;
+      if (current) current.children.push(renderable);
+      else out.push({ type: "chunk", chunk: renderable });
+    }
+
+    if (current) out.push({ type: "section", ...current });
+    return out;
+  })();
+
+  function buildH3Sections(children: RenderChunk[]) {
+    const out: H3SectionItem[] = [];
+    let current:
+      | {
+          heading: { id: string; text: string; html: string };
+          children: RenderChunk[];
+        }
+      | null = null;
+
+    for (const ch of children) {
+      if (ch.type === "h3") {
+        if (current) out.push({ type: "subsection", ...current });
+        const inline = marked.parseInline(ch.text, { smartypants: true } as any) as any as string;
+        const h3Html = `<h3 id="${ch.id}">${inline}</h3>`;
+        current = {
+          heading: { id: ch.id, text: ch.text, html: h3Html },
+          children: [],
+        };
+        continue;
+      }
+
+      const renderable = ch as RenderChunk;
+      if (current) current.children.push(renderable);
+      else out.push({ type: "chunk", chunk: renderable });
+    }
+
+    if (current) out.push({ type: "subsection", ...current });
+    return out;
+  }
 
   import { onMount, afterUpdate, onDestroy } from "svelte";
 
@@ -536,15 +665,30 @@
   function alignFootnotes() {
     if (!container || !footnoteAside || !footnoteList) return;
     if (shellEl?.dataset.side === "off") return;
+    const isInClosedDetails = (el: Element) => {
+      const d = el.closest("details") as HTMLDetailsElement | null;
+      return !!(d && !d.open);
+    };
+
     const refs = Array.from(
       container.querySelectorAll<HTMLAnchorElement>(".footnote-ref a[data-fn]"),
-    );
+    ).filter((a) => !isInClosedDetails(a));
     if (!refs.length) return;
 
     const items = new Map<string, HTMLLIElement>();
     footnoteAside
       .querySelectorAll<HTMLLIElement>("li[id^='fn-']")
       .forEach((li) => items.set(li.id.replace(/^fn-/, ""), li));
+
+    // Reset: hide everything, then re-show + position only notes that have visible refs.
+    footnoteAside
+      .querySelectorAll<HTMLLIElement>("li[id^='fn-']")
+      .forEach((li) => {
+        li.style.display = "none";
+        li.style.position = "";
+        li.style.top = "";
+        li.style.marginTop = "";
+      });
 
     const listRect = footnoteList.getBoundingClientRect();
     const footnoteStyles = getComputedStyle(footnoteAside);
@@ -567,6 +711,7 @@
       const li = items.get(id);
       if (!li) continue;
       used.add(id);
+      li.style.display = "flex";
 
       // The ref is rendered as a <sup> (see renderer), so its own rect is *not*
       // representative of the containing text line. Use a collapsed Range to
@@ -761,8 +906,27 @@
     }
   }
 
+  function openFoldForCurrentHash() {
+    if (typeof window === "undefined" || !container) return;
+    const raw = window.location.hash || "";
+    const id = raw.startsWith("#") ? raw.slice(1) : raw;
+    if (!id) return;
+    const target = container.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+    if (!target) return;
+    let d = target.closest("details.foldbox") as HTMLDetailsElement | null;
+    while (d) {
+      if (!d.open) d.open = true;
+      d = d.parentElement?.closest("details.foldbox") as HTMLDetailsElement | null;
+    }
+  }
+
   onMount(() => {
     if (container) {
+      // Ensure all h2 folds start closed
+      container.querySelectorAll<HTMLDetailsElement>("details[data-h2fold]").forEach((d) => {
+        d.open = false;
+      });
+      openFoldForCurrentHash();
       setupVideos(container);
       makeCodeBlocksCopyable(container);
       updateSideVisibility();
@@ -773,6 +937,9 @@
     if (typeof window !== "undefined") {
       window.addEventListener("resize", scheduleAlign, { passive: true });
       window.addEventListener("resize", updateSideVisibility, { passive: true });
+      window.addEventListener("hashchange", openFoldForCurrentHash as any, {
+        passive: true,
+      } as any);
       // Sync footnotes visibility to TOC visibility changes (dataset updates)
       // even when the change doesn't trigger a resize.
       window.addEventListener("sidecolschange", updateSideVisibility as any, {
@@ -816,6 +983,7 @@
 
   afterUpdate(() => {
     if (container) {
+      openFoldForCurrentHash();
       setupVideos(container); // handle markdown re-render
       makeCodeBlocksCopyable(container);
       updateSideVisibility();
@@ -836,6 +1004,7 @@
       window.removeEventListener("resize", scheduleAlign);
       window.removeEventListener("resize", updateSideVisibility);
       window.removeEventListener("sidecolschange", updateSideVisibility as any);
+      window.removeEventListener("hashchange", openFoldForCurrentHash as any);
     }
     if (sideMO) {
       sideMO.disconnect();
@@ -849,23 +1018,131 @@
 <div class="md-shell" bind:this={shellEl}>
   <div class="md-grid">
     <div class="md-output space-y-6" bind:this={container}>
-      {#each chunks as chunk, i (i)}
-        {#if chunk.type === "text"}
-          <div class="md-output">{@html toHtml(chunk.content)}</div>
-        {:else if chunk.type === "jumpbox"}
-          <Jumpbox id={chunk.id} label={chunk.label} />
-        {:else if chunk.type === "takeaway"}
-          <TakeawayBox html={toHtml(chunk.content)} />
-        {:else if chunk.type === "small"}
-          <div class="md-output text-sm sm-block">{@html toHtml(chunk.content)}</div>
-        {:else if chunk.type === "callout"}
-          <CalloutBox
-            variant={chunk.variant}
-            title={chunk.title}
-            html={toHtml(chunk.content)}
-          />
-        {:else if chunk.type === "fold"}
-          <FoldBox title={chunk.title} open={chunk.open} html={toHtml(chunk.content)} />
+      {#each sections as item, i (i)}
+        {#if item.type === "chunk"}
+          {#if item.chunk.type === "text"}
+            <div class="md-output">{@html toHtml(item.chunk.content)}</div>
+          {:else if item.chunk.type === "jumpbox"}
+            <Jumpbox id={item.chunk.id} />
+          {:else if item.chunk.type === "small"}
+            <div class="md-output text-sm sm-block">{@html toHtml(item.chunk.content)}</div>
+          {:else if item.chunk.type === "callout"}
+            <CalloutBox
+              variant={item.chunk.variant}
+              title={item.chunk.title}
+              html={toHtml(item.chunk.content)}
+            />
+          {:else if item.chunk.type === "fold"}
+            <FoldBox title={item.chunk.title} open={item.chunk.open} html={toHtml(item.chunk.content)} />
+          {/if}
+        {:else if item.type === "section"}
+          <details class="foldbox foldbox--h2" data-h2fold="1">
+            <summary
+              class="foldbox__summary foldbox__summary--h2"
+              on:click={(e) => {
+                if (typeof window === "undefined") return;
+                const details = e.currentTarget.parentElement;
+                if (!(details instanceof HTMLDetailsElement)) return;
+                // If we're closing and the URL hash points inside this fold,
+                // clear the hash first so the browser doesn't force it open.
+                if (!details.open) return;
+                const raw = window.location.hash || "";
+                const id = raw.startsWith("#") ? raw.slice(1) : raw;
+                if (!id) return;
+                const target = details.querySelector(`#${CSS.escape(id)}`);
+                if (!target) return;
+                history.replaceState(
+                  null,
+                  "",
+                  window.location.pathname + window.location.search,
+                );
+              }}
+            >
+              <span class="foldbox__caret" aria-hidden="true"></span>
+              <span class="foldbox__h2 md-output">
+                {@html item.heading.html}
+              </span>
+            </summary>
+            <div class="foldbox__body foldbox__body--h2">
+              {#each buildH3Sections(item.children) as sub, j (j)}
+                {#if sub.type === "chunk"}
+                  {#if sub.chunk.type === "text"}
+                    <div class="md-output">{@html toHtml(sub.chunk.content)}</div>
+                  {:else if sub.chunk.type === "jumpbox"}
+                    <Jumpbox id={sub.chunk.id} />
+                  {:else if sub.chunk.type === "small"}
+                    <div class="md-output text-sm sm-block">{@html toHtml(sub.chunk.content)}</div>
+                  {:else if sub.chunk.type === "callout"}
+                    <CalloutBox
+                      variant={sub.chunk.variant}
+                      title={sub.chunk.title}
+                      html={toHtml(sub.chunk.content)}
+                    />
+                  {:else if sub.chunk.type === "fold"}
+                    <FoldBox title={sub.chunk.title} open={sub.chunk.open} html={toHtml(sub.chunk.content)} />
+                  {/if}
+                {:else if sub.type === "subsection"}
+                  <details
+                    class="foldbox foldbox--h3"
+                    data-h3fold="1"
+                    on:toggle={(e) => {
+                      const details = e.currentTarget;
+                      if (!(details instanceof HTMLDetailsElement)) return;
+                      const caret = details.querySelector(".foldbox__caret");
+                      if (!(caret instanceof HTMLElement)) return;
+                      caret.style.transform = details.open ? "rotate(90deg)" : "rotate(0deg)";
+                    }}
+                  >
+                    <summary
+                      class="foldbox__summary foldbox__summary--h3"
+                      on:click={(e) => {
+                        if (typeof window === "undefined") return;
+                        const details = e.currentTarget.parentElement;
+                        if (!(details instanceof HTMLDetailsElement)) return;
+                        // If we're closing and the URL hash points inside this fold,
+                        // clear the hash first so the browser doesn't force it open.
+                        if (!details.open) return;
+                        const raw = window.location.hash || "";
+                        const id = raw.startsWith("#") ? raw.slice(1) : raw;
+                        if (!id) return;
+                        const target = details.querySelector(`#${CSS.escape(id)}`);
+                        if (!target) return;
+                        history.replaceState(
+                          null,
+                          "",
+                          window.location.pathname + window.location.search,
+                        );
+                      }}
+                    >
+                      <span class="foldbox__caret" aria-hidden="true"></span>
+                      <span class="foldbox__h3 md-output">
+                        {@html sub.heading.html}
+                      </span>
+                    </summary>
+                    <div class="foldbox__body foldbox__body--h3">
+                      {#each sub.children as chunk, k (k)}
+                        {#if chunk.type === "text"}
+                          <div class="md-output">{@html toHtml(chunk.content)}</div>
+                        {:else if chunk.type === "jumpbox"}
+                          <Jumpbox id={chunk.id} />
+                        {:else if chunk.type === "small"}
+                          <div class="md-output text-sm sm-block">{@html toHtml(chunk.content)}</div>
+                        {:else if chunk.type === "callout"}
+                          <CalloutBox
+                            variant={chunk.variant}
+                            title={chunk.title}
+                            html={toHtml(chunk.content)}
+                          />
+                        {:else if chunk.type === "fold"}
+                          <FoldBox title={chunk.title} open={chunk.open} html={toHtml(chunk.content)} />
+                        {/if}
+                      {/each}
+                    </div>
+                  </details>
+                {/if}
+              {/each}
+            </div>
+          </details>
         {/if}
       {/each}
     </div>
@@ -945,6 +1222,88 @@
   :global(.md-output blockquote > :last-child) {
     @apply mb-0;
   }
+
+  /* Auto-folded H2 sections */
+  :global(details.foldbox.foldbox--h2) {
+    @apply my-4;
+  }
+
+  :global(details.foldbox.foldbox--h2 > .foldbox__summary) {
+    /* folder-entry style with clickable area */
+    @apply px-0 py-1 cursor-pointer select-none;
+  }
+
+  :global(details.foldbox.foldbox--h2 > .foldbox__body) {
+    @apply pl-6 pt-2;
+  }
+
+  :global(details.foldbox.foldbox--h2 .foldbox__h2 > h2) {
+    /* remove the default h2 margins since it's now inside <summary> */
+    margin: 0;
+  }
+
+  /* Important: the H2 is rendered as real HTML inside <summary>.
+     Let the h2 container receive clicks, but not its children. */
+  :global(details.foldbox.foldbox--h2 .foldbox__h2) {
+    /* Allow the wrapper to receive clicks */
+    pointer-events: auto;
+  }
+  :global(details.foldbox.foldbox--h2 .foldbox__h2 h2),
+  :global(details.foldbox.foldbox--h2 .foldbox__h2 h2 *) {
+    /* Prevent h2 and its children from intercepting clicks */
+    pointer-events: none;
+  }
+
+  /* Shared caret styling for h2/h3 folds (self-contained, no FoldBox dependency) */
+  :global(details.foldbox > summary::-webkit-details-marker) {
+    display: none;
+  }
+  :global(.foldbox__caret) {
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 7px solid currentColor;
+    transform: rotate(0deg);
+    transform-origin: 2px 6px;
+    transition: transform 120ms ease;
+    opacity: 0.9;
+    flex: 0 0 auto;
+  }
+  :global(details.foldbox[open] .foldbox__caret) {
+    transform: rotate(90deg);
+  }
+
+  /* Auto-folded H3 sections inside H2 folds */
+  :global(details.foldbox.foldbox--h3) {
+    @apply my-2;
+  }
+
+  :global(details.foldbox.foldbox--h3 > .foldbox__summary) {
+    @apply px-0 py-1 pl-4 cursor-pointer select-none text-sm font-semibold text-neutral-800;
+    @apply flex items-center gap-2;
+  }
+
+  :global(details.foldbox.foldbox--h3 > .foldbox__body) {
+    @apply pl-8 pt-2;
+  }
+
+  :global(details.foldbox.foldbox--h3 .foldbox__h3 > h3) {
+    margin: 0;
+  }
+
+  :global(details.foldbox.foldbox--h3 .foldbox__h3 h3),
+  :global(details.foldbox.foldbox--h3 .foldbox__h3 h3 *) {
+    pointer-events: none;
+  }
+
+  :global(details.foldbox.foldbox--h3 > summary .foldbox__caret) {
+    transform: rotate(0deg);
+  }
+  :global(details.foldbox.foldbox--h3[open] > summary .foldbox__caret) {
+    transform: rotate(90deg) !important;
+  }
+
   /* Small-section overrides: drop each heading one step inside .sm-block */
   /* :global(.sm-block) { font-size: 0.875rem; } */
   :global(.sm-block h1) { @apply text-2xl font-bold mt-6 mb-4; }

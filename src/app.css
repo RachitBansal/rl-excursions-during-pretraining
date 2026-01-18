@@ -54,14 +54,14 @@ html {
 
 :root {
   /* Shared horizontal gap between main text and side columns (TOC / footnotes). */
-  --side-gap: 32px;
+  --side-gap: 46px;
   /* Fine-tuned gaps for left TOC and right footnotes. */
-  --toc-gap: 48px;
+  --toc-gap: 44px;
   --footnote-gap: 38px;
   /* Minimum vertical gap between footnote items in the side column. */
   --footnote-item-gap: 28px;
   /* Minimum gap between the TOC and the viewport left edge (useful under zoom). */
-  --toc-min-left: 38px;
+  --toc-min-left: 18px;
 }
 
 body {

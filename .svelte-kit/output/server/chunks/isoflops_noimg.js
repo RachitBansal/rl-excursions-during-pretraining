@@ -129,17 +129,12 @@ const Jumpbox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.id(id);
   return `<a${add_attribute("href", "#" + id, 0)} class="block -mx-4 mb-4 px-4 py-2 bg-gray-100 hover:bg-slate-100 rounded transition"><span class="text-neutral-500" data-svelte-h="svelte-a7fxhe">↪</span> Our paper: <em>${escape(label)}</em></a>`;
 });
-const TakeawayBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { html } = $$props;
-  if ($$props.html === void 0 && $$bindings.html && html !== void 0)
-    $$bindings.html(html);
-  return `<div class="my-4 rounded bg-slate-50 hover:bg-sky-50/50 p-4 pb-1 border-l-4 border-sky-700 transition"><div class="text-xs font-semibold tracking-wide uppercase text-sky-700" data-svelte-h="svelte-8vdxxn">Takeaways</div> <div class="prose max-w-none mt-1"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></div>`;
-});
 const CalloutBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let meta;
+  let displayLabel;
   var _a;
   let { html } = $$props;
-  let { title: title2 = "Callout" } = $$props;
+  let { title: title2 = "" } = $$props;
   let { variant = "note" } = $$props;
   const styles = {
     note: {
@@ -150,7 +145,7 @@ const CalloutBox = create_ssr_component(($$result, $$props, $$bindings, slots) =
     info: {
       wrap: "bg-sky-50 hover:bg-sky-100/60 border-sky-700",
       badge: "text-sky-800",
-      label: "Info"
+      label: "Takeaways"
     },
     tip: {
       wrap: "bg-emerald-50 hover:bg-emerald-100/60 border-emerald-700",
@@ -161,6 +156,11 @@ const CalloutBox = create_ssr_component(($$result, $$props, $$bindings, slots) =
       wrap: "bg-amber-50 hover:bg-amber-100/60 border-amber-700",
       badge: "text-amber-800",
       label: "Warning"
+    },
+    takeaway: {
+      wrap: "bg-slate-50 hover:bg-sky-50/50 border-sky-700",
+      badge: "text-sky-700",
+      label: "Takeaways"
     }
   };
   if ($$props.html === void 0 && $$bindings.html && html !== void 0)
@@ -170,8 +170,13 @@ const CalloutBox = create_ssr_component(($$result, $$props, $$bindings, slots) =
   if ($$props.variant === void 0 && $$bindings.variant && variant !== void 0)
     $$bindings.variant(variant);
   meta = (_a = styles[variant]) !== null && _a !== void 0 ? _a : styles.note;
-  return `<div${add_attribute("class", `my-4 rounded p-4 pb-1 border-l-4 transition ${meta.wrap}`, 0)}>${title2 ? `<div${add_attribute("class", `text-xs font-semibold tracking-wide uppercase ${meta.badge}`, 0)}>${escape(meta.label)}: ${escape(title2)}</div>` : ``} <div class="${["prose max-w-none", title2 ? "mt-1" : ""].join(" ").trim()}"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></div>`;
+  displayLabel = title2 || meta.label;
+  return `<div${add_attribute("class", `my-4 rounded p-4 pb-1 border-l-4 transition ${meta.wrap}`, 0)}><div${add_attribute("class", `text-xs font-semibold tracking-wide uppercase ${meta.badge}`, 0)}>${escape(displayLabel)}</div> <div class="prose max-w-none mt-1"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></div>`;
 });
+const css$2 = {
+  code: ".foldbox{margin-top:0.5rem;margin-bottom:0.5rem}.foldbox--boxed{border-radius:0.25rem;border-width:1px;--tw-border-opacity:1;border-color:rgb(229 229 229 / var(--tw-border-opacity));--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.foldbox__summary{cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;font-weight:600;--tw-text-opacity:1;color:rgb(23 23 23 / var(--tw-text-opacity));display:flex;align-items:center;gap:0.75rem}.foldbox--boxed > .foldbox__summary{padding-left:1rem;padding-right:1rem;padding-top:0.75rem;padding-bottom:0.75rem}.foldbox--boxed > .foldbox__summary:hover{--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity))}details.foldbox > summary::-webkit-details-marker{display:none}.foldbox__caret{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:7px solid currentColor;transform:rotate(0deg);transform-origin:2px 6px;transition:transform 120ms ease;opacity:0.9;flex:0 0 auto}details.foldbox[open] .foldbox__caret{transform:rotate(90deg)}.foldbox--boxed > .foldbox__body{padding-left:1rem;padding-right:1rem;padding-bottom:0.75rem;padding-top:0.5rem}",
+  map: null
+};
 const FoldBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { title: title2 = "Details" } = $$props;
   let { open = false } = $$props;
@@ -182,10 +187,11 @@ const FoldBox = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.open(open);
   if ($$props.html === void 0 && $$bindings.html && html !== void 0)
     $$bindings.html(html);
-  return `<details class="my-4 rounded border border-neutral-200 bg-white" ${open ? "open" : ""}><summary class="cursor-pointer select-none px-4 py-3 font-semibold text-neutral-900 hover:bg-neutral-50">${escape(title2)}</summary> <div class="px-4 pb-3 pt-2"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div></details>`;
+  $$result.css.add(css$2);
+  return `<details class="foldbox foldbox--boxed my-4" ${open ? "open" : ""} data-foldbox="1"><summary class="foldbox__summary"><span class="foldbox__caret" aria-hidden="true"></span> <span class="foldbox__title">${escape(title2)}</span></summary> <div class="foldbox__body"><div class="md-output"><!-- HTML_TAG_START -->${html}<!-- HTML_TAG_END --></div></div> </details>`;
 });
 const css$1 = {
-  code: '.md-output h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:700}.md-output h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.md-output h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.3rem;line-height:2rem;font-weight:600}.md-output h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.md-output p{margin-bottom:1rem}.md-output strong{font-weight:600}.md-output em{font-style:italic}.md-output code{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding-left:0.25rem;padding-right:0.25rem;font-size:95%}.md-output pre{margin-bottom:1rem;overflow-x:auto;border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding:1rem}.md-output ul{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:disc}.md-output ul>:not([hidden])~.svelte-c8zg2i.svelte-c8zg2i:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ul{padding-left:1.25rem}.md-output ol{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:decimal}.md-output ol>:not([hidden])~.svelte-c8zg2i.svelte-c8zg2i:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ol{padding-left:1.25rem}.md-output li{margin-bottom:0.25rem}.math-block{margin-top:1rem;margin-bottom:1rem;text-align:center}.math-inline{vertical-align:baseline}.katex-error{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity));padding:0.25rem;--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity))}.md-output blockquote{margin-top:0.5rem;margin-bottom:0.5rem;display:inline-block;border-radius:0.25rem;border-left-width:4px;--tw-border-opacity:1;border-color:rgb(82 82 82 / var(--tw-border-opacity));--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity));padding-left:0.75rem;padding-right:0.75rem;padding-top:0.5rem;padding-bottom:0.5rem;vertical-align:middle}.md-output blockquote > :first-child{margin-top:0px}.md-output blockquote > :last-child{margin-bottom:0px}.sm-block h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.5rem;line-height:2rem;font-weight:700}.sm-block h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.3rem;line-height:2rem;font-weight:600}.sm-block h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.sm-block h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1rem;line-height:1.5rem;font-weight:600}.sm-block code{font-size:90%}.md-shell.svelte-c8zg2i.svelte-c8zg2i{position:relative}.md-shell.svelte-c8zg2i:not([data-fn-aligned="1"]) .md-footnotes.svelte-c8zg2i{opacity:0}.md-grid.svelte-c8zg2i.svelte-c8zg2i{display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 850px) minmax(0, 1fr);-moz-column-gap:var(--toc-gap, var(--side-gap, 32px));column-gap:var(--toc-gap, var(--side-gap, 32px));align-items:start}.md-output.svelte-c8zg2i.svelte-c8zg2i{grid-column:2;min-width:0}.md-footnotes.svelte-c8zg2i.svelte-c8zg2i{position:relative;grid-column:3;width:260px;justify-self:start;padding-left:calc(var(--footnote-gap, 48px) - var(--toc-gap, var(--side-gap, 32px)));font-size:14px;line-height:1.6;color:#6b7280}.md-footnotes.svelte-c8zg2i ol.svelte-c8zg2i{list-style:none;padding:0;margin:0;position:relative;min-height:100%}.md-footnotes.svelte-c8zg2i li.svelte-c8zg2i{display:flex;gap:8px;width:100%;margin-bottom:var(--footnote-item-gap, 28px)}.md-footnotes.svelte-c8zg2i li.svelte-c8zg2i:last-child{margin-bottom:0}.md-footnotes.svelte-c8zg2i .fn-label.svelte-c8zg2i{font-variant-numeric:tabular-nums;color:#6b7280}.md-footnotes.svelte-c8zg2i .fn-text.svelte-c8zg2i p{margin:0}.md-footnotes.svelte-c8zg2i .fn-text.svelte-c8zg2i a{text-decoration-line:underline;text-decoration-color:#a3a3a3;text-underline-offset:3px}.footnote-ref{font-size:0.75em;vertical-align:super;margin-left:1px}.footnote-ref a{color:#6b7280;text-decoration:none}.footnote-ref a:hover{color:#111827}@media(max-width: 1024px){.md-grid.svelte-c8zg2i.svelte-c8zg2i{grid-template-columns:minmax(0, 1fr);row-gap:16px}.md-output.svelte-c8zg2i.svelte-c8zg2i{grid-column:1}.md-footnotes.svelte-c8zg2i.svelte-c8zg2i{position:static;grid-column:1;width:auto}}pre[data-copyable]{position:relative}pre[data-copyable] .copy-btn{position:absolute;top:0.25rem;right:0.25rem;background:#f3f4f6;font-size:0.75rem;padding:0.1rem 0.4rem;border-radius:0.25rem;cursor:pointer;opacity:1;transition:opacity 0.2s}pre[data-copyable]:hover .copy-btn{opacity:1}',
+  code: '.md-output h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.875rem;line-height:2.25rem;font-weight:700}.md-output h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.5rem;line-height:2rem;font-weight:600}.md-output h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.3rem;line-height:2rem;font-weight:600}.md-output h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.md-output p{margin-bottom:1rem}.md-output strong{font-weight:600}.md-output em{font-style:italic}.md-output code{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding-left:0.25rem;padding-right:0.25rem;font-size:95%}.md-output pre{margin-bottom:1rem;overflow-x:auto;border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(245 245 245 / var(--tw-bg-opacity));padding:1rem}.md-output ul{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:disc}.md-output ul>:not([hidden])~.svelte-umi69w.svelte-umi69w:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ul{padding-left:1.25rem}.md-output ol{margin-left:1.25rem;margin-bottom:1rem;list-style-position:outside;list-style-type:decimal}.md-output ol>:not([hidden])~.svelte-umi69w.svelte-umi69w:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.md-output ol{padding-left:1.25rem}.md-output li{margin-bottom:0.25rem}.math-block{margin-top:1rem;margin-bottom:1rem;text-align:center}.math-inline{vertical-align:baseline}.katex-error{border-radius:0.25rem;--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity));padding:0.25rem;--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity))}.md-output blockquote{margin-top:0.5rem;margin-bottom:0.5rem;display:inline-block;border-radius:0.25rem;border-left-width:4px;--tw-border-opacity:1;border-color:rgb(82 82 82 / var(--tw-border-opacity));--tw-bg-opacity:1;background-color:rgb(250 250 250 / var(--tw-bg-opacity));padding-left:0.75rem;padding-right:0.75rem;padding-top:0.5rem;padding-bottom:0.5rem;vertical-align:middle}.md-output blockquote > :first-child{margin-top:0px}.md-output blockquote > :last-child{margin-bottom:0px}details.foldbox.foldbox--h2{margin-top:1rem;margin-bottom:1rem}details.foldbox.foldbox--h2 > .foldbox__summary{cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;padding-left:0px;padding-right:0px;padding-top:0.25rem;padding-bottom:0.25rem}details.foldbox.foldbox--h2 > .foldbox__body{padding-left:1.5rem;padding-top:0.5rem}details.foldbox.foldbox--h2 .foldbox__h2 > h2{margin:0}details.foldbox.foldbox--h2 .foldbox__h2{pointer-events:auto}details.foldbox.foldbox--h2 .foldbox__h2 h2,details.foldbox.foldbox--h2 .foldbox__h2 h2 *{pointer-events:none}details.foldbox > summary::-webkit-details-marker{display:none}.foldbox__caret{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:7px solid currentColor;transform:rotate(0deg);transform-origin:2px 6px;transition:transform 120ms ease;opacity:0.9;flex:0 0 auto}details.foldbox[open] .foldbox__caret{transform:rotate(90deg)}details.foldbox.foldbox--h3{margin-top:0.5rem;margin-bottom:0.5rem}details.foldbox.foldbox--h3 > .foldbox__summary{cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;padding-left:0px;padding-right:0px;padding-top:0.25rem;padding-bottom:0.25rem;padding-left:1rem;font-size:1rem;line-height:1.4rem;font-weight:600;--tw-text-opacity:1;color:rgb(38 38 38 / var(--tw-text-opacity));display:flex;align-items:center;gap:0.5rem}details.foldbox.foldbox--h3 > .foldbox__body{padding-left:2rem;padding-top:0.5rem}details.foldbox.foldbox--h3 .foldbox__h3 > h3{margin:0}details.foldbox.foldbox--h3 .foldbox__h3 h3,details.foldbox.foldbox--h3 .foldbox__h3 h3 *{pointer-events:none}details.foldbox.foldbox--h3 > summary .foldbox__caret{transform:rotate(0deg)}details.foldbox.foldbox--h3[open] > summary .foldbox__caret{transform:rotate(90deg) !important}.sm-block h1{margin-top:1.5rem;margin-bottom:1rem;font-size:1.5rem;line-height:2rem;font-weight:700}.sm-block h2{margin-top:1.25rem;margin-bottom:0.75rem;font-size:1.3rem;line-height:2rem;font-weight:600}.sm-block h3{margin-top:1rem;margin-bottom:0.5rem;font-size:1.125rem;line-height:1.75rem;font-weight:600}.sm-block h4{margin-top:0.75rem;margin-bottom:0.5rem;font-size:1rem;line-height:1.5rem;font-weight:600}.sm-block code{font-size:90%}.md-shell.svelte-umi69w.svelte-umi69w{position:relative}.md-shell.svelte-umi69w:not([data-fn-aligned="1"]) .md-footnotes.svelte-umi69w{opacity:0}.md-grid.svelte-umi69w.svelte-umi69w{display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 850px) minmax(0, 1fr);-moz-column-gap:var(--toc-gap, var(--side-gap, 32px));column-gap:var(--toc-gap, var(--side-gap, 32px));align-items:start}.md-output.svelte-umi69w.svelte-umi69w{grid-column:2;min-width:0}.md-footnotes.svelte-umi69w.svelte-umi69w{position:relative;grid-column:3;width:260px;justify-self:start;padding-left:calc(var(--footnote-gap, 48px) - var(--toc-gap, var(--side-gap, 32px)));font-size:14px;line-height:1.6;color:#6b7280}.md-footnotes.svelte-umi69w ol.svelte-umi69w{list-style:none;padding:0;margin:0;position:relative;min-height:100%}.md-footnotes.svelte-umi69w li.svelte-umi69w{display:flex;gap:8px;width:100%;margin-bottom:var(--footnote-item-gap, 28px)}.md-footnotes.svelte-umi69w li.svelte-umi69w:last-child{margin-bottom:0}.md-footnotes.svelte-umi69w .fn-label.svelte-umi69w{font-variant-numeric:tabular-nums;color:#6b7280}.md-footnotes.svelte-umi69w .fn-text.svelte-umi69w p{margin:0}.md-footnotes.svelte-umi69w .fn-text.svelte-umi69w a{text-decoration-line:underline;text-decoration-color:#a3a3a3;text-underline-offset:3px}.footnote-ref{font-size:0.75em;vertical-align:super;margin-left:1px}.footnote-ref a{color:#6b7280;text-decoration:none}.footnote-ref a:hover{color:#111827}@media(max-width: 1024px){.md-grid.svelte-umi69w.svelte-umi69w{grid-template-columns:minmax(0, 1fr);row-gap:16px}.md-output.svelte-umi69w.svelte-umi69w{grid-column:1}.md-footnotes.svelte-umi69w.svelte-umi69w{position:static;grid-column:1;width:auto}}pre[data-copyable]{position:relative}pre[data-copyable] .copy-btn{position:absolute;top:0.25rem;right:0.25rem;background:#f3f4f6;font-size:0.75rem;padding:0.1rem 0.4rem;border-radius:0.25rem;cursor:pointer;opacity:1;transition:opacity 0.2s}pre[data-copyable]:hover .copy-btn{opacity:1}',
   map: null
 };
 (function(thisArg, _arguments, P, generator) {
@@ -413,6 +419,20 @@ const CALLOUT_BEGIN_RE = /:::callout_begin(?:\s+type="([^"]+)")?(?:\s+title="([^
 const CALLOUT_END_RE = /:::callout_end:::/gm;
 const FOLD_BEGIN_RE = /:::fold_begin(?:\s+title="([^"]+)")?(?:\s+(open))?\s*:::/gm;
 const FOLD_END_RE = /:::fold_end:::/gm;
+const H2_RE = /^##(?!#)\s+(.+?)\s*$/gm;
+const H3_RE = /^###(?!#)\s+(.+?)\s*$/gm;
+function createSlugger() {
+  const seen = /* @__PURE__ */ new Map();
+  return {
+    slug(raw) {
+      var _a;
+      const base = slugify(raw || "") || "section";
+      const prev = (_a = seen.get(base)) !== null && _a !== void 0 ? _a : 0;
+      seen.set(base, prev + 1);
+      return prev === 0 ? base : `${base}-${prev}`;
+    }
+  };
+}
 function extractFootnotes(md) {
   const lines = md.split("\n");
   const mainLines = [];
@@ -492,11 +512,34 @@ function replaceFootnoteRefs(md, idToNum) {
     return `<sup class="footnote-ref"><a href="#fn-${safeId}" data-fn="${safeId}">${label}</a></sup>`;
   });
 }
-function toHtml(md) {
-  return marked.parse(md, { smartypants: true });
+function buildH3Sections(children) {
+  const out = [];
+  let current = null;
+  for (const ch of children) {
+    if (ch.type === "h3") {
+      if (current)
+        out.push(Object.assign({ type: "subsection" }, current));
+      const inline = marked.parseInline(ch.text, { smartypants: true });
+      const h3Html = `<h3 id="${ch.id}">${inline}</h3>`;
+      current = {
+        heading: { id: ch.id, text: ch.text, html: h3Html },
+        children: []
+      };
+      continue;
+    }
+    const renderable = ch;
+    if (current)
+      current.children.push(renderable);
+    else
+      out.push({ type: "chunk", chunk: renderable });
+  }
+  if (current)
+    out.push(Object.assign({ type: "subsection" }, current));
+  return out;
 }
 const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let chunks;
+  let sections;
   (function(thisArg, _arguments, P, generator) {
     function adopt(value) {
       return value instanceof P ? value : new P(function(resolve) {
@@ -527,6 +570,16 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   let { source } = $$props;
   let processedSource = source;
   let footnotes = [];
+  const htmlCache = /* @__PURE__ */ new Map();
+  function toHtml(md) {
+    const key = md || "";
+    const cached = htmlCache.get(key);
+    if (cached !== void 0)
+      return cached;
+    const html = marked.parse(key, { smartypants: true });
+    htmlCache.set(key, html);
+    return html;
+  }
   let container = null;
   let footnoteAside = null;
   let footnoteList = null;
@@ -631,29 +684,33 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
       const { idToNum, numbered } = computeFootnoteNumbering(main, notes);
       processedSource = replaceFootnoteRefs(main, idToNum);
       footnotes = numbered;
+      htmlCache.clear();
     }
   }
   chunks = (() => {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const out = [];
     let pos = 0;
-    while (pos < source.length) {
+    const slugger = createSlugger();
+    const doc = processedSource || "";
+    while (pos < doc.length) {
       JUMP_RE.lastIndex = pos;
       TAKE_BEGIN_RE.lastIndex = pos;
       SMALL_BEGIN_RE.lastIndex = pos;
       CALLOUT_BEGIN_RE.lastIndex = pos;
       FOLD_BEGIN_RE.lastIndex = pos;
-      const j = JUMP_RE.exec(source);
-      const t = TAKE_BEGIN_RE.exec(source);
-      const s = SMALL_BEGIN_RE.exec(source);
-      const c = CALLOUT_BEGIN_RE.exec(source);
-      const f = FOLD_BEGIN_RE.exec(source);
-      if (!j && !t && !s && !c && !f) {
-        if (pos < processedSource.length)
-          out.push({
-            type: "text",
-            content: processedSource.slice(pos)
-          });
+      H2_RE.lastIndex = pos;
+      H3_RE.lastIndex = pos;
+      const j = JUMP_RE.exec(doc);
+      const t = TAKE_BEGIN_RE.exec(doc);
+      const s = SMALL_BEGIN_RE.exec(doc);
+      const c = CALLOUT_BEGIN_RE.exec(doc);
+      const f = FOLD_BEGIN_RE.exec(doc);
+      const h2 = H2_RE.exec(doc);
+      const h3 = H3_RE.exec(doc);
+      if (!j && !t && !s && !c && !f && !h2 && !h3) {
+        if (pos < doc.length)
+          out.push({ type: "text", content: doc.slice(pos) });
         break;
       }
       const j_idx = j ? j.index : Infinity;
@@ -661,16 +718,41 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
       const s_idx = s ? s.index : Infinity;
       const c_idx = c ? c.index : Infinity;
       const f_idx = f ? f.index : Infinity;
-      const min_idx = Math.min(j_idx, t_idx, s_idx, c_idx, f_idx);
-      if (j_idx === min_idx) {
+      const h2_idx = h2 ? h2.index : Infinity;
+      const h3_idx = h3 ? h3.index : Infinity;
+      const min_idx = Math.min(j_idx, t_idx, s_idx, c_idx, f_idx, h2_idx, h3_idx);
+      if (h2_idx === min_idx) {
+        const begin_idx = h2.index;
+        const begin_end = begin_idx + h2[0].length;
+        if (begin_idx > pos)
+          out.push({
+            type: "text",
+            content: doc.slice(pos, begin_idx)
+          });
+        const text2 = ((_a = h2[1]) !== null && _a !== void 0 ? _a : "").trim();
+        const id = slugger.slug(text2);
+        out.push({ type: "h2", id, text: text2 });
+        pos = begin_end;
+      } else if (h3_idx === min_idx) {
+        const begin_idx = h3.index;
+        const begin_end = begin_idx + h3[0].length;
+        if (begin_idx > pos)
+          out.push({
+            type: "text",
+            content: doc.slice(pos, begin_idx)
+          });
+        const text2 = ((_b = h3[1]) !== null && _b !== void 0 ? _b : "").trim();
+        const id = slugger.slug(text2);
+        out.push({ type: "h3", id, text: text2 });
+        pos = begin_end;
+      } else if (j_idx === min_idx) {
         if (j_idx > pos)
           out.push({
             type: "text",
-            content: processedSource.slice(pos, j_idx)
+            content: doc.slice(pos, j_idx)
           });
         const id = j[1];
-        const label = (_a = j[2]) !== null && _a !== void 0 ? _a : id;
-        out.push({ type: "jumpbox", id, label });
+        out.push({ type: "jumpbox", id });
         pos = JUMP_RE.lastIndex;
       } else if (t_idx === min_idx) {
         const begin_idx = t.index;
@@ -678,20 +760,25 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: processedSource.slice(pos, begin_idx)
+            content: doc.slice(pos, begin_idx)
           });
         TAKE_END_RE.lastIndex = begin_end;
-        const tend = TAKE_END_RE.exec(source);
+        const tend = TAKE_END_RE.exec(doc);
         if (!tend) {
           out.push({
             type: "text",
-            content: source.slice(begin_idx, begin_end)
+            content: doc.slice(begin_idx, begin_end)
           });
           pos = begin_end;
           continue;
         }
-        const inner_md = processedSource.slice(begin_end, tend.index).trim();
-        out.push({ type: "takeaway", content: inner_md });
+        const inner_md = doc.slice(begin_end, tend.index).trim();
+        out.push({
+          type: "callout",
+          variant: "takeaway",
+          title: "",
+          content: inner_md
+        });
         pos = TAKE_END_RE.lastIndex;
       } else if (s_idx === min_idx) {
         const begin_idx = s.index;
@@ -699,19 +786,19 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: processedSource.slice(pos, begin_idx)
+            content: doc.slice(pos, begin_idx)
           });
         SMALL_END_RE.lastIndex = begin_end;
-        const send = SMALL_END_RE.exec(source);
+        const send = SMALL_END_RE.exec(doc);
         if (!send) {
           out.push({
             type: "text",
-            content: source.slice(begin_idx, begin_end)
+            content: doc.slice(begin_idx, begin_end)
           });
           pos = begin_end;
           continue;
         }
-        const inner_md = processedSource.slice(begin_end, send.index).trim();
+        const inner_md = doc.slice(begin_end, send.index).trim();
         out.push({ type: "small", content: inner_md });
         pos = SMALL_END_RE.lastIndex;
       } else if (c_idx === min_idx) {
@@ -720,22 +807,22 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: processedSource.slice(pos, begin_idx)
+            content: doc.slice(pos, begin_idx)
           });
         CALLOUT_END_RE.lastIndex = begin_end;
-        const cend = CALLOUT_END_RE.exec(source);
+        const cend = CALLOUT_END_RE.exec(doc);
         if (!cend) {
           out.push({
             type: "text",
-            content: source.slice(begin_idx, begin_end)
+            content: doc.slice(begin_idx, begin_end)
           });
           pos = begin_end;
           continue;
         }
-        const variantRaw = ((_b = c[1]) !== null && _b !== void 0 ? _b : "note").toLowerCase();
-        const variant = ["note", "tip", "warning", "info"].includes(variantRaw) ? variantRaw : "note";
-        const title2 = (_c = c[2]) !== null && _c !== void 0 ? _c : "";
-        const inner_md = processedSource.slice(begin_end, cend.index).trim();
+        const variantRaw = ((_c = c[1]) !== null && _c !== void 0 ? _c : "note").toLowerCase();
+        const variant = ["note", "tip", "warning", "info", "takeaway"].includes(variantRaw) ? variantRaw : "note";
+        const title2 = (_d = c[2]) !== null && _d !== void 0 ? _d : "";
+        const inner_md = doc.slice(begin_end, cend.index).trim();
         out.push({
           type: "callout",
           variant,
@@ -749,21 +836,21 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         if (begin_idx > pos)
           out.push({
             type: "text",
-            content: processedSource.slice(pos, begin_idx)
+            content: doc.slice(pos, begin_idx)
           });
         FOLD_END_RE.lastIndex = begin_end;
-        const fend = FOLD_END_RE.exec(source);
+        const fend = FOLD_END_RE.exec(doc);
         if (!fend) {
           out.push({
             type: "text",
-            content: source.slice(begin_idx, begin_end)
+            content: doc.slice(begin_idx, begin_end)
           });
           pos = begin_end;
           continue;
         }
-        const title2 = (_d = f[1]) !== null && _d !== void 0 ? _d : "Details";
+        const title2 = (_e = f[1]) !== null && _e !== void 0 ? _e : "Details";
         const open = !!f[2];
-        const inner_md = processedSource.slice(begin_end, fend.index).trim();
+        const inner_md = doc.slice(begin_end, fend.index).trim();
         out.push({
           type: "fold",
           title: title2,
@@ -775,37 +862,103 @@ const Markdown = create_ssr_component(($$result, $$props, $$bindings, slots) => 
     }
     return out;
   })();
-  return `<div class="md-shell svelte-c8zg2i"${add_attribute("this", shellEl, 0)}><div class="md-grid svelte-c8zg2i"><div class="md-output space-y-6 svelte-c8zg2i"${add_attribute("this", container, 0)}>${each(chunks, (chunk, i) => {
-    return `${chunk.type === "text" ? `<div class="md-output svelte-c8zg2i"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: chunk.id, label: chunk.label }, {}, {})}` : `${chunk.type === "takeaway" ? `${validate_component(TakeawayBox, "TakeawayBox").$$render($$result, { html: toHtml(chunk.content) }, {}, {})}` : `${chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-c8zg2i"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
+  sections = (() => {
+    const out = [];
+    let current = null;
+    for (const ch of chunks) {
+      if (ch.type === "h2") {
+        if (current)
+          out.push(Object.assign({ type: "section" }, current));
+        const inline = marked.parseInline(ch.text, { smartypants: true });
+        const h2Html = `<h2 id="${ch.id}">${inline}</h2>`;
+        current = {
+          heading: { id: ch.id, text: ch.text, html: h2Html },
+          children: []
+        };
+        continue;
+      }
+      const renderable = ch;
+      if (current)
+        current.children.push(renderable);
+      else
+        out.push({ type: "chunk", chunk: renderable });
+    }
+    if (current)
+      out.push(Object.assign({ type: "section" }, current));
+    return out;
+  })();
+  return `<div class="md-shell svelte-umi69w"${add_attribute("this", shellEl, 0)}><div class="md-grid svelte-umi69w"><div class="md-output space-y-6 svelte-umi69w"${add_attribute("this", container, 0)}>${each(sections, (item, i) => {
+    return `${item.type === "chunk" ? `${item.chunk.type === "text" ? `<div class="md-output svelte-umi69w"><!-- HTML_TAG_START -->${toHtml(item.chunk.content)}<!-- HTML_TAG_END --></div>` : `${item.chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: item.chunk.id }, {}, {})}` : `${item.chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-umi69w"><!-- HTML_TAG_START -->${toHtml(item.chunk.content)}<!-- HTML_TAG_END --></div>` : `${item.chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
       $$result,
       {
-        variant: chunk.variant,
-        title: chunk.title,
-        html: toHtml(chunk.content)
+        variant: item.chunk.variant,
+        title: item.chunk.title,
+        html: toHtml(item.chunk.content)
       },
       {},
       {}
-    )}` : `${chunk.type === "fold" ? `${validate_component(FoldBox, "FoldBox").$$render(
+    )}` : `${item.chunk.type === "fold" ? `${validate_component(FoldBox, "FoldBox").$$render(
       $$result,
       {
-        title: chunk.title,
-        open: chunk.open,
-        html: toHtml(chunk.content)
+        title: item.chunk.title,
+        open: item.chunk.open,
+        html: toHtml(item.chunk.content)
       },
       {},
       {}
-    )}` : ``}`}`}`}`}`}`;
-  })}</div> ${footnotes.length ? `<aside class="md-footnotes svelte-c8zg2i" aria-label="Footnotes"${add_attribute("this", footnoteAside, 0)}><ol class="svelte-c8zg2i"${add_attribute("this", footnoteList, 0)}>${each(footnotes, (fn) => {
-    return `<li${add_attribute("id", `fn-${fn.safeId}`, 0)}${add_attribute("title", fn.id, 0)} class="svelte-c8zg2i"><span class="fn-label svelte-c8zg2i">${escape(fn.num)}</span> <span class="fn-text svelte-c8zg2i"><!-- HTML_TAG_START -->${fn.html}<!-- HTML_TAG_END --></span> </li>`;
+    )}` : ``}`}`}`}`}` : `${item.type === "section" ? `<details class="foldbox foldbox--h2 svelte-umi69w" data-h2fold="1"><summary class="foldbox__summary foldbox__summary--h2"><span class="foldbox__caret" aria-hidden="true"></span> <span class="foldbox__h2 md-output svelte-umi69w"><!-- HTML_TAG_START -->${item.heading.html}<!-- HTML_TAG_END --> </span></summary> <div class="foldbox__body foldbox__body--h2 svelte-umi69w">${each(buildH3Sections(item.children), (sub, j) => {
+      return `${sub.type === "chunk" ? `${sub.chunk.type === "text" ? `<div class="md-output svelte-umi69w"><!-- HTML_TAG_START -->${toHtml(sub.chunk.content)}<!-- HTML_TAG_END --></div>` : `${sub.chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: sub.chunk.id }, {}, {})}` : `${sub.chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-umi69w"><!-- HTML_TAG_START -->${toHtml(sub.chunk.content)}<!-- HTML_TAG_END --></div>` : `${sub.chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
+        $$result,
+        {
+          variant: sub.chunk.variant,
+          title: sub.chunk.title,
+          html: toHtml(sub.chunk.content)
+        },
+        {},
+        {}
+      )}` : `${sub.chunk.type === "fold" ? `${validate_component(FoldBox, "FoldBox").$$render(
+        $$result,
+        {
+          title: sub.chunk.title,
+          open: sub.chunk.open,
+          html: toHtml(sub.chunk.content)
+        },
+        {},
+        {}
+      )}` : ``}`}`}`}`}` : `${sub.type === "subsection" ? `<details class="foldbox foldbox--h3 svelte-umi69w" data-h3fold="1"><summary class="foldbox__summary foldbox__summary--h3"><span class="foldbox__caret" aria-hidden="true"></span> <span class="foldbox__h3 md-output svelte-umi69w"><!-- HTML_TAG_START -->${sub.heading.html}<!-- HTML_TAG_END --> </span></summary> <div class="foldbox__body foldbox__body--h3 svelte-umi69w">${each(sub.children, (chunk, k) => {
+        return `${chunk.type === "text" ? `<div class="md-output svelte-umi69w"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "jumpbox" ? `${validate_component(Jumpbox, "Jumpbox").$$render($$result, { id: chunk.id }, {}, {})}` : `${chunk.type === "small" ? `<div class="md-output text-sm sm-block svelte-umi69w"><!-- HTML_TAG_START -->${toHtml(chunk.content)}<!-- HTML_TAG_END --></div>` : `${chunk.type === "callout" ? `${validate_component(CalloutBox, "CalloutBox").$$render(
+          $$result,
+          {
+            variant: chunk.variant,
+            title: chunk.title,
+            html: toHtml(chunk.content)
+          },
+          {},
+          {}
+        )}` : `${chunk.type === "fold" ? `${validate_component(FoldBox, "FoldBox").$$render(
+          $$result,
+          {
+            title: chunk.title,
+            open: chunk.open,
+            html: toHtml(chunk.content)
+          },
+          {},
+          {}
+        )}` : ``}`}`}`}`}`;
+      })}</div> </details>` : ``}`}`;
+    })}</div> </details>` : ``}`}`;
+  })}</div> ${footnotes.length ? `<aside class="md-footnotes svelte-umi69w" aria-label="Footnotes"${add_attribute("this", footnoteAside, 0)}><ol class="svelte-umi69w"${add_attribute("this", footnoteList, 0)}>${each(footnotes, (fn) => {
+    return `<li${add_attribute("id", `fn-${fn.safeId}`, 0)}${add_attribute("title", fn.id, 0)} class="svelte-umi69w"><span class="fn-label svelte-umi69w">${escape(fn.num)}</span> <span class="fn-text svelte-umi69w"><!-- HTML_TAG_START -->${fn.html}<!-- HTML_TAG_END --></span> </li>`;
   })}</ol></aside>` : ``}</div> </div>`;
 });
 const css = {
-  code: ":root{--toc-max-width:280px;--toc-left:28px}.toc.svelte-1b2oh2w.svelte-1b2oh2w{position:fixed;left:var(--toc-left, 28px);top:50%;transform:translateY(-50%);width:var(--toc-max-width, 280px);height:calc(100vh - 180px);max-height:calc(100vh - 180px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding-right:0;z-index:50;opacity:0;transition:opacity 400ms ease;text-align:left}.toc.ready.svelte-1b2oh2w.svelte-1b2oh2w{opacity:1}.toc.hidden.svelte-1b2oh2w.svelte-1b2oh2w{display:none}.toc-item.svelte-1b2oh2w.svelte-1b2oh2w{display:block;width:100%;text-align:left;overflow-wrap:anywhere;word-break:break-word;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-1b2oh2w.svelte-1b2oh2w:hover{color:#111827}.toc-item.active.svelte-1b2oh2w.svelte-1b2oh2w{color:#111827;font-weight:600}.toc.in-body.svelte-1b2oh2w .toc-item.active.svelte-1b2oh2w{color:#6b7280}.toc.in-body.svelte-1b2oh2w .toc-item.active.sub.svelte-1b2oh2w{color:#9ca3af}.toc-item.sub.svelte-1b2oh2w.svelte-1b2oh2w{padding-left:14px;color:#9ca3af;font-size:13px}.toc-item.hidden.svelte-1b2oh2w.svelte-1b2oh2w{visibility:hidden;pointer-events:none}",
+  code: ":root{--toc-max-width:280px;--toc-left:28px;--toc-max-width-cap:220px}.toc.svelte-bsu6pv{position:fixed;left:var(--toc-left, 28px);top:50%;transform:translateY(-50%);width:var(--toc-max-width, 280px);height:calc(100vh - 180px);max-height:calc(100vh - 180px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding-right:0;z-index:50;opacity:0;transition:opacity 400ms ease;text-align:left}.toc.ready.svelte-bsu6pv{opacity:1}.toc.hidden.svelte-bsu6pv{display:none}.toc-item.svelte-bsu6pv{display:block;width:100%;text-align:left;overflow-wrap:anywhere;word-break:break-word;color:#6b7280;font-size:14px;line-height:1.6;text-decoration:none;margin:6px 0}.toc-item.svelte-bsu6pv:hover{color:#111827}.toc-item.active.svelte-bsu6pv{color:#111827;font-weight:600}.toc-item.sub.svelte-bsu6pv{padding-left:14px;color:#9ca3af;font-size:13px}",
   map: null
 };
 const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { containerSelector = ".md-output" } = $$props;
   let { headingsSelector = "h2, h3" } = $$props;
+  let { tocMaxWidthCap = 320 } = $$props;
   let meterEl = null;
   onDestroy(() => {
   });
@@ -813,11 +966,10 @@ const ScrollMeter = create_ssr_component(($$result, $$props, $$bindings, slots) 
     $$bindings.containerSelector(containerSelector);
   if ($$props.headingsSelector === void 0 && $$bindings.headingsSelector && headingsSelector !== void 0)
     $$bindings.headingsSelector(headingsSelector);
+  if ($$props.tocMaxWidthCap === void 0 && $$bindings.tocMaxWidthCap && tocMaxWidthCap !== void 0)
+    $$bindings.tocMaxWidthCap(tocMaxWidthCap);
   $$result.css.add(css);
-  return ` <nav class="${[
-    "toc svelte-1b2oh2w",
-    "  "
-  ].join(" ").trim()}" aria-hidden="true"${add_attribute("this", meterEl, 0)}>${``} </nav>`;
+  return ` <nav class="${["toc svelte-bsu6pv", " "].join(" ").trim()}" aria-hidden="true"${add_attribute("this", meterEl, 0)}>${``} </nav>`;
 });
 const text = `![teaser](/assets/figures/teaser.gif "Figure 1: We study the compute-optimal RL for LLM along three axis: #parallel rollouts($n$), #problems per batch($B_\\text{problem}$), and #sequential iterations($M$), where total rollout compute $C = n \\times B_\\text{problem} \\times M$. We find that (1) optimal parallel rollouts per problem ($n$) grows with  compute budget ($C$). (2) Easy and hard problems: similar scaling trends, but different mechanisms. (3) under fixed hardware constraints ($B$ = $B$<sub>problem</sub> × $n$), prioritize **large $B$<sub>problem</sub>** (small $n$) at low compute budgets, but shift to **large $n$** (small $B$<sub>problem</sub>) at high compute budgets to maximize performance (3) #problems per batch ($B$<sub>problem</sub>) has marginal impact on performance when kept in a moderate range."){width=900px}
 
@@ -888,13 +1040,13 @@ $$
 
 Our central scaling question, put informally is:
 
-:::callout_begin type="info":::
+:::callout_begin type="tip" title=" ":::
 **Given a base model and a problem set, how should we spend a fixed amount of sampling compute to achieve the highest possible post-training performance?**
 :::callout_end:::
 
 This simple question abstracts all of the complexity of modern LLM RL. We make a simplifying assumption and assume that response length, on an average, is captured in the constants, we are now left to allocate sampling compute into $B$<sub>problem</sub>, $n$, and $M$. In principle, we could carry out our analysis accounting for the compute spent in terms of the total tokens sampled instead of the total rollouts. However, in our experiments we observed that although response length might vary across settings, these variations manifest primarily as a constant offset in log-log space, leaving the fundamental scaling trends intact. Hence, our conclusions would be similar whether or not we accounted for the sequence length, and we chose to ignore it for simplicity. Our scaling study is based on one model and a problem set, so we do not count them as resources. Hence, our formal resource allocation question is given by:
 
-:::callout_begin type="tip":::
+:::callout_begin type="tip" title=" ":::
 **Given a base model, a problem set, and a sampling budget $C$ ≤ $C$<sub>max</sub>, find the configurations of $n$, $M$, $B$<sub>problem</sub> that attain the best possible performance as measured by a target performance metric.**
 :::callout_end:::
 
@@ -943,14 +1095,15 @@ Building on the perspective of stable entropy and KL dynamics, the **learning ra
 
 As shown in Figure 4 below, we observe that ***square-root scaling enables faster convergence while avoiding the instability seen in linear scaling.*** Although we ran this experiment on the easy problem set, we expect the same learning rate scaling strategy to apply across problem sets of varying difficulty. Conceptually, the way the learning rate should scale with batch size is governed by gradient variance and noise. While problem difficulty may change the optimal *absolute* learning rate, it should not fundamentally change the underlying scaling relationship as batch size increases.
 
-:::takeaway_begin:::
+:::callout_begin type="info":::
+
 **Key Takeaways**:
 
 1. RL training exhibits distinct training behaviors depending on problem difficulty. We therefore explicitly **curate and control for both Easy and Hard datasets** to ensure the recipe is robust to different saturation points and exploration requirements. On heterogeneous datasets that we discuss later, we simply use the recipe corresponding to the Hard dataset to avoid instability.
 2. The necessity of regularization changes based on the difficulty level. **Easy tasks** benefit from KL divergence and entropy constraints to prevent premature collapse, whereas **Hard tasks** achieve peak performance when these constraints are removed to allow unconstrained exploration. Training on mixed datasets is most stable when no KL divergence or entropy are used.
 3. Learning rate should not be fixed as the total batch size $B$ changes. Of the schemes we compared, the **square-root learning rate scaling** strategy is the best.
 
-:::takeaway_end:::
+:::callout_end:::
 
 ---
 
@@ -1010,18 +1163,17 @@ The net effect of these distinct optimization dynamics is a similar trend of com
 
 ![Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different $B_\\text{problem}$ values](/assets/figures/sec3_q1_fixBprob_bestworstk.png "Figure 7: Values of $n$ that optimize the best@4 and worst@4 performance for different $B_\\text{problem}$ values, when evaluated at the largest allowed compute budget. On the Easy set ***(left)***, the compute-optimal $n$ is smaller for best@4 (blue) than for worst@4 (red), indicating that improving robustness (worst@4) requires substantially more parallel rollouts than improving coverage. In contrast, this trend reverses on the Hard set ***(right)***: a larger $n$ is needed to improve best@4 compute-optimally, while worst@4 saturates at smaller $n$."){width=900px}
 
-:::takeaway_begin:::
-**Key Result Takeaways**:
+:::callout_begin type="info" title="Key Result Takeaways":::
 
 1. The compute-optimal $n$ frontier **shifts systematically higher** as the total sampling compute increases. The trend remains consistent **across training dataset difficulties.**
 2. The source of gain from large $n$ **shifts based on the training data difficulty**: scaling $n$ improves **sharpening** (worst@4) on the Easy set, but expands **coverage** (best@4) on the Hard set. 
-:::takeaway_end:::
+:::callout_end:::
 
-:::takeaway_begin:::
-**Workflow Takeaways:**
+
+:::callout_begin type="info" title="Workflow Takeaways":::
 
 - Depending upon the composition of the problem set, and how effectively can the base model learn on this set, we might see different underlying mechanisms for performance improvement. It is advisable to evaluate the mode of performance improvement for your base model on your prompt set, and accordingly use it to set $n$ as a function of the available $C$.
-:::takeaway_end:::
+:::callout_end:::
 
 ### Question 2: Bounded Parallel Compute: Trading off $B$<sub>problem</sub> with $n$
 
@@ -1057,17 +1209,17 @@ Overall, we find that setting a large $n$ (up to the saturation point), combined
 
 ---
 
-:::takeaway_begin:::
-**Key Result Takeaways**:
+:::callout_begin type="info" title="Key Result Takeaways":::
 
 1. With a fixed total batch size $B$, increasing compute favors allocating more rollouts ($n$) per problem and fewer problems per batch ($B$<sub>problem</sub>). On the Easy set, this trend is especially clean, since large $B$<sub>problem</sub> leads to rapid overfitting (as a result of multi-epoch training).
 2. On the Easy set, the compute-optimal value of $n$ increases with the allowed number of sequential iterations $M$ and eventually saturates, following a sigmoidal scaling pattern.
 3. For the Hard dataset, $B$<sub>problem</sub> must exceed a minimum threshold when sequential compute is unconstrained. Here, incomplete optimization of training reward, rather than overfitting, limits validation performance, making overly small $B$<sub>problem</sub> suboptimal. However, $n$ is still the more critical resource to allocate, and it generally increases as total $B$ is scaled up.
+:::callout_end:::
 
-**Workflow Takeaways:**
+:::callout_begin type="info" title="Workflow Takeaways:":::
 
 - It is preferable to train on fewer problems with a sampling large budget $n$ if we are allowed training for multiple epochs on the same problem set. On the other hand, if multi-epoch training is not possible, then it might be preferable to include on more problems in a batch.
-:::takeaway_end:::
+:::callout_end:::
 
 ### Question 3: Putting It All Together
 
@@ -1082,13 +1234,12 @@ Finally, we relax all constraints and optimize ($B$<sub>problem</sub>, $n$, $M$)
 
 ![Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization).](/assets/figures/sec3_q3_sigmoid.png "Figure 12. Compute-optimal parallel rollouts $n^*$ as a function of total compute $C$ (Joint Optimization). We sweep all hyperparameters ($n, B_{\\text{problem}}, M$) to find the global optimal configuration at each compute budget. Left (Easy) & Right (Hard): The optimal $n$ increases monotonically with compute, well-fitted by a sigmoid function (dashed black lines). Note that despite the freedom to vary $B_{\\text{problem}}$, the scaling behavior is dominated by $n$, which saturates at a lower value on the Hard set compared to the Easy set."){width=900px}
 
-:::takeaway_begin:::
-**Key Takeaways:** 
+:::callout_begin type="info":::
 
 1. When jointly optimizing across all hyperparameters ($n$, $B$<sub>problem</sub>, $M$), the compute-optimal value of $n$ still increases with $C$, similar to the findings from Questions 1 & 2.
 2. Note the best total rollout size $B$ must generally increase as $C$ increases, though the compute-optimal value of $B$<sub>problem</sub> can be roughly chosen to be a constant at all compute budgets.
 3. Our prescribed workflow suggests tuning $n$ first for a new model or new run, followed by allocating $B$<sub>problem</sub> to a reasonable value and setting $M$ accordingly to the remaining compute. This provides the practical recommendation for users.
-:::takeaway_end:::
+:::callout_end:::
 
 ---
 
@@ -1134,13 +1285,12 @@ Technically, we can also plot compute-optimal scaling laws for training performa
 
 ![Figure 16: Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set).](/assets/figures/sec3_varyD.png "Figure 16: Impact of data size ($D$) on compute-optimal frontiers for Qwen2.5-7B-Instruct (easy set). With a larger dataset ($D$=6k), we continues to improve with more parallel rollouts ($n$ = 512; ***left***). With a smaller dataset ($D$=500), performance peaks at $n$ = 256, and a larger $n$ leads to degradation ($n$ = 256)."){width=900px}
 
-:::takeaway_begin:::
-**Key Takeaways:**
+:::callout_begin type="info" title="Key Takeaways:":::
 
 1. While sequential and parallel computation are perfectly interchangeable in a tabular setting, interference across problems prevents a perfect exchange in practical LLM training. As a result, allocating compute toward parallel sampling to achieve a roughly uniform rate of improvement across training problems is often preferable to more sequential training iterations.
 2. Although different base models exhibit different levels of interference on different problem sets, we observe similar scaling rules for how compute should be allocated to the number of parallel rollouts across different prompt set combinations and base models, although the underlying causes of those scaling trends are different. 
 3. The size of the training problem set manifests as a train–test gap: when the training set is small, validation performance saturates early. This leads to lower saturation values for $n$ and $M$, and correspondingly higher optimal values of $B$<sub>problem</sub>.
-:::takeaway_end:::
+:::callout_end:::
 
 ---
 
@@ -1159,7 +1309,8 @@ A promising direction is to identify sufficient statistics early in training tha
 [^value-scaling]: "Value Scaling" (collection of scaling-law results/notes for RL). https://value-scaling.github.io/
 [^deep-rl-2301]: Additional work on scaling behavior in (deep) RL settings. https://arxiv.org/abs/2301.13442
 [^rl-sigmoid-2510]: Prior results showing sigmoidal reward curves in LLM-RL under a fixed problem mixture. https://arxiv.org/abs/2510.13786
-[^record-breaking]: Why record-breaking points are enough: if we assume the learning curve is (approximately) monotone in compute but noisy, then only *new maxima* constrain any monotone fit—the intermediate points below the running maximum are redundant for determining the upper envelope/frontier. Bucketizing reward into coarse bins further reduces sensitivity to tiny fluctuations and logging noise; selecting the first point where the bucket increases is a stable way to pick representative “frontier updates” along the run. Fitting on these record-breaking points therefore preserves the same practical frontier as fitting on all points, while greatly reducing sample count and making the monotone regression numerically more stable.`;
+[^record-breaking]: Why record-breaking points are enough: if we assume the learning curve is (approximately) monotone in compute but noisy, then only *new maxima* constrain any monotone fit—the intermediate points below the running maximum are redundant for determining the upper envelope/frontier. Bucketizing reward into coarse bins further reduces sensitivity to tiny fluctuations and logging noise; selecting the first point where the bucket increases is a stable way to pick representative “frontier updates” along the run. Fitting on these record-breaking points therefore preserves the same practical frontier as fitting on all points, while greatly reducing sample count and making the monotone regression numerically more stable.
+`;
 export {
   Markdown as M,
   Seo as S,

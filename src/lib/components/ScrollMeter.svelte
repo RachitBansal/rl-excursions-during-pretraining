@@ -6,8 +6,17 @@
   export let containerSelector = '.md-output';
   /** Which headings become ticks */
   export let headingsSelector = 'h2, h3';
+  /** Max width for the TOC column (px) */
+  export let tocMaxWidthCap = 320;
 
-  type Heading = { id: string; level: 2 | 3; top: number; label: string };
+  type Heading = {
+    id: string;
+    level: 2 | 3;
+    top: number;
+    label: string;
+    inSummary: boolean;
+    inClosedDetails: boolean;
+  };
 
   let headings: Heading[] = [];
   let visibleHeadings: Heading[] = [];
@@ -26,6 +35,7 @@
   let lastWatchDpr = -1;
   let lastWatchVw = -1;
   let hideByWidth = false;
+  let scrollRaf: number | null = null;
 
   function onTocWheel(e: WheelEvent) {
     if (!meterEl) return;
@@ -40,6 +50,12 @@
     meterEl.scrollTop = next;
     e.preventDefault();
     e.stopPropagation();
+  }
+
+  function syncTocMaxWidthCap() {
+    if (!browser) return;
+    const root = document.documentElement;
+    root.style.setProperty("--toc-max-width-cap", `${tocMaxWidthCap}`);
   }
 
   function publishSideCols(side: "on" | "off") {
@@ -73,6 +89,75 @@
     if (h.getAttribute('data-meter') === 'false') return false;
     if (h.classList.contains('no-meter')) return false;
     return true;
+  }
+
+  function effectiveTopForHeading(h: HTMLElement) {
+    // If the heading is inside a collapsed <details>, its own rect is 0 (hidden).
+    // Use the fold summary position as a stable proxy so the TOC can still compute
+    // a monotonic ordering and clickable navigation works.
+    const d = h.closest("details") as HTMLDetailsElement | null;
+    if (d && !d.open) {
+      const summary = d.querySelector("summary");
+      if (summary) return doc_y(summary);
+      return doc_y(d);
+    }
+    return doc_y(h);
+  }
+
+  function openParentFolds(el: HTMLElement) {
+    let d = el.closest("details") as HTMLDetailsElement | null;
+    while (d) {
+      d.open = true;
+      d = d.parentElement?.closest("details") as HTMLDetailsElement | null;
+    }
+  }
+
+  function gotoHeading(id: string) {
+    if (!browser) return;
+    const root = container_el ?? document;
+    const target = root.querySelector<HTMLElement>(`#${CSS.escape(id)}`);
+    if (!target) {
+      // Fallback: still update hash so other listeners can react.
+      window.location.hash = `#${id}`;
+      return;
+    }
+    // If the target is inside a closed fold, scroll to its summary first,
+    // then open folds and finish the jump in the next frame.
+    let firstClosed: HTMLDetailsElement | null = null;
+    let d = target.closest("details") as HTMLDetailsElement | null;
+    while (d) {
+      if (!d.open) {
+        firstClosed = d;
+        break;
+      }
+      d = d.parentElement?.closest("details") as HTMLDetailsElement | null;
+    }
+    openParentFolds(target);
+    const doScroll = () => {
+      const fresh = root.querySelector<HTMLElement>(`#${CSS.escape(id)}`) || target;
+      const beforeY = window.scrollY;
+      const top = fresh.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: "smooth" });
+      // Update URL hash without relying on default anchor behavior.
+      if (window.location.hash !== `#${id}`) window.location.hash = `#${id}`;
+      // Ensure active highlight matches the new scroll position.
+      recompute();
+      update_progress();
+      // Fallback: if scroll didn't move, force a hash jump and retry.
+      setTimeout(() => {
+        if (Math.abs(window.scrollY - beforeY) < 2) {
+          history.replaceState(null, "", window.location.pathname + window.location.search);
+          window.location.hash = `#${id}`;
+          fresh.scrollIntoView({ block: "start", inline: "nearest" });
+        }
+      }, 60);
+    };
+    // If we had to open folds, wait an extra frame so layout settles.
+    if (firstClosed) {
+      requestAnimationFrame(() => requestAnimationFrame(doScroll));
+    } else {
+      requestAnimationFrame(doScroll);
+    }
   }
 
   function sanitizeHeadingLabel(text: string) {
@@ -117,15 +202,21 @@
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, '');
         }
+        const inSummary = !!h.closest("summary");
+        const d = h.closest("details") as HTMLDetailsElement | null;
+        const inClosedDetails = !!(d && !d.open);
         return {
           id: h.id,
           level: h.tagName === 'H2' ? 2 : 3,
-          top: doc_y(h),
-          label: sanitizeHeadingLabel(h.textContent || '')
+          top: effectiveTopForHeading(h),
+          label: sanitizeHeadingLabel(h.textContent || ''),
+          inSummary,
+          inClosedDetails,
         };
       });
 
     visibleHeadings = headings;
+    // Always show full TOC (no in-body collapsing).
     showAll = true;
     visibleIdSet = null;
     updateVisibility();
@@ -174,46 +265,43 @@
   function update_progress() {
     if (!browser) return;
     const y = window.scrollY + 8;
-    let idx = -1;
-    for (let i = 0; i < headings.length; i++) {
-      if (headings[i].top <= y) idx = i;
-      else break;
-    }
-    active_index = idx;
-
-    const h2Indices = headings
-      .map((h, i) => (h.level === 2 ? i : -1))
-      .filter((i) => i !== -1) as number[];
-    const firstH2Top =
-      h2Indices.length > 0 ? headings[h2Indices[0]].top : null;
-    const beforeFirstH2 =
-      firstH2Top === null ? true : y < firstH2Top - 20;
-
-    if (isHovering || beforeFirstH2) {
-      showAll = true;
-      visibleIdSet = null;
-      return;
-    }
-
-    showAll = false;
-    // Show current H2 and its H3s only
-    let currentH2Index = -1;
-    for (let i = h2Indices.length - 1; i >= 0; i--) {
-      if (headings[h2Indices[i]].top <= y) {
-        currentH2Index = h2Indices[i];
-        break;
+    // Binary search for the last heading with top <= y.
+    let lo = 0;
+    let hi = headings.length - 1;
+    let ans = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (headings[mid].top <= y) {
+        ans = mid;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
       }
     }
-
-    if (currentH2Index === -1) {
-      visibleIdSet = new Set();
-      return;
+    if (ans >= 0) {
+      const top = headings[ans].top;
+      if (headings[ans].inClosedDetails) {
+        for (let i = ans; i >= 0 && headings[i].top === top; i -= 1) {
+          if (headings[i].inSummary) {
+            ans = i;
+            break;
+          }
+        }
+      }
     }
+    active_index = ans;
+    // Always show full TOC; hover does not change visibility.
+    showAll = true;
+    visibleIdSet = null;
+  }
 
-    const nextH2Index =
-      h2Indices.find((i) => i > currentH2Index) ?? headings.length;
-    const range = headings.slice(currentH2Index, nextH2Index);
-    visibleIdSet = new Set(range.map((h) => h.id));
+  function schedule_progress() {
+    if (!browser) return;
+    if (scrollRaf !== null) return;
+    scrollRaf = requestAnimationFrame(() => {
+      scrollRaf = null;
+      update_progress();
+    });
   }
 
   // list layout uses natural flow; no per-item positioning needed
@@ -249,8 +337,10 @@
     if (contentWidth === 0) return;
 
     const available = Math.max(0, Math.floor(leftMargin - gap));
+    const capVar = getComputedStyle(document.documentElement).getPropertyValue("--toc-max-width-cap");
+    const cap = Math.max(0, Math.round(parseFloat(capVar || "320") || 320));
     const maxWidth = available > 0 ? Math.min(contentWidth, available) : contentWidth;
-    meterEl.style.setProperty("--toc-max-width", `${maxWidth}px`);
+    meterEl.style.setProperty("--toc-max-width", `${Math.min(maxWidth, cap)}px`);
 
     // Position the TOC so it "hugs" the main text: place it to the left of the main
     // text column with a small gap.
@@ -260,28 +350,37 @@
 
   let onScroll: () => void;
   let onResize: () => void;
+  let onToggle: (e: Event) => void;
   let ro: ResizeObserver | null = null;
-  let meterEl: HTMLDivElement | null = null;
+  let meterEl: HTMLElement | null = null;
+  let containerRoot: HTMLElement | null = null;
 
   onMount(() => {
     hydrated = true;
+    syncTocMaxWidthCap();
     raf_id = requestAnimationFrame(() => {
       recompute();
       update_progress();
       ready = true;
     });
-    onScroll = () => update_progress();
+    onScroll = () => schedule_progress();
     onResize = () => recompute();
+    onToggle = () => {
+      // Fold/unfold changes heading positions; refresh measurements.
+      recompute();
+    };
 
     if (browser) {
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onResize);
 
       if (containerSelector) {
-        const c = document.querySelector(containerSelector);
+        const c = document.querySelector(containerSelector) as HTMLElement | null;
         if (c) {
+          containerRoot = c;
           ro = new ResizeObserver(() => recompute());
           ro.observe(c);
+          c.addEventListener("toggle", onToggle, true);
         }
       }
 
@@ -303,9 +402,13 @@
         lastWatchDpr = dpr;
         updateVisibility();
         updateLabelWidth();
-      }, 250);
+      }, 500);
     }
   });
+
+  $: if (browser) {
+    syncTocMaxWidthCap();
+  }
 
   onDestroy(() => {
     if (browser) {
@@ -323,7 +426,11 @@
       window.dispatchEvent(new CustomEvent("sidecolschange", { detail: { side: "on" } }));
     }
     if (ro) ro.disconnect();
+    if (containerRoot && onToggle) {
+      containerRoot.removeEventListener("toggle", onToggle, true);
+    }
     if (raf_id) cancelAnimationFrame(raf_id);
+    if (scrollRaf !== null) cancelAnimationFrame(scrollRaf);
   });
 </script>
 
@@ -338,7 +445,6 @@
   bind:this={meterEl}
   aria-hidden="true"
   class:ready={ready}
-  class:in-body={!showAll}
   class:hidden={hideToc}
   on:wheel={onTocWheel}
   on:mouseenter={() => {
@@ -354,8 +460,9 @@
     {#each visibleHeadings as h, i}
       <a
         href={`#${h.id}`}
-        class={`toc-item ${h.level === 3 ? 'sub' : ''} ${i === active_index ? 'active' : ''} ${!showAll && visibleIdSet && !visibleIdSet.has(h.id) ? 'hidden' : ''}`}
+        class={`toc-item ${h.level === 3 ? 'sub' : ''} ${i === active_index ? 'active' : ''}`}
         title={h.label}
+        on:click|preventDefault={() => gotoHeading(h.id)}
       >
         {h.label}
       </a>
@@ -367,6 +474,7 @@
   :root {
     --toc-max-width: 280px;
     --toc-left: 28px;
+    --toc-max-width-cap: 220px;
   }
 
   .toc {
@@ -417,14 +525,6 @@
     font-weight: 600;
   }
 
-  /* In body view, keep active items the same color (no black) */
-  .toc.in-body .toc-item.active {
-    color: #6b7280;
-  }
-
-  .toc.in-body .toc-item.active.sub {
-    color: #9ca3af;
-  }
 
   .toc-item.sub {
     padding-left: 14px;
@@ -432,10 +532,7 @@
     font-size: 13px;
   }
 
-  .toc-item.hidden {
-    visibility: hidden; /* keep spacing but hide text */
-    pointer-events: none;
-  }
+  /* No collapsing/hiding of items; TOC always shows all headings. */
 
   /* Do NOT hide the TOC via media queries; visibility is controlled by `hideToc`
      so we can keep TOC and footnotes bound to the same state. */
