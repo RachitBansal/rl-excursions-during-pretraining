@@ -13,7 +13,8 @@
     id: string;
     level: 2 | 3;
     top: number;
-    label: string;
+    labelText: string;
+    labelHtml: string;
     inSummary: boolean;
     inClosedDetails: boolean;
     el: HTMLElement;
@@ -206,11 +207,14 @@
         const inSummary = !!h.closest("summary");
         const d = h.closest("details") as HTMLDetailsElement | null;
         const inClosedDetails = !!(d && !d.open);
+        const labelText = sanitizeHeadingLabel(h.textContent || '');
+        const labelHtml = h.innerHTML || labelText;
         return {
           id: h.id,
           level: h.tagName === 'H2' ? 2 : 3,
           top: effectiveTopForHeading(h),
-          label: sanitizeHeadingLabel(h.textContent || ''),
+          labelText,
+          labelHtml,
           inSummary,
           inClosedDetails,
           el: h,
@@ -487,10 +491,10 @@
       <a
         href={`#${h.id}`}
         class={`toc-item ${h.level === 3 ? 'sub' : ''} ${i === active_index ? 'active' : ''} ${!showAll && visibleIdSet && !visibleIdSet.has(h.id) ? 'hidden' : ''}`}
-        title={h.label}
+        title={h.labelText}
         on:click|preventDefault={() => gotoHeading(h.id)}
       >
-        {h.label}
+        {@html h.labelHtml}
       </a>
     {/each}
   {/if}
