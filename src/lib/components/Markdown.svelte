@@ -660,6 +660,12 @@
     return out;
   }
 
+  function shouldOpenH3(sub: H3SectionItem): boolean {
+    if (sub.type !== "subsection") return false;
+    const text = (sub.heading.text || "").trim().toLowerCase();
+    return /^question\s*\d+/.test(text);
+  }
+
   function isPinnedTakeaway(chunk: RenderChunk): chunk is CalloutChunk {
     if (chunk.type !== "callout") return false;
     if (chunk.variant === "takeaway") return true;
@@ -1198,6 +1204,7 @@
                   <details
                     class="foldbox foldbox--h3"
                     data-h3fold="1"
+                    open={shouldOpenH3(sub)}
                     on:toggle={(e) => {
                       const details = e.currentTarget;
                       if (!(details instanceof HTMLDetailsElement)) return;

@@ -42,6 +42,7 @@ declare module '$env/static/private' {
 	export const npm_config_noproxy: string;
 	export const HOME: string;
 	export const CONDA_SHLVL: string;
+	export const OLDPWD: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const NVM_BIN: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
@@ -51,9 +52,10 @@ declare module '$env/static/private' {
 	export const GURU_DATA_DIR: string;
 	export const PS1: string;
 	export const VSCODE_GIT_ASKPASS_NODE: string;
-	export const SSL_CERT_FILE: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_local_prefix: string;
+	export const PYDEVD_DISABLE_FILE_VALIDATION: string;
+	export const BUNDLED_DEBUGPY_PATH: string;
 	export const COLORTERM: string;
 	export const LMOD_sys: string;
 	export const COLOR: string;
@@ -76,7 +78,7 @@ declare module '$env/static/private' {
 	export const npm_package_name: string;
 	export const SHARE: string;
 	export const STEM_LLM_JUDGE_URL_1: string;
-	export const SSL_CERT_DIR: string;
+	export const VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: string;
 	export const LANG: string;
 	export const STEM_LLM_JUDGE_URL_2: string;
 	export const VIRTUAL_ENV_PROMPT: string;
@@ -96,6 +98,7 @@ declare module '$env/static/private' {
 	export const LMOD_CMD: string;
 	export const CONDA_BIN_PATH: string;
 	export const VIRTUAL_ENV: string;
+	export const VSCODE_GIT_IPC_AUTH_TOKEN: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const BASH_ENV: string;
 	export const npm_config_globalconfig: string;
@@ -165,6 +168,7 @@ declare module '$env/dynamic/private' {
 		npm_config_noproxy: string;
 		HOME: string;
 		CONDA_SHLVL: string;
+		OLDPWD: string;
 		TERM_PROGRAM_VERSION: string;
 		NVM_BIN: string;
 		VSCODE_IPC_HOOK_CLI: string;
@@ -174,9 +178,10 @@ declare module '$env/dynamic/private' {
 		GURU_DATA_DIR: string;
 		PS1: string;
 		VSCODE_GIT_ASKPASS_NODE: string;
-		SSL_CERT_FILE: string;
 		npm_config_userconfig: string;
 		npm_config_local_prefix: string;
+		PYDEVD_DISABLE_FILE_VALIDATION: string;
+		BUNDLED_DEBUGPY_PATH: string;
 		COLORTERM: string;
 		LMOD_sys: string;
 		COLOR: string;
@@ -199,7 +204,7 @@ declare module '$env/dynamic/private' {
 		npm_package_name: string;
 		SHARE: string;
 		STEM_LLM_JUDGE_URL_1: string;
-		SSL_CERT_DIR: string;
+		VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: string;
 		LANG: string;
 		STEM_LLM_JUDGE_URL_2: string;
 		VIRTUAL_ENV_PROMPT: string;
@@ -219,6 +224,7 @@ declare module '$env/dynamic/private' {
 		LMOD_CMD: string;
 		CONDA_BIN_PATH: string;
 		VIRTUAL_ENV: string;
+		VSCODE_GIT_IPC_AUTH_TOKEN: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		BASH_ENV: string;
 		npm_config_globalconfig: string;
