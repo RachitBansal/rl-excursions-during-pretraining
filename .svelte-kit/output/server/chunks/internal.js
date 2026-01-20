@@ -122,7 +122,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <link\n      rel="preload"\n      href="' + assets2 + '/fonts/ibm_plex_sans/IBMPlexSans-Regular.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <link\n      rel="preload"\n      href="' + assets2 + '/fonts/newsreader/Newsreader_14pt-Italic.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <link rel="icon" href="' + assets2 + '/favicon.ico" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <script\n      async\n      src="https://www.googletagmanager.com/gtag/js?id=G-ZSV2YDNY0W"\n    ><\/script>\n    <script>\n      window.dataLayer = window.dataLayer || [];\n      function gtag() {\n        dataLayer.push(arguments);\n      }\n      gtag("js", new Date());\n      gtag("config", "G-ZSV2YDNY0W", { send_page_view: false });\n    <\/script>\n    <script>\n      if (window.location.hostname === "localhost") {\n        window.gtag = () => {};\n      }\n    <\/script>\n    ' + head + '\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body + "</div>\n  </body>\n</html>\n",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <link\n      rel="preload"\n      href="' + assets2 + '/fonts/ibm_plex_sans/IBMPlexSans-Regular.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <link\n      rel="preload"\n      href="' + assets2 + '/fonts/newsreader/Newsreader_14pt-Italic.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <!-- Favicon -->\n    <link rel="icon" type="image/jpeg" href="' + assets2 + '/assets/figures/isocompute_ico.jpg" />\n    <!-- Keep .ico as a fallback for older clients -->\n    <!-- <link rel="icon" href="' + assets2 + '/favicon.ico" /> -->\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <script\n      async\n      src="https://www.googletagmanager.com/gtag/js?id=G-ZSV2YDNY0W"\n    ><\/script>\n    <script>\n      window.dataLayer = window.dataLayer || [];\n      function gtag() {\n        dataLayer.push(arguments);\n      }\n      gtag("js", new Date());\n      gtag("config", "G-ZSV2YDNY0W", { send_page_view: false });\n    <\/script>\n    <script>\n      if (window.location.hostname === "localhost") {\n        window.gtag = () => {};\n      }\n    <\/script>\n    ' + head + '\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body + "</div>\n  </body>\n</html>\n",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -194,7 +194,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ppmemq"
+  version_hash: "mysvkr"
 };
 async function get_hooks() {
   return {

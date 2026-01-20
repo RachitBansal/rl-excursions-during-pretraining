@@ -11,9 +11,11 @@ export const load: LayoutLoad = async ({ url }) => {
         "IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs",
       // Edit these three fields to update the header author block.
       authors:
-        "Zhoujun Cheng*, Yutao Xie*, Yuxiao Qu*, Amrith Setlur*, Shibo Hao, Varad, Tongtong Liang, Feng Yao, Hector Liu, Eric Xing, Virginia Smith, Ruslan Salakhutdinov, Zhiting Hu, Taylor Killian, Aviral Kumar",
+        "Zhoujun Cheng¹²*, Yutao Xie¹*, Yuxiao Qu³*, Amrith Setlur³*, Shibo Hao¹², Varad Pimpalkhute², Tongtong Liang¹, Feng Yao¹, Hector Liu², Eric Xing², Virginia Smith³, Ruslan Salakhutdinov³, Zhiting Hu¹, Taylor Killian², Aviral Kumar³",
       affiliations: [
-        "UCSD, MBZUAI-IFM, Carnegie Mellon University",
+        "¹ UC San Diego",
+        "² MBZUAI-IFM",
+        "³ Carnegie Mellon University",
         "* equal contribution",
       ],
       date: "2026 01/19",
