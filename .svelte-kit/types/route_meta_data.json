@@ -3,7 +3,7 @@
 		"src/routes/+layout.ts",
 		"src/routes/+layout.ts"
 	],
-	"/isoflops": [
+	"/rl-excursions": [
 		"src/routes/+layout.ts"
 	]
 }

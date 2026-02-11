@@ -46,12 +46,12 @@ Logos appear next to author names and in the affiliation line. To set them up:
    In `src/routes/+layout.ts`, set each author’s `affils` to the key you used (e.g. `["harvard"]`), and include the full affiliation string in `affiliations` (e.g. `"Harvard University"`) so the legend shows the logo too.
 
 **Harvard is already wired up.** Add `static/assets/figures/harvard.png` (e.g. from your university’s brand assets) and the logos will show.
-- **`src/routes/isoflops/`** – Legacy IsoCompute post route. You can remove this route and its content when you no longer need it.
+- **`src/routes/rl-excursions/`** – Legacy IsoCompute post route. You can remove this route and its content when you no longer need it.
 - **`BLOG_STRUCTURE.md`** (repo root) – Map of paper sections to blog files and where to edit. Kept in root so `npm run build` doesn’t overwrite it (build output goes to `docs/`).
 
 ## Build and deploy
 
-The site is built as **static files** (SvelteKit `adapter-static`). Output goes to the **`docs/`** folder.
+The site is built as **static files** (SvelteKit `adapter-static`). Output goes to the **`docs/`** folder. GitHub Pages serves only these built files—it does **not** run the build. So after you edit the blog (e.g. `rl_excursions.md`), you must run the build and push the updated `docs/` folder for the live site to change.
 
 ```bash
 npm run build

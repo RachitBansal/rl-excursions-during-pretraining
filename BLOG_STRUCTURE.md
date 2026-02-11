@@ -29,5 +29,5 @@ Add your narrative and figures section by section; the Markdown component suppor
 
 ## Optional cleanup
 
-- **Remove IsoCompute content**: Delete `src/routes/isoflops/` and optionally `src/maintext/iso_compute_final0.md` if you no longer need that post.
+- **Remove IsoCompute content**: Delete `src/routes/rl-excursions/` and optionally `src/maintext/iso_compute_final0.md` if you no longer need that post.
 - **Favicon**: Replace `static/assets/figures/isocompute_ico.jpg` and update `src/app.html` if you want a custom icon.
