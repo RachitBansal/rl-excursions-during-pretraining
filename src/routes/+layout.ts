@@ -8,33 +8,20 @@ export const load: LayoutLoad = async ({ url }) => {
     pathname: url.pathname,
     header: {
       title:
-        "IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs",
-      // Edit these three fields to update the header author block.
+        "RL Excursions during Pre-training: How early is too early for On-policy Learning?",
+      // Edit authors and affiliations for your paper.
       authors: [
-        { name: "Zhoujun Cheng*", affils: ["ucsd", "mbzuai"] },
-        { name: "Yutao Xie*", affils: ["ucsd"] },
-        { name: "Yuxiao Qu*", affils: ["cmu"] },
-        { name: "Amrith Setlur*", affils: ["cmu"] },
-        { name: "Shibo Hao", affils: ["ucsd", "mbzuai"] },
-        { name: "Varad Pimpalkhute", affils: ["mbzuai"] },
-        { name: "Tongtong Liang", affils: ["ucsd"] },
-        { name: "Feng Yao", affils: ["ucsd"] },
-        { name: "Zhengzhong Liu", affils: ["mbzuai"] },
-        { name: "Eric Xing", affils: ["mbzuai","cmu"] },
-        { name: "Virginia Smith", affils: ["cmu"] },
-        { name: "Ruslan Salakhutdinov", affils: ["cmu"] },
-        { name: "Zhiting Hu", affils: ["ucsd"] },
-        { name: "Taylor Killian", affils: ["mbzuai"] },
-        { name: "Aviral Kumar", affils: ["cmu"] },
+        { name: "Rachit Bansal*", affils: ["harvard"] },
+        { name: "Tian Qin*", affils: ["harvard"] },
+        { name: "Clara Mohri*", affils: ["harvard"] },
+        { name: "David Alvarez-Melis", affils: ["harvard"] },
+        { name: "Sham Kakade", affils: ["harvard"] },
       ],
       affiliations: [
-        // "UC San Diego",
-        // "MBZUAI-IFM",
-        // "Carnegie Mellon University",
+        // "Harvard University",
         "* Equal contribution",
-        // "Work done during internship at MBZUAI-IFM",
       ],
-      date: " ",
+      date: " ", // e.g. "2025" or "Under review"
     },
   };
 };

@@ -2,13 +2,12 @@
   import Seo from "$lib/components/Seo.svelte";
   import Markdown from "$lib/components/Markdown.svelte";
   import ScrollMeter from "$lib/components/ScrollMeter.svelte";
-  import text from "../maintext/iso_compute_final0.md?raw";
-
+  import text from "../maintext/rl_excursions.md?raw";
 </script>
 
 <Seo
-  title="IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs"
-  description="IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs (image URLs replaced with placeholders)."
+  title="RL Excursions during Pre-training: How early is too early for On-policy Learning?"
+  description="We study when and how to introduce RL objectives during LLM training: RL on intermediate pretraining checkpoints, sharpening vs expansion, and rollout budgets."
 />
 
 <div>

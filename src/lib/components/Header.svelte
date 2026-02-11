@@ -36,7 +36,7 @@
   <div class="header-inner mb-8">
     <h1 class="title-font font-bold text-black text-3xl mb-4 leading-tight">
       {$page.data.header?.title ??
-        "IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs"}
+        "RL Excursions during Pre-training: How early is too early for On-policy Learning?"}
     </h1>
 
     <div class="meta text-black">
