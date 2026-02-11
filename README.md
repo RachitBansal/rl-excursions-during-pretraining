@@ -24,6 +24,28 @@ Then open [http://localhost:5173](http://localhost:5173).
 - **`src/routes/+layout.ts`** – Site layout and header (title, authors, affiliations, date). Update here when you add author names and affiliations.
 - **`src/lib/components/`** – Reusable UI (Header, Markdown, Seo, etc.).
 - **`static/assets/figures/`** – Images and figures. Paper figures (e.g. from `assets/figures/` at repo root) can be copied here and referenced in the markdown.
+
+## Institution logos in the header
+
+Logos appear next to author names and in the affiliation line. To set them up:
+
+1. **Add the logo image**  
+   Put your logo file in `static/assets/figures/`, e.g. `harvard.png`. Use PNG or SVG; keep it small (roughly 50–80px tall) for a sharp look.
+
+2. **Register the logo in the header**  
+   In `src/lib/components/Header.svelte`, add an entry to `logoMap` and to `affiliationLogoMap`:
+   ```js
+   // In logoMap:
+   harvard: { src: "/assets/figures/harvard.png", alt: "Harvard University" },
+   // In affiliationLogoMap (use the exact string you put in +layout.ts):
+   "Harvard University": logoMap.harvard,
+   ```
+   Optional: add a class like `affil-logo--harvard` on the `<img>` and a style `.affil-logo--harvard { height: 18px; }` to tune size.
+
+3. **Use it in the layout**  
+   In `src/routes/+layout.ts`, set each author’s `affils` to the key you used (e.g. `["harvard"]`), and include the full affiliation string in `affiliations` (e.g. `"Harvard University"`) so the legend shows the logo too.
+
+**Harvard is already wired up.** Add `static/assets/figures/harvard.png` (e.g. from your university’s brand assets) and the logos will show.
 - **`src/routes/isoflops/`** – Legacy IsoCompute post route. You can remove this route and its content when you no longer need it.
 - **`BLOG_STRUCTURE.md`** (repo root) – Map of paper sections to blog files and where to edit. Kept in root so `npm run build` doesn’t overwrite it (build output goes to `docs/`).
 

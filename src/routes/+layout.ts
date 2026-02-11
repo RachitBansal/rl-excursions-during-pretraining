@@ -18,7 +18,7 @@ export const load: LayoutLoad = async ({ url }) => {
         { name: "Sham Kakade", affils: ["harvard"] },
       ],
       affiliations: [
-        // "Harvard University",
+        "Harvard University",
         "* Equal contribution",
       ],
       date: " ", // e.g. "2025" or "Under review"

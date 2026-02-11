@@ -2,9 +2,7 @@
   import { page } from "$app/stores";
 
   const logoMap: Record<string, { src: string; alt: string }> = {
-    ucsd: { src: "/assets/figures/ucsd.png", alt: "UC San Diego" },
-    mbzuai: { src: "/assets/figures/mbzuai.png", alt: "MBZUAI-IFM" },
-    cmu: { src: "/assets/figures/cmu.png", alt: "Carnegie Mellon University" },
+    harvard: { src: "/assets/figures/harvard.svg", alt: "Harvard University" },
   };
 
   const internshipLine = "Work done during internship at MBZUAI-IFM";
@@ -12,6 +10,7 @@
     "UC San Diego": logoMap.ucsd,
     "MBZUAI-IFM": logoMap.mbzuai,
     "Carnegie Mellon University": logoMap.cmu,
+    "Harvard University": logoMap.harvard,
   };
 
   type AuthorEntry = { name: string; affils?: string[] };
@@ -53,7 +52,7 @@
                         src={logoMap[key].src}
                         alt={logoMap[key].alt}
                         title={logoMap[key].alt}
-                        class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""}`}
+                        class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""} ${key === "harvard" ? "affil-logo--harvard" : ""}`}
                         loading="lazy"
                         decoding="async"
                       />
@@ -187,6 +186,10 @@
 
   .affil-logo--cmu {
     height: 23px;
+  }
+
+  .affil-logo--harvard {
+    height: 18px;
   }
 
   .affil-logo--legend {
