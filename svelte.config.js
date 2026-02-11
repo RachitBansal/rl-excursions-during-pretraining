@@ -11,7 +11,8 @@ const config = {
       fallback: null,
     }),
     paths: {
-      base: "",
+      // Use repo name as base when deploying to GitHub Pages (e.g. user.github.io/rl-excursions-during-pretraining/)
+      base: process.env.GITHUB_PAGES ? "/rl-excursions-during-pretraining" : "",
     },
     prerender: {
       handleHttpError: ({ path, referrer, message }) => {

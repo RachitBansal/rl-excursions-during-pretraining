@@ -11,6 +11,7 @@
 
   import { fly } from "svelte/transition";
 
+  import { base } from "$app/paths";
   import Header from "$lib/components/Header.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import type { LayoutData } from "./$types";
@@ -71,7 +72,7 @@
 
 <div class="page-upper-right-inline">
   <img
-    src="/assets/figures/upper_right_final.png"
+    src={base + "/assets/figures/upper_right_final.png"}
     alt="Institution logos"
     class="page-upper-right"
     loading="lazy"

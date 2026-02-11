@@ -1,18 +1,5 @@
 import { c as create_ssr_component, a as setContext, v as validate_component, m as missing_component } from "./ssr.js";
-let base = "";
-let assets = base;
-const initial = { base, assets };
-function override(paths) {
-  base = paths.base;
-  assets = paths.assets;
-}
-function reset() {
-  base = initial.base;
-  assets = initial.assets;
-}
-function set_assets(path) {
-  assets = initial.assets = path;
-}
+import "./paths.js";
 let public_env = {};
 let safe_public_env = {};
 function set_private_env(environment) {
@@ -122,7 +109,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <link\n      rel="preload"\n      href="' + assets2 + '/fonts/ibm_plex_sans/IBMPlexSans-Regular.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <link\n      rel="preload"\n      href="' + assets2 + '/fonts/newsreader/Newsreader_14pt-Italic.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <!-- Favicon: replace with your own when ready -->\n    <link rel="icon" type="image/jpeg" href="' + assets2 + '/assets/figures/isocompute_ico.jpg" />\n    <!-- Keep .ico as a fallback for older clients -->\n    <!-- <link rel="icon" href="' + assets2 + '/favicon.ico" /> -->\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <script\n      async\n      src="https://www.googletagmanager.com/gtag/js?id=G-ZSV2YDNY0W"\n    ><\/script>\n    <script>\n      window.dataLayer = window.dataLayer || [];\n      function gtag() {\n        dataLayer.push(arguments);\n      }\n      gtag("js", new Date());\n      gtag("config", "G-ZSV2YDNY0W", { send_page_view: false });\n    <\/script>\n    <script>\n      if (window.location.hostname === "localhost") {\n        window.gtag = () => {};\n      }\n    <\/script>\n    ' + head + '\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body + "</div>\n  </body>\n</html>\n",
+    app: ({ head, body, assets, nonce, env }) => '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <link\n      rel="preload"\n      href="' + assets + '/fonts/ibm_plex_sans/IBMPlexSans-Regular.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <link\n      rel="preload"\n      href="' + assets + '/fonts/newsreader/Newsreader_14pt-Italic.ttf"\n      as="font"\n      type="font/ttf"\n      crossorigin\n    />\n    <!-- Favicon: replace with your own when ready -->\n    <link rel="icon" type="image/jpeg" href="' + assets + '/assets/figures/isocompute_ico.jpg" />\n    <!-- Keep .ico as a fallback for older clients -->\n    <!-- <link rel="icon" href="' + assets + '/favicon.ico" /> -->\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <script\n      async\n      src="https://www.googletagmanager.com/gtag/js?id=G-ZSV2YDNY0W"\n    ><\/script>\n    <script>\n      window.dataLayer = window.dataLayer || [];\n      function gtag() {\n        dataLayer.push(arguments);\n      }\n      gtag("js", new Date());\n      gtag("config", "G-ZSV2YDNY0W", { send_page_view: false });\n    <\/script>\n    <script>\n      if (window.location.hostname === "localhost") {\n        window.gtag = () => {};\n      }\n    <\/script>\n    ' + head + '\n  </head>\n  <body data-sveltekit-preload-data="hover">\n    <div style="display: contents">' + body + "</div>\n  </body>\n</html>\n",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -194,7 +181,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1jsh6n1"
+  version_hash: "ctwowq"
 };
 async function get_hooks() {
   return {
@@ -202,21 +189,16 @@ async function get_hooks() {
   };
 }
 export {
-  assets as a,
-  base as b,
-  options as c,
-  set_private_env as d,
-  prerendering as e,
-  set_public_env as f,
+  set_private_env as a,
+  prerendering as b,
+  set_public_env as c,
+  set_safe_public_env as d,
+  set_building as e,
+  set_manifest as f,
   get_hooks as g,
-  set_safe_public_env as h,
-  set_assets as i,
-  set_building as j,
-  set_manifest as k,
-  set_prerendering as l,
-  set_read_implementation as m,
-  override as o,
+  set_prerendering as h,
+  set_read_implementation as i,
+  options as o,
   public_env as p,
-  reset as r,
   safe_public_env as s
 };

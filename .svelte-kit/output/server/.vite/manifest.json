@@ -4,7 +4,8 @@
     "src": ".svelte-kit/generated/server/internal.js",
     "isEntry": true,
     "imports": [
-      "_internal.js"
+      "_internal.js",
+      "_paths.js"
     ]
   },
   "_ScrollMeter.js": {
@@ -13,7 +14,7 @@
       "_ssr.js"
     ],
     "css": [
-      "_app/immutable/assets/ScrollMeter.Byj1YCSA.css"
+      "_app/immutable/assets/ScrollMeter.B73mUbvq.css"
     ],
     "assets": [
       "_app/immutable/assets/KaTeX_AMS-Regular.BQhdFMY1.woff2",
@@ -83,11 +84,15 @@
   "_internal.js": {
     "file": "chunks/internal.js",
     "imports": [
-      "_ssr.js"
+      "_ssr.js",
+      "_paths.js"
     ],
     "dynamicImports": [
       "src/hooks.server.js"
     ]
+  },
+  "_paths.js": {
+    "file": "chunks/paths.js"
   },
   "_ssr.js": {
     "file": "chunks/ssr.js"
@@ -104,9 +109,10 @@
     "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js",
     "isEntry": true,
     "imports": [
-      "_internal.js",
+      "_paths.js",
       "_exports.js",
-      "_ssr.js"
+      "_ssr.js",
+      "_internal.js"
     ]
   },
   "node_modules/katex/dist/fonts/KaTeX_AMS-Regular.ttf": {
@@ -365,10 +371,11 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
+      "_paths.js",
       "_stores.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.C2HuP_Ij.css"
+      "_app/immutable/assets/_layout.BtFj93Ee.css"
     ]
   },
   "src/routes/+layout.ts": {

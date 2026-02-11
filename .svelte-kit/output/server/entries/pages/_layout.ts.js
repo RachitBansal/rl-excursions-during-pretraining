@@ -14,7 +14,7 @@ const load = async ({ url }) => {
         { name: "Sham Kakade", affils: ["harvard"] }
       ],
       affiliations: [
-        // "Harvard University",
+        "Harvard University",
         "* Equal contribution"
       ],
       date: " "

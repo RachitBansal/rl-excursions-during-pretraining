@@ -1,7 +1,11 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { base } from "$app/paths";
 
   const logoMap: Record<string, { src: string; alt: string }> = {
+    ucsd: { src: "/assets/figures/ucsd.png", alt: "UC San Diego" },
+    mbzuai: { src: "/assets/figures/mbzuai.png", alt: "MBZUAI-IFM" },
+    cmu: { src: "/assets/figures/cmu.png", alt: "Carnegie Mellon University" },
     harvard: { src: "/assets/figures/harvard.svg", alt: "Harvard University" },
   };
 
@@ -49,7 +53,7 @@
                   {#each author.affils as key, j (j)}
                     {#if logoMap[key]}
                       <img
-                        src={logoMap[key].src}
+                        src={base + logoMap[key].src}
                         alt={logoMap[key].alt}
                         title={logoMap[key].alt}
                         class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""} ${key === "harvard" ? "affil-logo--harvard" : ""}`}
@@ -83,7 +87,7 @@
                   <span class="affil-dot" aria-hidden="true"></span>
                 {:else if affiliationLogoMap[line]}
                   <img
-                    src={affiliationLogoMap[line].src}
+                    src={base + affiliationLogoMap[line].src}
                     alt={affiliationLogoMap[line].alt}
                     title={affiliationLogoMap[line].alt}
                     class="affil-logo affil-logo--legend"

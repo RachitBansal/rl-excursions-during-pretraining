@@ -61,9 +61,9 @@ npm run build
 
 Your config already outputs to `docs/`, which GitHub Pages can serve from the same repo.
 
-1. **Build** the site:
+1. **Build** the site (use `GITHUB_PAGES=1` so asset paths work when served from `.../rl-excursions-during-pretraining/`):
    ```bash
-   npm run build
+   GITHUB_PAGES=1 npm run build
    ```
 2. **Commit and push** the `docs/` folder:
    ```bash

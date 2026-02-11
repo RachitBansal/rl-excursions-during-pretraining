@@ -39,7 +39,7 @@
       }
     </script>
     
-		<link href="./_app/immutable/assets/0.U-9DGnEV.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/0.ChBBf1Xn.css" rel="stylesheet">
 		<link href="./_app/immutable/assets/ScrollMeter.CZR1otz5.css" rel="stylesheet">
 		<link rel="preload" as="font" type="font/woff2" href="./_app/immutable/assets/KaTeX_AMS-Regular.BQhdFMY1.woff2" crossorigin>
 		<link rel="preload" as="font" type="font/woff" href="./_app/immutable/assets/KaTeX_AMS-Regular.DMm9YOAa.woff" crossorigin>
@@ -100,14 +100,14 @@
 		<link rel="preload" as="font" type="font/woff2" href="./_app/immutable/assets/KaTeX_Typewriter-Regular.CO6r4hn1.woff2" crossorigin>
 		<link rel="preload" as="font" type="font/woff" href="./_app/immutable/assets/KaTeX_Typewriter-Regular.C0xS9mPB.woff" crossorigin>
 		<link rel="preload" as="font" type="font/ttf" href="./_app/immutable/assets/KaTeX_Typewriter-Regular.D3Ib7_Hf.ttf" crossorigin>
-		<link rel="modulepreload" href="./_app/immutable/entry/start.TktPK5LP.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/entry.CQOgGdx2.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.CVQ-Legw.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.BA1Rdi2j.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.CHFMnfDQ.js">
-		<link rel="modulepreload" href="./_app/immutable/entry/app.BeGH2OWE.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.D9xGimwu.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/index.B7zo_JMq.js">
-		<link rel="modulepreload" href="./_app/immutable/nodes/0.B9bRfBUy.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.C21b7AdM.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/each.12NJaz3W.js">
-		<link rel="modulepreload" href="./_app/immutable/chunks/stores.BDFdLui_.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/stores.CPOYYnEc.js">
 		<link rel="modulepreload" href="./_app/immutable/nodes/2.PQmym87p.js">
 		<link rel="modulepreload" href="./_app/immutable/chunks/ScrollMeter.BCPujD7v.js"><title>RL Excursions during Pre-training: How early is too early for On-policy Learning?</title><!-- HEAD_svelte-yrkxwy_START --><script async src="https://www.googletagmanager.com/gtag/js?id=G-Z1XRQ6ZG3X" data-svelte-h="svelte-1mc97wv"></script><script data-svelte-h="svelte-woggic">window.dataLayer = window.dataLayer || [];
     function gtag() {
@@ -118,7 +118,7 @@
   </script><!-- HEAD_svelte-yrkxwy_END --><!-- HEAD_svelte-1u7ey3_START --><meta name="description" content="We study when and how to introduce RL objectives during LLM training: RL on intermediate pretraining checkpoints, sharpening vs expansion, and rollout budgets."><meta property="og:title" content="RL Excursions during Pre-training: How early is too early for On-policy Learning?"><meta property="og:description" content="We study when and how to introduce RL objectives during LLM training: RL on intermediate pretraining checkpoints, sharpening vs expansion, and rollout budgets."><!-- HEAD_svelte-1u7ey3_END -->
   </head>
   <body data-sveltekit-preload-data="hover">
-    <div style="display: contents">   <div class="page-upper-right-inline svelte-pbnrg0" data-svelte-h="svelte-1nuwv2k"><img src="/assets/figures/upper_right_final.png" alt="Institution logos" class="page-upper-right svelte-pbnrg0" loading="lazy" decoding="async"></div> <header class="layout-xl justify-between items-start" data-sveltekit-noscroll data-sveltekit-preload-code="eager"><div class="header-inner mb-8 svelte-x8x8zz"><h1 class="title-font font-bold text-black text-3xl mb-4 leading-tight svelte-x8x8zz">RL Excursions during Pre-training: How early is too early for On-policy Learning?</h1> <div class="meta text-black svelte-x8x8zz"><div class="authors svelte-x8x8zz"><span class="author svelte-x8x8zz"><span class="author-name svelte-x8x8zz">Rachit Bansal</span> <sup class="affil-sup svelte-x8x8zz"><span class="affil-fallback svelte-x8x8zz">harvard</span> <span class="affil-sup-text svelte-x8x8zz" data-svelte-h="svelte-17ywuv4">*</span> </sup> </span><span class="author svelte-x8x8zz"><span class="author-name svelte-x8x8zz">Tian Qin</span> <sup class="affil-sup svelte-x8x8zz"><span class="affil-fallback svelte-x8x8zz">harvard</span> <span class="affil-sup-text svelte-x8x8zz" data-svelte-h="svelte-17ywuv4">*</span> </sup> </span><span class="author svelte-x8x8zz"><span class="author-name svelte-x8x8zz">Clara Mohri</span> <sup class="affil-sup svelte-x8x8zz"><span class="affil-fallback svelte-x8x8zz">harvard</span> <span class="affil-sup-text svelte-x8x8zz" data-svelte-h="svelte-17ywuv4">*</span> </sup> </span><span class="author svelte-x8x8zz"><span class="author-name svelte-x8x8zz">David Alvarez-Melis</span> <sup class="affil-sup svelte-x8x8zz"><span class="affil-fallback svelte-x8x8zz">harvard</span>  </sup> </span><span class="author svelte-x8x8zz"><span class="author-name svelte-x8x8zz">Sham Kakade</span> <sup class="affil-sup svelte-x8x8zz"><span class="affil-fallback svelte-x8x8zz">harvard</span>  </sup> </span></div> <div class="affiliations svelte-x8x8zz"><div class="affiliation-line svelte-x8x8zz"><span class="affiliation-item svelte-x8x8zz"> <span>* Equal contribution</span></span> </div></div> <div class="date svelte-x8x8zz"> </div></div></div> </header> <main> <div> <nav class="toc svelte-wsnayn" aria-hidden="true"> </nav> <div class="layout-xl text-base space-y-12"><div class="md-shell svelte-1cybysc"><div class="md-grid svelte-1cybysc"><div class="md-output space-y-6 svelte-1cybysc"><div class="md-output svelte-1cybysc"><!-- HTML_TAG_START --><h1 id="rl-excursions-during-pre-training-how-early-is-too-early-for-on-policy-learning">RL Excursions during Pre-training: How early is too early for On-policy Learning?</h1><!-- Blog post for the paper. Replace placeholder content below with your narrative. -->
+    <div style="display: contents">   <div class="page-upper-right-inline svelte-pbnrg0" data-svelte-h="svelte-6nno4e"><img src="./assets/figures/upper_right_final.png" alt="Institution logos" class="page-upper-right svelte-pbnrg0" loading="lazy" decoding="async"></div> <header class="layout-xl justify-between items-start" data-sveltekit-noscroll data-sveltekit-preload-code="eager"><div class="header-inner mb-8 svelte-1j41yyi"><h1 class="title-font font-bold text-black text-3xl mb-4 leading-tight svelte-1j41yyi">RL Excursions during Pre-training: How early is too early for On-policy Learning?</h1> <div class="meta text-black svelte-1j41yyi"><div class="authors svelte-1j41yyi"><span class="author svelte-1j41yyi"><span class="author-name svelte-1j41yyi">Rachit Bansal</span> <sup class="affil-sup svelte-1j41yyi"><img src="./assets/figures/harvard.svg" alt="Harvard University" title="Harvard University" class="affil-logo   affil-logo--harvard svelte-1j41yyi" loading="lazy" decoding="async"> <span class="affil-sup-text svelte-1j41yyi" data-svelte-h="svelte-17ywuv4">*</span> </sup> </span><span class="author svelte-1j41yyi"><span class="author-name svelte-1j41yyi">Tian Qin</span> <sup class="affil-sup svelte-1j41yyi"><img src="./assets/figures/harvard.svg" alt="Harvard University" title="Harvard University" class="affil-logo   affil-logo--harvard svelte-1j41yyi" loading="lazy" decoding="async"> <span class="affil-sup-text svelte-1j41yyi" data-svelte-h="svelte-17ywuv4">*</span> </sup> </span><span class="author svelte-1j41yyi"><span class="author-name svelte-1j41yyi">Clara Mohri</span> <sup class="affil-sup svelte-1j41yyi"><img src="./assets/figures/harvard.svg" alt="Harvard University" title="Harvard University" class="affil-logo   affil-logo--harvard svelte-1j41yyi" loading="lazy" decoding="async"> <span class="affil-sup-text svelte-1j41yyi" data-svelte-h="svelte-17ywuv4">*</span> </sup> </span><span class="author svelte-1j41yyi"><span class="author-name svelte-1j41yyi">David Alvarez-Melis</span> <sup class="affil-sup svelte-1j41yyi"><img src="./assets/figures/harvard.svg" alt="Harvard University" title="Harvard University" class="affil-logo   affil-logo--harvard svelte-1j41yyi" loading="lazy" decoding="async">  </sup> </span><span class="author svelte-1j41yyi"><span class="author-name svelte-1j41yyi">Sham Kakade</span> <sup class="affil-sup svelte-1j41yyi"><img src="./assets/figures/harvard.svg" alt="Harvard University" title="Harvard University" class="affil-logo   affil-logo--harvard svelte-1j41yyi" loading="lazy" decoding="async">  </sup> </span></div> <div class="affiliations svelte-1j41yyi"><div class="affiliation-line svelte-1j41yyi"><span class="affiliation-item svelte-1j41yyi"><img src="./assets/figures/harvard.svg" alt="Harvard University" title="Harvard University" class="affil-logo affil-logo--legend svelte-1j41yyi" loading="lazy" decoding="async"> <span>Harvard University</span></span> <span class="affiliation-sep svelte-1j41yyi" data-svelte-h="svelte-djw72">, </span><span class="affiliation-item svelte-1j41yyi"> <span>* Equal contribution</span></span> </div></div> <div class="date svelte-1j41yyi"> </div></div></div> </header> <main> <div> <nav class="toc svelte-wsnayn" aria-hidden="true"> </nav> <div class="layout-xl text-base space-y-12"><div class="md-shell svelte-1cybysc"><div class="md-grid svelte-1cybysc"><div class="md-output space-y-6 svelte-1cybysc"><div class="md-output svelte-1cybysc"><!-- HTML_TAG_START --><h1 id="rl-excursions-during-pre-training-how-early-is-too-early-for-on-policy-learning">RL Excursions during Pre-training: How early is too early for On-policy Learning?</h1><!-- Blog post for the paper. Replace placeholder content below with your narrative. -->
 
 <!-- HTML_TAG_END --></div><details class="foldbox foldbox--h2 svelte-1cybysc" data-h2fold="1" open><summary class="foldbox__summary foldbox__summary--h2"><span class="foldbox__caret" aria-hidden="true"></span> <span class="foldbox__h2 md-output svelte-1cybysc"><!-- HTML_TAG_START --><h2 id="abstract">Abstract</h2><!-- HTML_TAG_END --> </span></summary> <div class="foldbox__body foldbox__body--h2 svelte-1cybysc"><div class="md-output svelte-1cybysc"><!-- HTML_TAG_START --><p><em>[Summarize: RL applied to intermediate pretraining checkpoints; RL effective from ~25% pretraining; direct RL can match SFT→RL; sharpening vs expansion; rollout budget insights.]</em></p>
 <hr>
@@ -138,8 +138,9 @@
 			
 			<script>
 				{
-					__sveltekit_1jsh6n1 = {
-						base: new URL(".", location).pathname.slice(0, -1)
+					__sveltekit_ctwowq = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						assets: "/rl-excursions-during-pretraining"
 					};
 
 					const element = document.currentScript.parentElement;
@@ -147,8 +148,8 @@
 					const data = [null,null];
 
 					Promise.all([
-						import("./_app/immutable/entry/start.TktPK5LP.js"),
-						import("./_app/immutable/entry/app.BeGH2OWE.js")
+						import("./_app/immutable/entry/start.CVQ-Legw.js"),
+						import("./_app/immutable/entry/app.D9xGimwu.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 2],
