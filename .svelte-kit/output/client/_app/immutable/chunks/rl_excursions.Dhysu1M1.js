@@ -338,7 +338,7 @@ This post is a blog-style adaptation of the paper:
 Replace placeholder figure links in \`assets/\` with real images exported from the paper.
 -->
 
-# RL excursions during pre-training: how early is *too* early for on-policy learning?
+<!-- # RL excursions during pre-training: how early is *too* early for on-policy learning? -->
 
 <figure>
   <img src="../assets/figures/figure_1.png" alt="Overview figure placeholder showing early RL works, expansion vs sharpening, and rollout budget tradeoffs." width="100%"/>
