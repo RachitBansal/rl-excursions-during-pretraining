@@ -239,6 +239,7 @@
 </script>
 
 <script lang="ts">
+  import { base } from "$app/paths";
   import Jumpbox from "./Jumpbox.svelte";
   import CalloutBox from "./CalloutBox.svelte";
   import FoldBox from "./FoldBox.svelte";
@@ -405,7 +406,12 @@
     const key = md || "";
     const cached = htmlCache.get(key);
     if (cached !== undefined) return cached;
-    const html = marked.parse(key, { smartypants: true }) as string;
+    let html = marked.parse(key, { smartypants: true }) as string;
+    // Prepend SvelteKit base path to absolute src/href attributes (e.g. /assets/...)
+    // so images resolve correctly on GitHub Pages where the site lives under a subpath.
+    if (base) {
+      html = html.replace(/(<(?:img|source|video)\b[^>]*\s(?:src|poster))="\/(?!\/)/g, `$1="${base}/`);
+    }
     htmlCache.set(key, html);
     return html;
   }
