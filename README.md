@@ -63,7 +63,15 @@ npm run build
 
 Your config already outputs to `docs/`, which GitHub Pages can serve from the same repo.
 
-1. **Build** the site (use `GITHUB_PAGES=1` so asset paths work when served from `.../rl-excursions-during-pretraining/`):
+**Option A1 – GitHub Actions (recommended)**  
+A workflow in `.github/workflows/deploy.yml` builds with the correct base path and deploys to GitHub Pages on every push to `main`.
+
+1. In the repo: **Settings** → **Pages** → Source: **GitHub Actions**.
+2. Push to `main`; the workflow runs and publishes to the `gh-pages` branch. The site will be at `https://<your-username>.github.io/rl-excursions-during-pretraining/`.
+
+**Option A2 – Build and push `docs/` yourself**
+
+1. **Build** the site with the base path so image and asset URLs work on GitHub Pages:
    ```bash
    GITHUB_PAGES=1 npm run build
    ```
@@ -74,9 +82,8 @@ Your config already outputs to `docs/`, which GitHub Pages can serve from the sa
    git push
    ```
 3. **Turn on GitHub Pages**: Repo → **Settings** → **Pages** → Source: **Deploy from a branch** → Branch: `main` (or your default), Folder: **/docs** → Save.
-4. The site will be at `https://<your-username>.github.io/rl-excursions-during-pretraining/` (or your custom domain if you set one).
 
-After the first time, run `npm run build` and commit/push `docs/` whenever you update the blog.
+If you build without `GITHUB_PAGES=1`, image paths will be wrong on the live site (e.g. `/assets/figures/...` instead of `/rl-excursions-during-pretraining/assets/figures/...`).
 
 ### Option B: Vercel
 

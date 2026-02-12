@@ -410,6 +410,7 @@
     "src": "src/routes/rl-excursions/+page.ts",
     "isEntry": true,
     "imports": [
+      "_paths.js",
       "_rl_excursions.js"
     ]
   }
