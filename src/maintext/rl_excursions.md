@@ -16,7 +16,7 @@ Replace placeholder figure links in `assets/` with real images exported from the
 <!-- # RL excursions during pre-training: how early is *too* early for on-policy learning? -->
 
 <figure>
-  <img src="gsm8k_rl_train_dynamics_comparison.png" alt="Overview figure placeholder showing early RL works, expansion vs sharpening, and rollout budget tradeoffs." width="100%"/>
+  <img src="/assets/figures/gsm8k_rl_train_dynamics_comparison.png" alt="Overview figure placeholder showing early RL works, expansion vs sharpening, and rollout budget tradeoffs." width="100%"/>
   <figcaption><strong>Figure 1.</strong> A one-picture summary: RL works surprisingly early; RL can <em>expand</em> or <em>sharpen</em> the output distribution depending on the pipeline; rollout count trades off sample-efficiency vs FLOP-efficiency.</figcaption>
 </figure>
 
