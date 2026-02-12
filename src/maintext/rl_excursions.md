@@ -1,13 +1,4 @@
-<figure>
-    <figcaption><strong>Figure 1.</strong>  We analyze the effect of RL across intermediate pretraining checkpoints
-    $\mathcal{M}_t$ and across two settings:
-    RL directly on the base model (**RL Only**; $\mathcal{M}_t^{RL}$),
-    and RL after SFT (**Standard Pipeline**; $\mathcal{M}_t^{\text{SFT}\rightarrow \text{RL}}$).
-    We observe:
-    (1) On-policy learning is effective starting very early during standard pretraining. $\mathcal{M}_t^{RL}$ models show significant improvement in both $\texttt{pass@1}$ and $\texttt{pass@k}$ metrics as soon as 2$K$ steps ($\sim$4B tokens) of pretraining.
-    (2) In line with prior work, $\mathcal{M}_t^{{\text{SFT}} \rightarrow \text{RL}}$ improves pass@1 performance over $\mathcal{M}_t^{\text{SFT}}$, but harms $\texttt{pass@32}$ suggesting sharpening.
-    (3) In contrast, $\mathcal{M}_t^{\text{RL}}$ consistently leads to an increase in $\texttt{pass@32}$ performance suggesting that RL can actually expand the model distribution to learn new capabilities.</figcaption>
-</figure>
+![We analyze the effect of RL across intermediate pretraining checkpoints](/assets/figures/figure_1.png "Figure 1. We analyze the effect of RL across intermediate pretraining checkpoints $\mathcal{M}_t$ and across two settings: RL directly on the base model (**RL Only**; $\mathcal{M}_t^{\text{RL}}$), and RL after SFT (**Standard Pipeline**; $\mathcal{M}_t^{\text{SFT}\rightarrow\text{RL}}$). We observe: (1) On-policy learning is effective starting very early during standard pretraining. $\mathcal{M}_t^{\text{RL}}$ models show significant improvement in both $\texttt{pass@1}$ and $\texttt{pass@k}$ metrics as soon as $2\text{K}$ steps ($\sim 4\text{B}$ tokens) of pretraining. (2) In line with prior work, $\mathcal{M}_t^{\text{SFT}\rightarrow\text{RL}}$ improves pass@1 performance over $\mathcal{M}_t^{\text{SFT}}$, but harms $\texttt{pass@32}$ suggesting sharpening. (3) In contrast, $\mathcal{M}_t^{\text{RL}}$ consistently leads to an increase in $\texttt{pass@32}$ performance suggesting that RL can actually expand the model distribution to learn new capabilities.")
 
 
 <!-- ## TL;DR
@@ -133,9 +124,7 @@ Let's look at what happens when we run RL directly on early pretraining checkpoi
 
 ### GSM8K: RL kicks in fast
 
-<figure>
-  <figcaption><strong>Figure 2 (placeholder).</strong> GSM8K results across checkpoints. RL-only improves early and can match SFT→RL after enough pretraining.</figcaption>
-</figure>
+![GSM8K results across checkpoints](/assets/figures/gsm_passatk_comparison.png "Figure 2. GSM8K results across checkpoints. RL-only improves early and can match SFT→RL after enough pretraining.")
 
 The results on GSM8K are pretty striking. As early as **4B pretraining tokens**, running RL gives us meaningful improvements. For example, pass@1 accuracy jumps from ~2% (base checkpoint) to ~18% (after RL).  What makes this especially interesting is that 4B tokens is *before* we've even hit the Chinchilla-optimal token count for this model size. In other words, RL is helping even when the model is still pretty "undertrained" by conventional standards.
 
@@ -147,9 +136,7 @@ We also see significant improvements in pass@k for k=8 and k=32, which we'll dig
 
 ### MATH: Not quite there yet
 
-<figure>
-  <figcaption><strong>Figure 3 (placeholder).</strong> MATH results. RL-only improves over the base checkpoint but doesn't catch up to SFT or SFT→RL on this harder distribution.</figcaption>
-</figure>
+![MATH results across checkpoints](/assets/figures/math_passatk_comparison.png "Figure 3. MATH results. RL-only improves over the base checkpoint but doesn't catch up to SFT or SFT→RL on this harder distribution.")
 
 The story on MATH is more nuanced. We still consistently see 5-10% improvements in pass@1, pass@8, and pass@32 over the base checkpoints. 
 But on MATH, RL-only never quite catches up to SFT or the standard SFT→RL pipeline. The gap persists even as we continue pretraining. MATH problems are significantly harder than GSM8K (competition-level vs. grade-school), and it seems like training purely on on-policy data from early checkpoints has its limits. The model's self-generated solutions might not be diverse or correct enough to bootstrap strong reasoning on really challenging problems.
@@ -174,9 +161,7 @@ We can think about RL's effect in two ways:
 
 Recent work has claimed that RL mostly just *sharpens* the distribution without giving the model genuinely new reasoning capabilities. But we found that **whether RL has a sharpening or expansion effect depends on the training pipeline.**
 
-<figure>
-  <figcaption><strong>Figure 4 (placeholder).</strong> Training dynamics. Left: SFT→RL shows sharpening (pass@1 up, pass@32 down during RL). Right: RL-only shows expansion (both pass@1 and pass@32 up).</figcaption>
-</figure>
+![Training dynamics: sharpening vs expansion](/assets/figures/gsm8k_rl_train_dynamics_comparison.png "Figure 4. Training dynamics. Left: SFT→RL shows sharpening (pass@1 up, pass@32 down during RL). Right: RL-only shows expansion (both pass@1 and pass@32 up).")
 
 ### Standard pipeline (SFT→RL) tends to sharpen
 
@@ -191,9 +176,7 @@ When we run RL directly on the base checkpoint (skipping SFT entirely), we inste
 
 <details>
 <summary><strong>An important detour: brittleness on early checkpoints</strong></summary>
-    <figure>
-  <figcaption><strong>Figure 7 (placeholder).</strong> Seed brittleness at early checkpoints: training reward can look similar while test performance diverges sharply.</figcaption>
-</figure>
+![Seed brittleness at early checkpoints](/assets/figures/gsm8k_seed_rewards.png "Figure 7. Seed brittleness at early checkpoints: training reward can look similar while test performance diverges sharply.")
 
 
 Despite these promising results, we need to be honest about something: direct RL training on early checkpoints is **unstable**. 
@@ -210,9 +193,7 @@ This is a real limitation we're still trying to understand. It's one reason why,
 
 ## Result 3: How Many Rollouts Do You Actually Need?
 
-<figure>
-  <figcaption><strong>Figure 5 (placeholder).</strong> Rollout scaling trade-offs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.</figcaption>
-</figure>
+![Rollout scaling trade-offs](/assets/figures/gsm8k_rollouts_p8-2.png "Figure 5. Rollout scaling trade-offs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.")
 
 When we ran RL on early pretraining checkpoints, we ran into a pretty practical problem: the model is pretty bad at the training questions 😅. So we had to deal with the **sparse rewards** problem: most of the model's attempts are wrong, so RL doesn't get much useful learning signal from its rollouts.
 
@@ -242,9 +223,7 @@ We then trained with GRPO using either **n=5 rollouts** or **n=64 rollouts** per
 
 ### What we found
 
-<figure>
-  <figcaption><strong>Figure 6 (placeholder).</strong> pass@1 and pass@8 results for different rollout counts on GSM8K-Easy and GSM8K-Hard splits, shown as a function of both training examples and FLOPs.</figcaption>
-</figure>
+![pass@1 and pass@8 for different rollout counts](/assets/figures/gsm8k_rollouts_p1-2.png "Figure 6. pass@1 and pass@8 results for different rollout counts on GSM8K-Easy and GSM8K-Hard splits, shown as a function of both training examples and FLOPs.")
 
 The results reveal a clear **sample efficiency vs. compute efficiency trade-off**:
 
@@ -303,8 +282,8 @@ These plots are useful for you to sanity-check training stability and evaluation
 <summary><strong>RL training convergence across checkpoints (Figure 6)</strong></summary>
 
 <figure>
-  <img src="../assets/figures/gsm8k_rl_sft_comparison.png" alt="Placeholder: RL train/val reward and GSM8K pass@1 over RL steps for multiple pretraining checkpoints." width="100%"/>
-  <figcaption><strong>Figure 6 (placeholder).</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
+  <img src="/assets/figures/gsm8k_rl_sft_comparison.png" alt="RL train/val reward and GSM8K pass@1 over RL steps for multiple pretraining checkpoints." width="100%"/>
+  <figcaption><strong>Figure 6.</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
 </figure>
 
 </details>
@@ -313,8 +292,8 @@ These plots are useful for you to sanity-check training stability and evaluation
 <summary><strong>SFT convergence (Figure 8)</strong></summary>
 
 <figure>
-  <img src="../assets/figures/appx_fixB_easy.png" alt="Placeholder: SFT epoch comparison (5 vs 10 epochs) showing convergence across checkpoints on GSM8K pass@k." width="100%"/>
-  <figcaption><strong>Figure 8 (placeholder).</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
+  <img src="/assets/figures/appx_fixB_easy.png" alt="SFT epoch comparison (5 vs 10 epochs) showing convergence across checkpoints on GSM8K pass@k." width="100%"/>
+  <figcaption><strong>Figure 8.</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
 </figure>
 
 </details>
@@ -323,8 +302,8 @@ These plots are useful for you to sanity-check training stability and evaluation
 <summary><strong>How we evaluate base checkpoints (Figure 9)</strong></summary>
 
 <figure>
-  <img src="../assets/figures/gsm8k_base_eval_shots.png" alt="Placeholder: n-shot prompting ablation (0/1/8-shot) for evaluating base checkpoints on GSM8K and MATH pass@k." width="100%"/>
-  <figcaption><strong>Figure 9 (placeholder).</strong> Few-shot prompting ablation for base checkpoints: 8-shot yields the strongest evaluation performance.</figcaption>
+  <img src="/assets/figures/gsm8k_base_eval_shots.png" alt="n-shot prompting ablation (0/1/8-shot) for evaluating base checkpoints on GSM8K and MATH pass@k." width="100%"/>
+  <figcaption><strong>Figure 9.</strong> Few-shot prompting ablation for base checkpoints: 8-shot yields the strongest evaluation performance.</figcaption>
 </figure>
 
 </details>
