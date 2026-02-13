@@ -1,1 +1,0 @@
-var s;const l=((s=globalThis.__sveltekit_1lslm7q)==null?void 0:s.base)??"/rl-excursions-during-pretraining";var e;const a=((e=globalThis.__sveltekit_1lslm7q)==null?void 0:e.assets)??l;export{a,l as b};

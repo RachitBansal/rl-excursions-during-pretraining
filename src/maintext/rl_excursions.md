@@ -258,18 +258,11 @@ We found that pretraining on lots of math makes RL effective quickly. But we als
 
 If we combine NTP and RL objectives during pretraining, maybe the optimal data mixture is different from what's currently standard. The common paradigm is to pretrain on general web data and save task-specific data for later. But if we're doing RL from the start, maybe we want more structured reasoning content earlier? Or maybe we want to ensure diversity in problem types to encourage expansion?
 
-These are open questions we're still thinking about—and we'd love to hear your thoughts too!
 
+## Appendix
 
-
-**Feedback?**  
-This is a living document and we're actively working on this project. If you have questions, ideas, or want to discuss any of these findings, feel free to reach out!
-
-
-
-## Appendix: additional training curves and ablations
-
-These plots are useful for you to sanity-check training dynamics and evaluation choices.
+We include some additional plots and ablations here. 
+<!-- These are useful sanity-check training dynamics and evaluation choices. -->
 
 <details>
 <summary><strong>Training convergence across checkpoints </strong></summary>
@@ -277,7 +270,7 @@ These plots are useful for you to sanity-check training dynamics and evaluation 
 In this work, we are interested in understanding, given sufficient compute, how well each method performs. Therefore, we train all our RL and SFT runs until convergence. In the two plots below, we confirm that both our SFT and RL runs have been trained until convergence. 
 
 <figure>
-  <img src="/assets/figures/gsm8k_rl_sft_comparison.png" alt="RL train/val reward and GSM8K pass@1 over RL steps for multiple pretraining checkpoints." width="100%"/>
+  <img src="/assets/figures/gsm8k_rl_train_dynamics.png" alt="RL train/val reward and GSM8K pass@1 over RL steps for multiple pretraining checkpoints." width="100%"/>
   <figcaption><strong>Figure A2.</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
 </figure>
 
@@ -366,3 +359,10 @@ Please cite this work as:
 [^arxiv-org-2307-04964]: Zheng et al. (2023). [Secrets of RLHF in Large Language Models Part I: PPO](https://arxiv.org/abs/2307.04964).
 
 [^zhou2023]: Zhou et al. (2023). [Lima: Less Is More for Alignment](https://arxiv.org/abs/2305.11206). NeurIPS 2023.
+
+
+
+**Feedback?**  
+These are open questions we're still thinking about; we'd love to hear your thoughts!
+
+This is a living document. If you have questions, ideas, or want to discuss any of these findings, feel free to reach out!

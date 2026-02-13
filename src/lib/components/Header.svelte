@@ -17,7 +17,7 @@
     "Harvard University": logoMap.harvard,
   };
 
-  type AuthorEntry = { name: string; affils?: string[] };
+  type AuthorEntry = { name: string; url?: string; affils?: string[]; line?: number };
 
   const isAuthorEntry = (a: unknown): a is AuthorEntry =>
     !!a && typeof a === "object" && "name" in (a as AuthorEntry);
@@ -27,8 +27,13 @@
     ? (authorData as AuthorEntry[])
     : null;
 
+  $: authorsLine1 = authorList?.filter((a) => (a.line ?? 1) === 1) ?? [];
+  $: authorsLine2 = authorList?.filter((a) => a.line === 2) ?? [];
+
   const stripEqualStar = (name: string) => name.replace(/\*+$/, "").trim();
   const hasEqualStar = (name: string) => /\*$/.test(name);
+  const stripDagger = (name: string) => name.replace(/†+$/, "").trim();
+  const hasDagger = (name: string) => /†$/.test(name);
 </script>
 
 <header
@@ -45,36 +50,49 @@
     <div class="meta text-black">
       <div class="authors">
         {#if authorList}
-          {#each authorList as author, i (i)}
-            <span class="author">
-              <span class="author-name">{stripEqualStar(author.name)}</span>
-              {#if author.affils}
-                {@const nonHarvardAffils = author.affils.filter((a) => a !== "harvard")}
-                {#if nonHarvardAffils.length > 0 || hasEqualStar(author.name)}
-                <sup class="affil-sup">
-                  {#each nonHarvardAffils as key, j (j)}
-                    {#if logoMap[key]}
-                      <img
-                        src={base + logoMap[key].src}
-                        alt={logoMap[key].alt}
-                        title={logoMap[key].alt}
-                        class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""} ${key === "harvard" ? "affil-logo--harvard" : ""}`}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    {:else if key === "intern"}
-                      <span class="affil-dot" title={internshipLine} aria-label={internshipLine}></span>
-                    {:else}
-                      <span class="affil-fallback">{key}</span>
-                    {/if}
-                  {/each}
-                  {#if hasEqualStar(author.name)}
-                    <span class="affil-sup-text">*</span>
+          {#each [authorsLine1, authorsLine2] as authorLine}
+            {#if authorLine.length > 0}
+              <div class="author-line">
+                {#each authorLine as author}
+                  <span class="author">
+                    {#if author.url}
+                    <a href={author.url} target="_blank" rel="noopener noreferrer" class="author-name author-link">{stripDagger(stripEqualStar(author.name))}</a>
+                  {:else}
+                    <span class="author-name">{stripDagger(stripEqualStar(author.name))}</span>
                   {/if}
-                </sup>
-                {/if}
-              {/if}
-            </span>
+                    {#if author.affils}
+                      {@const nonHarvardAffils = author.affils.filter((a) => a !== "harvard")}
+                      {#if nonHarvardAffils.length > 0 || hasEqualStar(author.name) || hasDagger(author.name)}
+                      <sup class="affil-sup">
+                        {#each nonHarvardAffils as key, j (j)}
+                          {#if logoMap[key]}
+                            <img
+                              src={base + logoMap[key].src}
+                              alt={logoMap[key].alt}
+                              title={logoMap[key].alt}
+                              class={`affil-logo ${key === "mbzuai" ? "affil-logo--mbzuai" : ""} ${key === "cmu" ? "affil-logo--cmu" : ""} ${key === "harvard" ? "affil-logo--harvard" : ""}`}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          {:else if key === "intern"}
+                            <span class="affil-dot" title={internshipLine} aria-label={internshipLine}></span>
+                          {:else}
+                            <span class="affil-fallback">{key}</span>
+                          {/if}
+                        {/each}
+                        {#if hasEqualStar(author.name)}
+                          <span class="affil-sup-text">*</span>
+                        {/if}
+                        {#if hasDagger(author.name)}
+                          <span class="affil-sup-text">†</span>
+                        {/if}
+                      </sup>
+                      {/if}
+                    {/if}
+                  </span>
+                {/each}
+              </div>
+            {/if}
           {/each}
         {:else}
           {$page.data.header?.authors ?? "__AUTHORS__"}
@@ -82,7 +100,7 @@
       </div>
 
       <div class="affiliations">
-        {#if Array.isArray($page.data.header?.affiliations)}
+        {#if Array.isArray($page.data.header?.affiliations) && $page.data.header.affiliations.length > 0}
           <div class="affiliation-line">
             {#each $page.data.header.affiliations as line, i (i)}
               <span class="affiliation-item">
@@ -101,12 +119,17 @@
                 <span>{line}</span>
               </span>
               {#if i < $page.data.header.affiliations.length - 1}
-                <span class="affiliation-sep">, </span>
+                <span class="affiliation-sep"> </span>
               {/if}
             {/each}
           </div>
         {:else}
-          {$page.data.header?.affiliations ?? "__AFFILIATIONS__"}
+          {#if $page.data.header?.affiliations}
+            {$page.data.header.affiliations}
+          {/if}
+        {/if}
+        {#if $page.data.header?.correspondence}
+          <div class="correspondence-line">{$page.data.header.correspondence}</div>
         {/if}
       </div>
 
@@ -141,17 +164,42 @@
     text-align: center;
   }
 
+  .author-line {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 0;
+    margin-bottom: 6px;
+  }
+
+  .author-line:last-child {
+    margin-bottom: 0;
+  }
+
   .author {
     display: inline-flex;
     align-items: baseline;
     gap: 1px;
-    margin-right: 8px;
+    margin-right: 16px;
     margin-bottom: 4px;
     white-space: nowrap;
   }
 
+  .author:last-child {
+    margin-right: 0;
+  }
+
   .author-name {
     line-height: 1.4;
+  }
+
+  .author-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .author-link:hover {
+    text-decoration: underline;
   }
 
   .affil-sup {
@@ -254,6 +302,11 @@
 
   .affiliation-line {
     margin-top: 2px;
+  }
+
+  .correspondence-line {
+    margin-top: 8px;
+    font-size: 15px;
   }
 
   .date {

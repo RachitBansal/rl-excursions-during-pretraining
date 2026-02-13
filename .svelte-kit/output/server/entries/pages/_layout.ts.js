@@ -7,17 +7,17 @@ const load = async ({ url }) => {
       title: "RL Excursions during Pre-training: How early is too early for On-policy Learning?",
       // Edit authors and affiliations for your paper.
       authors: [
-        { name: "Rachit Bansal*", affils: ["harvard"] },
-        { name: "Clara Mohri*", affils: ["harvard"] },
-        { name: "Tian (Sunny) Qin*", affils: ["harvard"] },
-        { name: "David Alvarez-Melis", affils: ["harvard"] },
-        { name: "Sham Kakade", affils: ["harvard"] }
+        { name: "Rachit Bansal*", url: "https://rachitbansal.github.io/", affils: ["harvard"], line: 1 },
+        { name: "Clara Mohri*", url: "https://claramohri.github.io/", affils: ["harvard"], line: 1 },
+        { name: "Tian (Sunny) Qin*", url: "https://sunnytqin.github.io/", affils: ["harvard"], line: 1 },
+        { name: "David Alvarez-Melis†", url: "https://dmelis.github.io/", affils: ["harvard"], line: 2 },
+        { name: "Sham Kakade†", url: "https://shamulent.github.io/", affils: ["harvard"], line: 2 }
       ],
       affiliations: [
-        "Harvard University",
-        "Kempner Institute at Harvard",
-        "* Equal contribution"
+        "* Equal contribution",
+        "† Equal advising"
       ],
+      correspondence: "Correspondence: {rachitbansal, tqin, cmohri}@g.harvard.edu",
       date: " "
       // e.g. "2025" or "Under review"
     }
