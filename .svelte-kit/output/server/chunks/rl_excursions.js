@@ -130,7 +130,7 @@ The results on GSM8K are pretty striking. As early as **4B pretraining tokens**,
 
 **More importantly, RL-only competes with the standard pipeline.** By the time we've pretrained on 10B+ tokens, something cool happens: the RL-only model actually *outperforms* the SFT-only model on pass@1, and performs on par with the full SFT→RL pipeline (our gold-standard baseline).
 
-**Why are we surprised? 🤔** RL-only never trains on ground-truth reasoning traces. It only sees its own generated solutions, and a reward signal for whether the final answer is correct. Yet it matches or outperforms the performance of models that explicitly train on expert-written solutions. This suggests that **ground-truth solution traces may not be strictly necessary or even optimal** to unlock certain reasoning behaviors. A pretraining model can happily bootstrap its way there from self-generated attempts.
+**Why are we surprised?** RL-only never trains on ground-truth reasoning traces. It only sees its own generated solutions, and a reward signal for whether the final answer is correct. Yet it matches or outperforms the performance of models that explicitly train on expert-written solutions. This suggests that **ground-truth solution traces may not be strictly necessary or even optimal** to unlock certain reasoning behaviors. A pretraining model can happily bootstrap its way there from self-generated attempts.
 
 We also see significant improvements in pass@k for k=8 and k=32, which we'll dig into more in the next section (add link here).
 
@@ -195,7 +195,7 @@ This is a real limitation we're still trying to understand. It's one reason why,
 
 ![Rollout scaling trade-offs](/assets/figures/gsm8k_rollouts_p8-2.png "Figure 5. Rollout scaling trade-offs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.")
 
-When we ran RL on early pretraining checkpoints, we ran into a pretty practical problem: the model is pretty bad at the training questions 😅. So we had to deal with the **sparse rewards** problem: most of the model's attempts are wrong, so RL doesn't get much useful learning signal from its rollouts.
+When we ran RL on early pretraining checkpoints, we ran into a pretty practical problem: the model is pretty bad at the training questions. So we had to deal with the **sparse rewards** problem: most of the model's attempts are wrong, so RL doesn't get much useful learning signal from its rollouts.
 
 We had a very natural idea: what if we just sample *more* rollouts per question? If the model only gets 1 out of 10 attempts right, maybe sampling 64 attempts instead of 5 will give us enough correct solutions to learn from.
 
@@ -292,7 +292,7 @@ These plots are useful for you to sanity-check training stability and evaluation
 <summary><strong>SFT convergence (Figure 8)</strong></summary>
 
 <figure>
-  <img src="/assets/figures/appx_fixB_easy.png" alt="SFT epoch comparison (5 vs 10 epochs) showing convergence across checkpoints on GSM8K pass@k." width="100%"/>
+  <img src="/assets/figures/gsm8k_sft_epoch_comparison.png" alt="SFT epoch comparison (5 vs 10 epochs) showing convergence across checkpoints on GSM8K pass@k." width="100%"/>
   <figcaption><strong>Figure 8.</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
 </figure>
 
@@ -310,23 +310,15 @@ These plots are useful for you to sanity-check training stability and evaluation
 
 ## Citation
 
-If you build on this work, please cite the accompanying paper:
+Please cite this work as:
 
 \`\`\`bibtex
-@article{anonymous2026rlexcursions,
-  title   = {RL Excursions During Pre-Training: How Early Is Too Early for On-Policy Learning?},
-  author  = {Anonymous Authors},
-  journal = {Under review},
-  year    = {2026}
+@misc{rbcmsq2026rlexcursions,
+  author={Rachit Bansal* and Clara Mohri* and Tian (Sunny) Qin* and David Alvarez-Melis and Sham Kakade},
+  title={RL Excursions During Pre-Training: How Early Is Too Early for On-Policy Learning?},
+  howpublished={url{https://rachitbansal.github.io/rl-excursions/}},
+  year={2026}
 }
-\`\`\`
-
----
-
-*If you want to adapt this markdown for a project page (like a GitHub Pages site), you can:*
-- export your plots from the paper into \`assets/\`,
-- replace the placeholders,
-- and optionally add interactive plot embeds (Plotly/Observable) for Figures 2–5.
 `;
 export {
   textRaw as t

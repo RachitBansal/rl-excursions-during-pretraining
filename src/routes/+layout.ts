@@ -12,8 +12,8 @@ export const load: LayoutLoad = async ({ url }) => {
       // Edit authors and affiliations for your paper.
       authors: [
         { name: "Rachit Bansal*", affils: ["harvard"] },
-        { name: "Tian (Sunny) Qin*", affils: ["harvard"] },
         { name: "Clara Mohri*", affils: ["harvard"] },
+        { name: "Tian (Sunny) Qin*", affils: ["harvard"] },
         { name: "David Alvarez-Melis", affils: ["harvard"] },
         { name: "Sham Kakade", affils: ["harvard"] },
       ],
