@@ -563,10 +563,7 @@ function buildH3Sections(children) {
   return out;
 }
 function shouldOpenH3(sub) {
-  if (sub.type !== "subsection")
-    return false;
-  const text = (sub.heading.text || "").trim().toLowerCase();
-  return /^question\s*\d+/.test(text);
+  return sub.type === "subsection";
 }
 function isPinnedTakeaway(chunk) {
   if (chunk.type !== "callout")

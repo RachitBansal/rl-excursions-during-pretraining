@@ -23,8 +23,7 @@ The use of two distinct training objectives raises several interesting but under
 
 > **How and when should we be using an RL objective during LLM training?**
 
-Furthermore, there has been a recent growing interest in applying RL earlier in training (Hatamizadeh et al., 2025; Li et al., 2025; Xing
-et al., 2025)[reference]. As a precursor, we ask concretely: *at what point during pretraining does the model's self-generated data become good enough that on-policy learning actually yields meaningful gradient signals?*
+Furthermore, there has been a recent growing interest in applying RL earlier in training[^arxiv-org-2510-01265] [^arxiv-org-2509-19249] [^arxiv-org-2512-03442]. As a precursor, we ask concretely: *at what point during pretraining does the model's self-generated data become good enough that on-policy learning actually yields meaningful gradient signals?*
 
 To answer these questions, we perform a rigorous case study of on-policy learning with a focus on LLM reasoning capabilities.
 We pretrain an LLM from scratch on a high-quality, reasoning heavy corpus, and sample several intermediate pre-training checkpoints. We perform RL on the base pre-training checkpoints and study these models in comparison with (i) SFT on the base checkpoints, and (ii) the standard SFT $\\rightarrow$ RL pipeline.
@@ -44,7 +43,7 @@ applying RL objectives to what would typically be considered “under-trained”
 
 ### Pretraining checkpoints
 
-We pretrain a **1B-parameter** decoder-only model (OLMo2 architecture) from scratch on **50B tokens** of a high-quality mixture (DOLMino, from OLMo2), saving intermediate checkpoints throughout. We then take these checkpoints and run different "post-training" pipelines *from each checkpoint*.
+We pretrain a **1B-parameter** decoder-only model (OLMo2 architecture[^arxiv-org-2501-00656]) from scratch on **50B tokens** of a high-quality mixture (DOLMino, from OLMo2), saving intermediate checkpoints throughout. We then take these checkpoints and run different "post-training" pipelines *from each checkpoint*.
 
 <details>
 <summary>Pretraining details</summary>
@@ -70,21 +69,6 @@ Let **M<sub>t</sub>** be the base checkpoint after *t* pretraining steps/tokens.
 
 3. **Standard pipeline:** M<sub>t</sub> → M<sub>t</sub><sup>SFT</sup> → M<sub>t</sub><sup>SFT→RL</sup>
    Taking SFT from above, we then apply RL. This is the typical modern recipe and our gold-standard baseline.
-
-Here's how the three pipelines compare visually (**SQ: idea is nice but plot looks bad**):
-\`\`\`mermaid
-flowchart LR
-    Mt["Base checkpointat t tokens"]
-    
-    Mt -->|"RL"| MRL["RL-only model"]
-    Mt -->|"SFT"| MSFT["SFT-only model"]
-    MSFT -->|"RL"| MSFTRL["Standard pipeline model"]
-    
-    style Mt fill:#e1f5ff
-    style MRL fill:#fff4e1
-    style MSFT fill:#ffe1f5
-    style MSFTRL fill:#e1ffe1
-\`\`\`
 
 ### Data and evaluation
 
@@ -319,6 +303,62 @@ Please cite this work as:
   howpublished={url{https://rachitbansal.github.io/rl-excursions/}},
   year={2026}
 }
+\`\`\`
+[^biderman2023]: Biderman et al. (2023). [Pythia: A Suite for Analyzing Large Language Models Across Training and Scaling](https://proceedings.mlr.press/v202/biderman23a.html). ICML 2023.
+
+[^arxiv-org-2510-15020]: Chen et al. (2025). [The Coverage Principle: How Pre-Training Enables Post-Training](https://arxiv.org/abs/2510.15020).
+
+[^arxiv-org-2107-03374]: Chen et al. (2021). [Evaluating Large Language Models Trained on Code](https://arxiv.org/abs/2107.03374).
+
+[^compute-optimal-rl-llm-scaling-github-io]: Cheng et al. (2026). [Isocompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs](https://compute-optimal-rl-llm-scaling.github.io/).
+
+[^arxiv-org-2110-14168]: Cobbe et al. (2021). [Training Verifiers to Solve Math Word Problems](https://arxiv.org/abs/2110.14168).
+
+[^arxiv-org-2310-12773]: Dai et al. (2023). [Safe RLHF: Safe Reinforcement Learning from Human Feedback](https://arxiv.org/abs/2310.12773).
+
+[^arxiv-org-2506-08007]: Dong et al. (2025). [Reinforcement Pre-Training](https://arxiv.org/abs/2506.08007).
+
+[^arxiv-org-2503-07453]: Foster et al. (2025). [Is a Good Foundation Necessary for Efficient Reinforcement Learning?](https://arxiv.org/abs/2503.07453).
+
+[^arxiv-org-2501-12948]: Guo et al. (2025). [DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning](https://arxiv.org/abs/2501.12948).
+
+[^arxiv-org-2510-01265]: Hatamizadeh et al. (2025). [RLP: Reinforcement as a Pretraining Objective](https://arxiv.org/abs/2510.01265).
+
+[^hendrycks2021]: Hendrycks et al. (2021). [Measuring Mathematical Problem Solving with the MATH Dataset](https://arxiv.org/abs/2103.03874). NeurIPS 2021.
+
+[^arxiv-org-2203-15556]: Hoffmann et al. (2022). [Training Compute-Optimal Large Language Models](https://arxiv.org/abs/2203.15556).
+
+[^li2024]: Li et al. (2024). [Datacomp-LM: In Search of the Next Generation of Training Sets for Language Models](https://arxiv.org/abs/2406.11794). NeurIPS 2024.
+
+[^arxiv-org-2509-19249]: Li et al. (2025). [Reinforcement Learning on Pre-Training Data](https://arxiv.org/abs/2509.19249).
+
+[^arxiv-org-1711-05101]: Loshchilov & Hutter (2019). [Decoupled Weight Decay Regularization](https://arxiv.org/abs/1711.05101).
+
+[^arxiv-org-2501-00656]: Team OLMo (2024). [2 OLMo 2 Furious](https://arxiv.org/abs/2501.00656).
+
+[^ouyang2022]: Ouyang et al. (2022). [Training Language Models to Follow Instructions with Human Feedback](https://arxiv.org/abs/2203.02155). NeurIPS 2022.
+
+[^arxiv-org-2305-18290]: Rafailov et al. (2023). [Direct Preference Optimization: Your Language Model is Secretly a Reward Model](https://arxiv.org/abs/2305.18290). NeurIPS 2023.
+
+[^arxiv-org-2402-03300]: Shao et al. (2024). [DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models](https://arxiv.org/abs/2402.03300).
+
+[^arxiv-org-2409-19256]: Sheng et al. (2024). [HybridFlow: A Flexible and Efficient RLHF Framework](https://arxiv.org/abs/2409.19256).
+
+[^toshniwal2024]: Toshniwal et al. (2024). [OpenMathInstruct-1: A 1.8 Million Math Instruction Tuning Dataset](https://arxiv.org/abs/2402.10176). NeurIPS 2024.
+
+[^wei2022]: Wei et al. (2022). [Finetuned Language Models Are Zero-Shot Learners](https://arxiv.org/abs/2109.01652). ICLR 2022.
+
+[^arxiv-org-2507-14843]: Wu et al. (2025). [The Invisible Leash: Why RLVR May or May Not Escape Its Origin](https://arxiv.org/abs/2507.14843).
+
+[^arxiv-org-2512-03442]: Xing et al. (2025). [PretrainZero: Reinforcement Active Pretraining](https://arxiv.org/abs/2512.03442).
+
+[^yue2025]: Yue et al. (2025). [Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?](https://arxiv.org/abs/2504.13837).
+
+[^arxiv-org-2512-07783]: Zhang et al. (2025). [On the Interplay of Pre-Training, Mid-Training, and RL on Reasoning Language Models](https://arxiv.org/abs/2512.07783).
+
+[^arxiv-org-2307-04964]: Zheng et al. (2023). [Secrets of RLHF in Large Language Models Part I: PPO](https://arxiv.org/abs/2307.04964).
+
+[^zhou2023]: Zhou et al. (2023). [Lima: Less Is More for Alignment](https://arxiv.org/abs/2305.11206). NeurIPS 2023.
 `;
 export {
   textRaw as t

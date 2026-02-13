@@ -667,9 +667,8 @@
   }
 
   function shouldOpenH3(sub: H3SectionItem): boolean {
-    if (sub.type !== "subsection") return false;
-    const text = (sub.heading.text || "").trim().toLowerCase();
-    return /^question\s*\d+/.test(text);
+    // All H3 sections are expanded (visible) by default
+    return sub.type === "subsection";
   }
 
   function isPinnedTakeaway(chunk: RenderChunk): chunk is CalloutChunk {
