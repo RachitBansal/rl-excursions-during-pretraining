@@ -15,7 +15,7 @@ The use of two distinct training objectives raises a basic but underexplored que
 
 <!-- ## Rethinking the Training Pipeline -->
 
-As of February 2026, Large Language Model (LLM) training follows a standard pipeline: **pretraining** $\rightarrow$ **supervised fine-tuning** (**SFT**) $\rightarrow$ **reinforcement learning** (**RL**) via verifiable rewards. These stages contrast in their objectives: Pretraining and SFT employ a Next-Token Prediction (NTP) objective on a static external dataset ("off-policy"). Whereas RL employs a policy optimization objective on the model's own generations ("on-policy").
+As of February 2026, Large Language Model (LLM) training follows a standard pipeline: **pretraining** $\rightarrow$ **supervised fine-tuning** (**SFT**) $\rightarrow$ **reinforcement learning** (**RL**) via verifiable rewards[^ouyang2022]. These stages contrast in their objectives: Pretraining and SFT employ a Next-Token Prediction (NTP) objective on a static external dataset ("off-policy"). Whereas RL employs a policy optimization objective on the model's own generations ("on-policy").
 
 
 
@@ -49,7 +49,7 @@ We pretrain a **1B-parameter** decoder-only model (OLMo2 architecture[^arxiv-org
 <summary>Pretraining details</summary>
 
 - **Architecture:** OLMo2 1B
-- **Tokens:** 50B total (≈ 2.5× Chinchilla-optimal token count for this model size)
+- **Tokens:** 50B total (≈ 2.5× Chinchilla-optimal[^arxiv-org-2203-15556] token count for this model size)
 - **Optimizer:** AdamW with cosine LR decay, peak LR 4e-4
 - **Seq length:** 4096
 - **Batch size:** 512
@@ -72,9 +72,9 @@ Let **M<sub>t</sub>** be the base checkpoint after *t* pretraining steps/tokens.
 
 ### Data and evaluation
 
-**Training data:** For both RL and SFT, we use [OpenMathInstruct](https://huggingface.co/datasets/nvidia/OpenMathInstruct-1)—a dataset of math questions with multiple ground-truth solutions per question.
+**Training data:** For both RL and SFT, we use [OpenMathInstruct](https://huggingface.co/datasets/nvidia/OpenMathInstruct-1)[^toshniwal2024]—a dataset of math questions with multiple ground-truth solutions per question.
 
-**Benchmarks:** We evaluate on GSM8K (grade-school math) and MATH (competition-level problems).
+**Benchmarks:** We evaluate on GSM8K[^arxiv-org-2110-14168] (grade-school math) and MATH[^hendrycks2021] (competition-level problems).
 
 **Metrics:** We report pass@k for k ∈ {1, 8, 32} at temperature T = 0.6.
 
@@ -110,7 +110,7 @@ Let's look at what happens when we run RL directly on early pretraining checkpoi
 
 ![GSM8K results across checkpoints](/assets/figures/gsm_passatk_comparison.png "Figure 2. GSM8K results across checkpoints. RL-only improves early and can match SFT→RL after enough pretraining.")
 
-We are seeing very promising results on GSM8K. As early as **4B pretraining tokens**, running RL gives us meaningful improvements. For example, pass@1 accuracy jumps from ~2% (base checkpoin, M<sub>t</sub>) to ~18% (after RL, M<sub>t</sub><sup>RL</sup>).  What makes this especially interesting is that 4B tokens is *before* we've even hit the Chinchilla-optimal token count (i.e., 20B) for this model size. In other words, RL is helping even when the model is still pretty "under-trained" by conventional standards.
+We are seeing very promising results on GSM8K. As early as **4B pretraining tokens**, running RL gives us meaningful improvements. For example, pass@1 accuracy jumps from ~2% (base checkpoin, M<sub>t</sub>) to ~18% (after RL, M<sub>t</sub><sup>RL</sup>).  What makes this especially interesting is that 4B tokens is *before* we've even hit the Chinchilla-optimal[^arxiv-org-2203-15556] token count (i.e., 20B) for this model size. In other words, RL is helping even when the model is still pretty "under-trained" by conventional standards.
 
 **More importantly, RL-only competes with the standard pipeline.** By the time we've pretrained on 10B+ tokens, the RL-only model actually *outperforms* the SFT-only model on pass@1, and performs on par with the full SFT→RL pipeline (M<sub>t</sub><sup>SFT→RL</sup>, the gold-standard baseline).
 
@@ -118,7 +118,7 @@ We are quite surprised by this results because the RL-only model M<sub>t</sub><s
 
 We also see significant improvements in pass@k for k=8 and k=32, which we'll dig into more in the next section (add link here).
 
-### Limiations on MATH.
+### Limitations on MATH. 
 
 ![MATH results across checkpoints](/assets/figures/math_passatk_comparison.png "Figure 3. MATH results. RL-only improves over the base checkpoint but doesn't catch up to SFT or SFT→RL on this harder distribution.")
 
@@ -134,7 +134,7 @@ Is this a fundamental limitation of the approach, or could we fix it with more d
 ---
 ## Result 2: Can we settle the long-time RL debate, sharpening or expansion?
 
-One of the heated debate in recent claims about what RL actually *does* to a model's output distribution. Many works [cite] claims that RL only sharpens distribution without teaching any new reasoning behaviors. 
+One of the heated debates in recent work is what RL actually *does* to a model's output distribution. Many works[^arxiv-org-2507-14843] [^yue2025] claim that RL only sharpens the distribution without teaching any new reasoning behaviors. 
 
 
 We can think about RL's effect in two ways:
@@ -160,7 +160,8 @@ When we run RL directly on the base checkpoint (skipping SFT entirely), we inste
 
 <details>
 <summary><strong>An important detour: brittleness on early checkpoints</strong></summary>
-![Seed brittleness at early checkpoints](/assets/figures/gsm8k_seed_rewards.png "Figure 7. Seed brittleness at early checkpoints: training reward can look similar while test performance diverges sharply.")
+
+![Seed brittleness at early checkpoints](/assets/figures/gsm8k_seed_rewards.png "Figure A1. Seed brittleness at early checkpoints: training reward can look similar while test performance diverges sharply.")
 
 
 Despite these promising results, we also noticed that directly running RL on early checkpoints is **unstable**. 
@@ -175,7 +176,8 @@ For earlier checkpoints in our main results, we ran RL across 4 different seeds 
 
 ## Result 3: How Many Rollouts Do You Actually Need?
 
-![Rollout scaling trade-offs](/assets/figures/gsm8k_rollouts_p8-2.png "Figure 5. Rollout scaling trade-offs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.")
+![Rollout scaling trade-offs](/assets/figures/gsm8k_rollouts_p1-2.png)
+![pass@1 and pass@8 for different rollout counts](/assets/figures/gsm8k_rollouts_p8-2.png "Figure 6. Rollout scaling trade-offs. pass@1 and pass@8 results for different rollout counts on GSM8K-Easy and GSM8K-Hard splits, shown as a function of both training examples and FLOPs. More rollouts improves sample efficiency, but fewer rollouts can be more FLOP-efficient—especially on the hard split.")
 
 When we ran RL on early pretraining checkpoints, we ran into a pretty practical problem: the model is pretty bad at the training questions. So we had to deal with the **sparse rewards** problem: most of the model's attempts are wrong, so RL doesn't get much useful learning signal from its rollouts.
 
@@ -205,8 +207,6 @@ We then trained with GRPO using either **n=5 rollouts** or **n=64 rollouts** per
 
 ### What we found
 
-![pass@1 and pass@8 for different rollout counts](/assets/figures/gsm8k_rollouts_p1-2.png "Figure 6. pass@1 and pass@8 results for different rollout counts on GSM8K-Easy and GSM8K-Hard splits, shown as a function of both training examples and FLOPs.")
-
 The results reveal a clear **sample efficiency vs. compute efficiency trade-off**:
 
 **Sample efficiency (examples seen):**  
@@ -228,7 +228,7 @@ Both n=5 and n=64 converge to similar pass@k peaks. You're not missing out on ca
 **3. The compute advantage is especially pronounced on hard problems.**
 On GSM8K-Hard (where rewards are sparse), using n=5 rollouts significantly outperforms n=64 in terms of FLOP efficiency.
 
-**Result 3 takeaway:** If you're training RL with sparse rewards, **fewer rollouts can actually be more efficient**. You don't need massive rollout scaling to get good performance.
+**Result 3 takeaway:** If you're training RL with sparse rewards, **fewer rollouts can actually be more efficient**[^compute-optimal-rl-llm-scaling-github-io]. You don't need massive rollout scaling to get good performance.
 
 
 ## What's Next?
@@ -238,7 +238,7 @@ This study is very much ongoing—we see it as a controlled probe into *when* RL
 ### Some important caveats
 
 **Task and algorithm scope:**  
-We intentionally chose RLVR with GRPO and focused on math reasoning. It's a clean setup to study the problem, but by no means comprehensive. Different RL algorithms or tasks (e.g., coding, general reasoning, instruction following) might behave quite differently.
+We intentionally chose RLVR with GRPO[^arxiv-org-2307-04964] and focused on math reasoning. It's a clean setup to study the problem, but by no means comprehensive. Different RL algorithms or tasks (e.g., coding, general reasoning, instruction following) might behave quite differently.
 
 **Data mixture matters:**  
 Our base model was pretrained on a corpus with substantial math (20%) and reasoning-related content (30%). "RL readiness" likely depends heavily on what's in the pretraining mix—a model trained mostly on web text might show different dynamics.
@@ -251,7 +251,7 @@ All our results are from a 1B model. Larger models may show different transition
 **Mixing RL into pretraining:**  
 Our analysis suggests RL can be effective surprisingly early in training. This raises a natural question: what if we don't wait for pretraining to finish, but instead *interleave* RL with the standard next-token prediction objective during pretraining itself?
 
-Recent work has started exploring "RL pretraining," but there are tons of open questions: How should you schedule the two objectives? What fraction of compute should go to each? Does the optimal data mixture change if you're doing both objectives at once?
+Recent work has started exploring "RL pretraining"[^arxiv-org-2506-08007] [^arxiv-org-2510-01265] [^arxiv-org-2509-19249], but there are tons of open questions: How should you schedule the two objectives? What fraction of compute should go to each? Does the optimal data mixture change if you're doing both objectives at once?
 
 **Data mixtures and the expansion vs. sharpening effect:**  
 We found that pretraining on lots of math makes RL effective quickly. But we also found that RL after SFT tends to sharpen rather than expand. This suggests an interesting hypothesis: **the effect of RL depends heavily on what the model has already seen.**
@@ -278,23 +278,23 @@ In this work, we are interested in understanding, given sufficient compute, how 
 
 <figure>
   <img src="/assets/figures/gsm8k_rl_sft_comparison.png" alt="RL train/val reward and GSM8K pass@1 over RL steps for multiple pretraining checkpoints." width="100%"/>
-  <figcaption><strong>Figure 6.</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
+  <figcaption><strong>Figure A2.</strong> RL reward curves (train/val) and GSM8K pass@1 over RL steps show convergence across checkpoints.</figcaption>
 </figure>
 
     
 <figure>
   <img src="/assets/figures/gsm8k_sft_epoch_comparison.png" alt="SFT epoch comparison (5 vs 10 epochs) showing convergence across checkpoints on GSM8K pass@k." width="100%"/>
-  <figcaption><strong>Figure 8.</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
+  <figcaption><strong>Figure A3.</strong> SFT epoch ablation indicates performance converges by ~5 epochs.</figcaption>
 </figure>
-
 </details>
+
 
 <details>
 <summary><strong>How we evaluate base checkpoints </strong></summary>
 The pretraining checkpoints do not have instruct following capabilities. Our goal is to evaluate their math capabilities, so we use 8-shot in-context examples to prompt the model to answer questions in the correct format. 
 <figure>
   <img src="/assets/figures/gsm8k_base_eval_shots.png" alt="n-shot prompting ablation (0/1/8-shot) for evaluating base checkpoints on GSM8K and MATH pass@k." width="100%"/>
-  <figcaption><strong>Figure 9.</strong> Few-shot prompting ablation for base checkpoints: 8-shot yields the strongest evaluation performance.</figcaption>
+  <figcaption><strong>Figure A4.</strong> Few-shot prompting ablation for base checkpoints: 8-shot yields the strongest evaluation performance.</figcaption>
 </figure>
 
 </details>
