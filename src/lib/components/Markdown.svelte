@@ -106,9 +106,38 @@
         }
         return '<!-- image placeholder -->';
       }
-      // Normal image rendering
       const id = text ? `fig-${slugify(text)}` : "";
-      let out = `<img src="${href}" alt="${text || ''}" ${id ? `id="${id}" ` : ""}class="block mx-auto unselectable" />`;
+      const isVideoHref = /\.(mov|mp4|webm|ogg)(\?.*)?$/i.test(href);
+      let out = "";
+
+      if (isVideoHref) {
+        // .mov is supported in Safari but not Chrome; use GIF fallback for Chrome
+        const isMov = /\.mov(\?.*)?$/i.test(href);
+        const fallbackGif = isMov ? href.replace(/\.mov(\?.*)?$/i, ".gif$1") : null;
+        const baseForMp4 = href.replace(/\.(mov|mp4|webm|ogg)(\?.*)?$/i, ".mp4$2");
+        const sourceType =
+          href.toLowerCase().endsWith(".webm")
+            ? "video/webm"
+            : href.toLowerCase().endsWith(".ogg")
+              ? "video/ogg"
+              : href.toLowerCase().endsWith(".mov")
+                ? "video/quicktime"
+                : "video/mp4";
+        out += `<div class="md-video-wrapper${fallbackGif ? " md-video-with-fallback" : ""}">`;
+        out += `<video class="block mx-auto autoplay-on-fullview md-video unselectable" aria-label="${text || ""}" ${id ? `id="${id}" ` : ""}muted playsinline data-freeze-ms="10000">`;
+        // MP4 first for Chrome; MOV second for Safari (when no MP4 present)
+        if (isMov) {
+          out += `<source src="${baseForMp4}" type="video/mp4" />`;
+        }
+        out += `<source src="${href}#t=0.1" type="${sourceType}" />`;
+        out += `</video>`;
+        if (fallbackGif) {
+          out += `<img class="md-video-fallback block mx-auto unselectable" src="${fallbackGif}" alt="${text || ""}" loading="lazy" decoding="async" />`;
+        }
+        out += `</div>`;
+      } else {
+        out = `<img src="${href}" alt="${text || ''}" ${id ? `id="${id}" ` : ""}class="block mx-auto unselectable" />`;
+      }
 
       // Render caption from image title (match imageAttrExtension behavior)
       if (title) {
@@ -164,7 +193,7 @@
       }
     },
     renderer(token: any) {
-      const isVideoSrc = /\.(mp4|webm|ogg)(\?.*)?$/i.test(token.src);
+      const isVideoSrc = /\.(mov|mp4|webm|ogg)(\?.*)?$/i.test(token.src);
       const declaresVideo =
         token.attrs["type"] === "video" ||
         Object.prototype.hasOwnProperty.call(token.attrs, "video");
@@ -177,7 +206,9 @@
             ? "video/webm"
             : lower.endsWith(".ogg")
               ? "video/ogg"
-              : "video/mp4");
+              : lower.endsWith(".mov")
+                ? "video/quicktime"
+                : "video/mp4");
 
         // read optional freeze ms from markdown: {... freeze=10000}
         const freezeMs = token.attrs["freeze"] || "10000";
@@ -828,6 +859,25 @@
       root.querySelectorAll<HTMLVideoElement>("video.autoplay-on-fullview"),
     );
 
+    // Video-with-fallback: show GIF when .mov can't play (e.g. Chrome)
+    const wrappers = root.querySelectorAll<HTMLElement>(".md-video-with-fallback");
+    for (const wrap of wrappers) {
+      if (wrap.dataset._fallbackWired) continue;
+      const video = wrap.querySelector("video");
+      const fallback = wrap.querySelector<HTMLImageElement>(".md-video-fallback");
+      if (!video || !fallback) continue;
+      wrap.dataset._fallbackWired = "1";
+      const showFallback = () => {
+        video.style.display = "none";
+        fallback.style.display = "block";
+      };
+      if (!video.canPlayType("video/quicktime")) {
+        showFallback();
+      } else {
+        video.addEventListener("error", showFallback, { once: true });
+      }
+    }
+
     // De-dup if we re-run on updates
     const fresh = videos.filter((v) => !v.dataset._wired);
 
@@ -1299,6 +1349,19 @@
   /* Nicer anchor landings for figures when navigating via hash/links. */
   :global(.md-output [id^="fig-"]) {
     scroll-margin-top: 120px;
+  }
+
+  /* Video with fallback: hide GIF until video errors (e.g. Chrome can't play .mov) */
+  :global(.md-video-with-fallback .md-video-fallback) {
+    display: none;
+  }
+  :global(.md-video-wrapper) {
+    position: relative;
+  }
+  :global(.md-video-wrapper video),
+  :global(.md-video-wrapper .md-video-fallback) {
+    width: 100%;
+    height: auto;
   }
 
   /* Figure captions: small, gray, left-aligned, full width (match main text column). */
