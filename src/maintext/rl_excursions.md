@@ -187,7 +187,7 @@ However, more rollouts also means more compute per training step. So we wanted t
 
 ### Experimental setup
 
-To study this properly, we simulated "easy" and "hard" training scenarios by splitting our *training* dataset based on how well the base model does on each question. We designed two subsets from OpenMathInstruct:
+To study this properly, we simulated "easy" and "hard" training scenarios by splitting our *training* dataset based on how well the base model does on each question. This set up is similar to recent work [^cheng2026isocompute], where they used Qwen models to study the effect of GRPO rollouts during post training stage. We also design two subsets from OpenMathInstruct based on problem difficulty:
 
 <details>
 <summary>About OpenMathInstruct structure</summary>
@@ -361,6 +361,9 @@ Please cite this work as:
 [^zhou2023]: Zhou et al. (2023). [Lima: Less Is More for Alignment](https://arxiv.org/abs/2305.11206). NeurIPS 2023.
 
 [^qin2025]: Qin et al. (2025). [Decomposing Elements of Problem Solving: What "Math" Does RL Teach?](https://arxiv.org/abs/2505.22756). 
+
+[^cheng2026isocompute]: Cheng et al. (2026). [IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs](https://compute-optimal-rl-llm-scaling.github.io/). 
+
 
 
 **Feedback?**  
