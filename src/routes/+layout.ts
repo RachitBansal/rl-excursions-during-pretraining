@@ -8,11 +8,11 @@ export const load: LayoutLoad = async ({ url }) => {
     pathname: url.pathname,
     header: {
       title:
-        "RL Excursions during Pre-training: How early is too early for On-policy Learning?",
+        "RL Excursions during Pretraining: How early is too early for On-policy Learning?",
       // Edit authors and affiliations for your paper.
       authors: [
         { name: "Rachit Bansal*", url: "https://rachitbansal.github.io/", affils: ["harvard"], line: 1 },
-        { name: "Clara Mohri*", url: "https://claramohri.github.io/", affils: ["harvard"], line: 1 },
+        { name: "Clara Mohri*", url: "https://cmohri.github.io/", affils: ["harvard"], line: 1 },
         { name: "Tian (Sunny) Qin*", url: "https://sunnytqin.github.io/", affils: ["harvard"], line: 1 },
         { name: "David Alvarez-Melis†", url: "https://dmelis.github.io/", affils: ["harvard"], line: 2 },
         { name: "Sham Kakade†", url: "https://shamulent.github.io/", affils: ["harvard"], line: 2 },

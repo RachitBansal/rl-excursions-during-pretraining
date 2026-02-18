@@ -1,4 +1,4 @@
-let base = "/rl-excursions-during-pretraining";
+let base = "";
 let assets = base;
 const initial = { base, assets };
 function override(paths) {

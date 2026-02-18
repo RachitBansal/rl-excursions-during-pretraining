@@ -1,8 +1,8 @@
-# RL Excursions during Pre-training
+# RL Excursions during Pretraining
 
 Blog and project site for the paper:
 
-**"RL Excursions during Pre-training: How early is too early for On-policy Learning?"**
+**"RL Excursions during Pretraining: How early is too early for On-policy Learning?"**
 
 We study when and how to introduce reinforcement learning (RL) objectives during LLM training. The blog summarizes our findings on RL applied to intermediate pretraining checkpoints, sharpening vs. distribution expansion, and rollout budget trade-offs.
 

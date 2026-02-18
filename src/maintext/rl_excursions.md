@@ -183,11 +183,11 @@ When we ran RL on early pretraining checkpoints, we ran into a pretty practical 
 
 We had a very natural idea: what if we just sample *more* rollouts per question? If the model only gets 1 out of 10 attempts right, maybe sampling 64 attempts instead of 5 will give us enough correct solutions to learn from.
 
-However, more rollouts also means more compute per training step. So we wanted to understand **when taking compute into consideration, wether increasing rollouts improve RL training.** 
+However, more rollouts also means more compute per training step. So we wanted to understand **when taking compute into consideration, whether increasing rollouts improve RL training.** 
 
 ### Experimental setup
 
-To study this properly, we simulated "easy" and "hard" training scenarios by splitting our *training* dataset based on how well the base model does on each question. This set up is similar to recent work [^cheng2026isocompute], where they used Qwen models to study the effect of GRPO rollouts during post training stage. We also design two subsets from OpenMathInstruct based on problem difficulty:
+To study this properly, we simulated "easy" and "hard" training scenarios by splitting our *training* dataset based on how well the base model does on each question. Concurrent work[^cheng2026isocompute] performed analysis for number of rollouts using a similar setup. We design two subsets from OpenMathInstruct based on problem difficulty:
 
 <details>
 <summary>About OpenMathInstruct structure</summary>

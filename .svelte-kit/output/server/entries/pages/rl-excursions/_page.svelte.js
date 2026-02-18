@@ -7,8 +7,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `  ${validate_component(Seo, "Seo").$$render(
     $$result,
     {
-      title: "RL Excursions during Pre-training",
-      description: "RL Excursions during Pre-training: How early is too early for On-policy Learning?"
+      title: "RL Excursions during Pretraining",
+      description: "RL Excursions during Pretraining: How early is too early for On-policy Learning?"
     },
     {},
     {}

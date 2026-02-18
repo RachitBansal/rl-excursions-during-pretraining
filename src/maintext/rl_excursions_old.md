@@ -1,4 +1,4 @@
-# RL Excursions during Pre-training: How early is too early for On-policy Learning?
+# RL Excursions during Pretraining: How early is too early for On-policy Learning?
 
 <!-- Blog post for the paper. Replace placeholder content below with your narrative. -->
 

@@ -7,7 +7,7 @@ Modern LLM training usually looks like this:
 
 > **Pretraining** → **Supervised fine-tuning (SFT)** → **Reinforcement Learning (RL) via verfiable rewards**
 
-where, pre-training and SFT employ a next-token prediction (NTP) objective on a static external dataset ("off-policy"). While, RL employs a policy optimization objective on the LLM generations ("on-policy").
+where, pretraining and SFT employ a next-token prediction (NTP) objective on a static external dataset ("off-policy"). While, RL employs a policy optimization objective on the LLM generations ("on-policy").
 
 The use of two distinct training objectives raises a basic but underexplored question
 > **At what point during training does an LLM become capable of learning from its own generations (i.e., on-policy)?**
@@ -21,18 +21,18 @@ As of February 2026, Large Language Model (LLM) training follows a standard pipe
 
 The use of two distinct training objectives raises several interesting but underexplored questions. In this work we systematically investigate this transition between off-policy and on-policy training objectives, asking: 
 
-> **How and when should we be using an RL objective during LLM training?**
+> **How and when should an RL objective be used in LLM training?**
 
 Furthermore, there has been a recent growing interest in applying RL earlier in training[^arxiv-org-2510-01265] [^arxiv-org-2509-19249] [^arxiv-org-2512-03442]. As a precursor, we ask concretely: *at what point during pretraining does the model's self-generated data become good enough that on-policy learning actually yields meaningful gradient signals?*
 
 To answer these questions, we perform a rigorous case study of on-policy learning with a focus on LLM reasoning capabilities.
-We pretrain an LLM from scratch on a high-quality, reasoning heavy corpus, and sample several intermediate pre-training checkpoints. We perform RL on the base pre-training checkpoints and study these models in comparison with (i) SFT on the base checkpoints, and (ii) the standard SFT $\\rightarrow$ RL pipeline.
+We pretrain an LLM from scratch on a high-quality, reasoning heavy corpus, and sample several intermediate pretraining checkpoints. We perform RL on the base pretraining checkpoints and study these models in comparison with (i) SFT on the base checkpoints, and (ii) the standard SFT $\\rightarrow$ RL pipeline.
 For all our experiments, we use math reasoning as a testbed since it provides a clean setting with unambiguous and verifiable rewards.
 <!-- , and outcome-based RL methods like GRPO are known to work well (at least in post-training). But we're hoping the lessons we learn here generalize to other RL-training scenarios.  -->
 In a nutshell, we derive the following insights:
 - **Models start to learn from their own generations very early in training**. That is, RL is effective surprisingly early in pretraining. Training with RL significantly improves performance across datasets and metrics prior to pretraining on a large number of tokens.
 - **RL can lead to expansion of the output distribution.** Contrary to recent findings that RL only sharpens the output distribution, we find that early stage RL considerably improves pass@k performance, indicating that "expansion". We find that the sharpening vs. expansion effect with RL depends on the training pipelines.
-- **Effect of number of rollouts at different stages of model training.** Early pre-training checkpoints might yield sparse or noisy reward. We observe that a larger number of rollouts provides diminishing returns with compute and fewer rollouts could in fact be
+- **Effect of number of rollouts at different stages of model training.** Early pretraining checkpoints might yield sparse or noisy reward. We observe that a larger number of rollouts provides diminishing returns with compute and fewer rollouts could in fact be
 more FLOP-efficient.
 
 Together, our findings demonstrate the feasibility of
@@ -114,7 +114,7 @@ We are seeing very promising results on GSM8K. As early as **4B pretraining toke
 
 **More importantly, RL-only competes with the standard pipeline.** By the time we've pretrained on 10B+ tokens, the RL-only model actually *outperforms* the SFT-only model on pass@1, and performs on par with the full SFT→RL pipeline (M<sub>t</sub><sup>SFT→RL</sup>, the gold-standard baseline).
 
-We are quite surprised by this results because the RL-only model M<sub>t</sub><sup>RL</sup> never trains on ground-truth reasoning traces. It only sees its own generated solutions, and a reward signal for whether the final answer is correct. Yet it matches or outperforms the performance of models that explicitly train on expert-written solutions. This suggests that **ground-truth solution traces may not be strictly necessary or even optimal** to unlock certain reasoning behaviors. A pretraining model can happily bootstrap its way there from self-generated attempts.
+We are quite surprised by this results because the RL-only model M<sub>t</sub><sup>RL</sup> never trains on ground-truth reasoning traces. It only sees its own generated solutions, and a reward signal for whether the final answer is correct. Yet it matches or outperforms the performance of models that explicitly train on expert-written solutions. This suggests that **ground-truth solution traces may not be strictly necessary** to unlock certain reasoning behaviors. A pretraining model can happily bootstrap its way there from self-generated attempts.
 
 We also see significant improvements in pass@k for k=8 and k=32, which we'll dig into more in the next section (add link here).
 
@@ -134,7 +134,7 @@ Is this a fundamental limitation of the approach, or could we fix it with more d
 ---
 ## Result 2: Can we settle the long-time RL debate, sharpening or expansion?
 
-One of the heated debates in recent work is what RL actually *does* to a model's output distribution. Many works[^arxiv-org-2507-14843] [^yue2025] claim that RL only sharpens the distribution without teaching any new reasoning behaviors. 
+One of the heated debates in recent work is what RL actually *does* to a model's output distribution. Many works[^qin2025][^arxiv-org-2507-14843] [^yue2025] claim that RL only sharpens the distribution without teaching any new reasoning behaviors. 
 
 
 We can think about RL's effect in two ways:
@@ -183,11 +183,11 @@ When we ran RL on early pretraining checkpoints, we ran into a pretty practical 
 
 We had a very natural idea: what if we just sample *more* rollouts per question? If the model only gets 1 out of 10 attempts right, maybe sampling 64 attempts instead of 5 will give us enough correct solutions to learn from.
 
-However, more rollouts also means more compute per training step. So we wanted to understand **when taking compute into consideration, wether increasing rollouts improve RL training.** 
+However, more rollouts also means more compute per training step. So we wanted to understand **when taking compute into consideration, whether increasing rollouts improve RL training.** 
 
 ### Experimental setup
 
-To study this properly, we simulated "easy" and "hard" training scenarios by splitting our *training* dataset based on how well the base model does on each question. We designed two subsets from OpenMathInstruct:
+To study this properly, we simulated "easy" and "hard" training scenarios by splitting our *training* dataset based on how well the base model does on each question. Concurrent work[^cheng2026isocompute] performed analysis for number of rollouts using a similar setup. We design two subsets from OpenMathInstruct based on problem difficulty:
 
 <details>
 <summary>About OpenMathInstruct structure</summary>
@@ -299,7 +299,7 @@ Please cite this work as:
 \`\`\`bibtex
 @misc{rbcmsq2026rlexcursions,
   author={Rachit Bansal* and Clara Mohri* and Tian (Sunny) Qin* and David Alvarez-Melis and Sham Kakade},
-  title={RL Excursions During Pre-Training: How Early Is Too Early for On-Policy Learning?},
+  title={RL Excursions During Pretraining: How Early Is Too Early for On-Policy Learning?},
   howpublished={url{https://rachitbansal.github.io/rl-excursions/}},
   year={2026}
 }
@@ -359,6 +359,10 @@ Please cite this work as:
 [^arxiv-org-2307-04964]: Zheng et al. (2023). [Secrets of RLHF in Large Language Models Part I: PPO](https://arxiv.org/abs/2307.04964).
 
 [^zhou2023]: Zhou et al. (2023). [Lima: Less Is More for Alignment](https://arxiv.org/abs/2305.11206). NeurIPS 2023.
+
+[^qin2025]: Qin et al. (2025). [Decomposing Elements of Problem Solving: What "Math" Does RL Teach?](https://arxiv.org/abs/2505.22756). 
+
+[^cheng2026isocompute]: Cheng et al. (2026). [IsoCompute Playbook: Optimally Scaling Sampling Compute for RL Training of LLMs](https://compute-optimal-rl-llm-scaling.github.io/). 
 
 
 

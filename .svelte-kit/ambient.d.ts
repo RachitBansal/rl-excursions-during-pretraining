@@ -79,7 +79,6 @@ declare module '$env/static/private' {
 	export const npm_lifecycle_script: string;
 	export const CONDA_DEFAULT_ENV: string;
 	export const npm_config_user_agent: string;
-	export const GITHUB_PAGES: string;
 	export const INFOPATH: string;
 	export const HOMEBREW_CELLAR: string;
 	export const npm_node_execpath: string;
@@ -169,7 +168,6 @@ declare module '$env/dynamic/private' {
 		npm_lifecycle_script: string;
 		CONDA_DEFAULT_ENV: string;
 		npm_config_user_agent: string;
-		GITHUB_PAGES: string;
 		INFOPATH: string;
 		HOMEBREW_CELLAR: string;
 		npm_node_execpath: string;
