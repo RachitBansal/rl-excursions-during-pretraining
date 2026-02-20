@@ -116,7 +116,7 @@ We are seeing very promising results on GSM8K. As early as **4B pretraining toke
 
 We are quite surprised by this results because the RL-only model M<sub>t</sub><sup>RL</sup> never trains on ground-truth reasoning traces. It only sees its own generated solutions, and a reward signal for whether the final answer is correct. Yet it matches or outperforms the performance of models that explicitly train on expert-written solutions. This suggests that **ground-truth solution traces may not be strictly necessary** to unlock certain reasoning behaviors. A pretraining model can happily bootstrap its way there from self-generated attempts.
 
-We also see significant improvements in pass@k for k=8 and k=32, which we'll dig into more in the next section (add link here).
+We also see significant improvements in pass@k for k=8 and k=32, which we'll dig into more in the next section (Result 2).
 
 ### Limitations on MATH. 
 
