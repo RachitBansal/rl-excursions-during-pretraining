@@ -367,6 +367,4 @@ Please cite this work as:
 
 
 **Feedback?**  
-These are open questions we're still thinking about; we'd love to hear your thoughts!
-
-This is a living document. If you have questions, ideas, or want to discuss any of these findings, feel free to reach out!
+These are open questions we're still thinking about; we'd love to hear your thoughts! If you have questions, ideas, or want to discuss any of these findings, feel free to reach out!
